@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\DirectX-Headers-1.614.1\DirectX-Headers-1.614.1\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\DirectXIncludes\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -107,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\DirectXIncludes\include;C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,6 +136,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\SDL2\lib\x64\SDL2.lib" />
+    <Library Include="..\..\SDL2\lib\x64\SDL2main.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
