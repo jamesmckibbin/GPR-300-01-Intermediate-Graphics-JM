@@ -107,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\DirectXIncludes\include;C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\SDL2\include;C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\DirectXIncludes\include\directx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

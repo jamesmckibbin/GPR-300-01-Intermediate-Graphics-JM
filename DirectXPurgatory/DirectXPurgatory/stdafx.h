@@ -6,7 +6,9 @@
 
 #define IID_PPV_ARGS(ppType) __uuidof(**(ppType)), IID_PPV_ARGS_Helper(ppType)
 
-#include <Windows.h>
+#define SAFE_RELEASE(p) { if ( (p) ) { (p)->Release(); (p) = 0; } }
+
+#include <windows.h>
 #include <windowsx.h>
 #include <wrl/client.h>
 #include <d3d12.h>
@@ -20,10 +22,3 @@
 #pragma comment (lib, "d3d12.lib")
 #pragma comment (lib, "dxgi.lib")
 #pragma comment (lib, "d3dcompiler.lib")
-
-template<typename T> _Post_equal_to_(pp) _Post_satisfies_(return == pp) void** IID_PPV_ARGS_Helper(T * *pp)
-{
-#pragma prefast(suppress: 6269, "Tool issue with unused static_cast")
-    static_cast<IUnknown*>(*pp);    // make sure everyone derives from IUnknown
-    return reinterpret_cast<void**>(pp);
-}
