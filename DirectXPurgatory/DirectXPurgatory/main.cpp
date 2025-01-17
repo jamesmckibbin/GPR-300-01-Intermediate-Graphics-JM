@@ -41,17 +41,7 @@ D3D12_VERTEX_BUFFER_VIEW vertexBufferView; // Pointer to vertex data in GPU
 // Vertex Definition
 struct Vertex {
 	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT4 color;
-	DirectX::XMFLOAT2 tex;
 };
-
-// Le triangle
-Vertex vList[] = {
-	{ { 0.0f, 0.5f, 0.5f } },
-	{ { 0.5f, -0.5f, 0.5f } },
-	{ { -0.5f, -0.5f, 0.5f } },
-};
-int vBufferSize = sizeof(vList);
 
 // Function Declarations
 bool InitD3D(); // Initializes Direct3D 12
@@ -99,11 +89,11 @@ int main(int argc, char* args[]) {
 
 bool InitD3D() {
 	// Search for any adapters
-	HRESULT hr;
+	HRESULT result;
 
 	IDXGIFactory4* dxgiFactory;
-	hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
-	if (FAILED(hr)) {
+	result = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -123,8 +113,8 @@ bool InitD3D() {
 		}
 
 		// Compatibility check
-		hr = D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr);
-		if (SUCCEEDED(hr)) {
+		result = D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr);
+		if (SUCCEEDED(result)) {
 			adapterFound = true;
 			break;
 		}
@@ -138,15 +128,15 @@ bool InitD3D() {
 	}
 
 	// Create the device using valid adapter
-	hr = D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device));
-	if (FAILED(hr)) {
+	result = D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device));
+	if (FAILED(result)) {
 		return false;
 	}
 
 	// Creating the command queue
 	D3D12_COMMAND_QUEUE_DESC cqDesc = {};
-	hr = device->CreateCommandQueue(&cqDesc, IID_PPV_ARGS(&commandQueue));
-	if (FAILED(hr)) {
+	result = device->CreateCommandQueue(&cqDesc, IID_PPV_ARGS(&commandQueue));
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -181,8 +171,8 @@ bool InitD3D() {
 	rtvHeapDesc.NumDescriptors = frameBufferCount;
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
-	if (FAILED(hr)) {
+	result = device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -194,8 +184,8 @@ bool InitD3D() {
 
 	// Create a RTV for each buffer
 	for (int i = 0; i < frameBufferCount; i++) {
-		hr = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTargets[i]));
-		if (FAILED(hr)) {
+		result = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTargets[i]));
+		if (FAILED(result)) {
 			return false;
 		}
 
@@ -208,23 +198,23 @@ bool InitD3D() {
 
 	// Create command allocators
 	for (int i = 0; i < frameBufferCount; i++) {
-		hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator[i]));
-		if (FAILED(hr)) {
+		result = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator[i]));
+		if (FAILED(result)) {
 			return false;
 		}
 	}
 
 	// Create command list
-	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator[0], NULL, IID_PPV_ARGS(&commandList));
-	if (FAILED(hr)) {
+	result = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator[0], NULL, IID_PPV_ARGS(&commandList));
+	if (FAILED(result)) {
 		return false;
 	}
 	commandList->Close(); // Close for now, will be reopened in loop
 
 	// Create fences
 	for (int i = 0; i < frameBufferCount; i++) {
-		hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence[i]));
-		if (FAILED(hr)) {
+		result = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence[i]));
+		if (FAILED(result)) {
 			return false;
 		}
 		fenceValue[i] = 0;
@@ -237,20 +227,20 @@ bool InitD3D() {
 	}
 
 	// Init root signature
-	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	// Grab root signature bytecode
 	ID3DBlob* signature;
-	hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
-	if (FAILED(hr))
+	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
+	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Create root signature
-	hr = device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
-	if (FAILED(hr))
+	result = device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+	if (FAILED(result))
 	{
 		return false;
 	}
@@ -258,10 +248,10 @@ bool InitD3D() {
 	// Compile vertex shader
 	ID3DBlob* vertexShader;
 	ID3DBlob* errorBuff; // Error data buffer
-	hr = D3DCompileFromFile(L"VertexShader.hlsl", nullptr, nullptr,
+	result = D3DCompileFromFile(L"VertexShader.hlsl", nullptr, nullptr,
 		"main", "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 		0, &vertexShader, &errorBuff);
-	if (FAILED(hr))
+	if (FAILED(result))
 	{
 		OutputDebugStringA((char*)errorBuff->GetBufferPointer());
 		return false;
@@ -271,13 +261,13 @@ bool InitD3D() {
 	D3D12_SHADER_BYTECODE vertexShaderBytecode = {};
 	vertexShaderBytecode.BytecodeLength = vertexShader->GetBufferSize();
 	vertexShaderBytecode.pShaderBytecode = vertexShader->GetBufferPointer();
-
+	
 	// Compile pixel shader
 	ID3DBlob* pixelShader;
-	hr = D3DCompileFromFile(L"PixelShader.hlsl", nullptr, nullptr,
+	result = D3DCompileFromFile(L"PixelShader.hlsl", nullptr, nullptr,
 		"main", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 		0, &pixelShader, &errorBuff);
-	if (FAILED(hr))
+	if (FAILED(result))
 	{
 		OutputDebugStringA((char*)errorBuff->GetBufferPointer());
 		return false;
@@ -291,9 +281,7 @@ bool InitD3D() {
 	// Create input layout
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEX", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
 	// Fill out input layout descriptor
@@ -316,65 +304,74 @@ bool InitD3D() {
 	psoDesc.NumRenderTargets = 1;
 
 	// Create the pipeline state object
-	hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
-	if (FAILED(hr))
+	result = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
+	if (FAILED(result))
 	{
 		return false;
 	}
 
+	// Le triangle
+	Vertex vList[] = {
+		{ { 0.0f, 0.5f, 0.5f } },
+		{ { -0.5f, -0.5f, 0.5f } },
+		{ { 0.5f, -0.5f, 0.5f } },
+	};
+	int vBufferSize = sizeof(vList);
+
 	// Create default heap
+	CD3DX12_HEAP_PROPERTIES dHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC resoDesc = CD3DX12_RESOURCE_DESC::Buffer(vBufferSize);
 	device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), // a default heap
-		D3D12_HEAP_FLAG_NONE, // no flags
-		&CD3DX12_RESOURCE_DESC::Buffer(vBufferSize), // resource description for a buffer
-		D3D12_RESOURCE_STATE_COPY_DEST, // we will start this heap in the copy destination state since we will copy data
-		// from the upload heap to this heap
-		nullptr, // optimized clear value must be null for this type of resource. used for render targets and depth/stencil buffers
+		&dHeapProp, // Default heap
+		D3D12_HEAP_FLAG_NONE,
+		&resoDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST, // Copy data from upload heap to this heap
+		nullptr,
 		IID_PPV_ARGS(&vertexBuffer));
 
-	// we can give resource heaps a name so when we debug with the graphics debugger we know what resource we are looking at
+	// Name the buffer
 	vertexBuffer->SetName(L"Vertex Buffer Resource Heap");
 
-	// create upload heap
-	// upload heaps are used to upload data to the GPU. CPU can write to it, GPU can read from it
-	// We will upload the vertex buffer using this heap to the default heap
+	// Create upload heap
+	CD3DX12_HEAP_PROPERTIES uHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	ID3D12Resource* vBufferUploadHeap;
 	device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), // upload heap
-		D3D12_HEAP_FLAG_NONE, // no flags
-		&CD3DX12_RESOURCE_DESC::Buffer(vBufferSize), // resource description for a buffer
-		D3D12_RESOURCE_STATE_GENERIC_READ, // GPU will read from this buffer and copy its contents to the default heap
+		&uHeapProp, // Upload heap
+		D3D12_HEAP_FLAG_NONE,
+		&resoDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ, // GPU reads from this buffer
 		nullptr,
 		IID_PPV_ARGS(&vBufferUploadHeap));
+
 	vBufferUploadHeap->SetName(L"Vertex Buffer Upload Resource Heap");
 
-	// store vertex buffer in upload heap
+	// Store vertex buffer in upload heap
 	D3D12_SUBRESOURCE_DATA vertexData = {};
-	vertexData.pData = reinterpret_cast<BYTE*>(vList); // pointer to our vertex array
-	vertexData.RowPitch = vBufferSize; // size of all our triangle vertex data
-	vertexData.SlicePitch = vBufferSize; // also the size of our triangle vertex data
+	vertexData.pData = reinterpret_cast<BYTE*>(vList); // Pointer to vertex array
+	vertexData.RowPitch = vBufferSize; // Size of vertex array data
+	vertexData.SlicePitch = vBufferSize; // ^
 
-	// we are now creating a command with the command list to copy the data from
-	// the upload heap to the default heap
+	// Command to copy upload heap to default heap
 	UpdateSubresources(commandList, vertexBuffer, vBufferUploadHeap, 0, 0, 1, &vertexData);
 
-	// transition the vertex buffer data from copy destination state to vertex buffer state
-	commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(vertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
+	// Transition from copy state to vertex buffer state
+	CD3DX12_RESOURCE_BARRIER resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(vertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	commandList->ResourceBarrier(1, &resoBarr);
 
-	// Now we execute the command list to upload the initial assets (triangle data)
+	// Execute command list to upload triangle data
 	commandList->Close();
 	ID3D12CommandList* ppCommandLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
-	// increment the fence value now, otherwise the buffer might not be uploaded by the time we start drawing
+	// Increment the fence value so buffer will load
 	fenceValue[frameIndex]++;
-	hr = commandQueue->Signal(fence[frameIndex], fenceValue[frameIndex]);
-	if (FAILED(hr))
+	result = commandQueue->Signal(fence[frameIndex], fenceValue[frameIndex]);
+	if (FAILED(result))
 	{
 		loop = false;
 	}
 
-	// create a vertex buffer view for the triangle. We get the GPU memory address to the vertex pointer using the GetGPUVirtualAddress() method
+	// Create VBV for the triangle
 	vertexBufferView.BufferLocation = vertexBuffer->GetGPUVirtualAddress();
 	vertexBufferView.StrideInBytes = sizeof(Vertex);
 	vertexBufferView.SizeInBytes = vBufferSize;
@@ -401,26 +398,28 @@ void Update() {
 }
 
 void UpdatePipeline() {
-	HRESULT hr;
+	HRESULT result;
 
 	// Wait for GPU to finish
 	WaitForPreviousFrame();
 
 	// Reset allocator when GPU is done
-	hr = commandAllocator[frameIndex]->Reset();
-	if (FAILED(hr)) {
+	result = commandAllocator[frameIndex]->Reset();
+	if (FAILED(result)) {
 		loop = false;
 	}
 
 	// Reset command lists
-	hr = commandList->Reset(commandAllocator[frameIndex], NULL);
-	if (FAILED(hr)) {
+	result = commandList->Reset(commandAllocator[frameIndex], pipelineStateObject);
+	if (FAILED(result)) {
 		loop = false;
 	}
 
+	CD3DX12_RESOURCE_BARRIER resoBarr;
+
 	// Reset render target to write
-	CD3DX12_RESOURCE_BARRIER rb = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	commandList->ResourceBarrier(1, &rb);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	commandList->ResourceBarrier(1, &resoBarr);
 
 	// Get handle to render target for merger stage
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, rtvDescriptorSize);
@@ -432,26 +431,26 @@ void UpdatePipeline() {
 	const float clearColor[] = { 0.4f, 0.1f, 0.4f, 1.0f };
 	commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
-	// PUT RENDER COMMANDS HERE (i think)
-	commandList->SetGraphicsRootSignature(rootSignature); // set the root signature
-	commandList->RSSetViewports(1, &viewport); // set the viewports
-	commandList->RSSetScissorRects(1, &scissorRect); // set the scissor rects
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // set the primitive topology
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView); // set the vertex buffer (using the vertex buffer view)
-	commandList->DrawInstanced(3, 1, 0, 0); // finally draw 3 vertices (draw the triangle)
+	// PUT RENDER COMMANDS HERE
+	commandList->SetGraphicsRootSignature(rootSignature); // Set root signature
+	commandList->RSSetViewports(1, &viewport); // Set viewports
+	commandList->RSSetScissorRects(1, &scissorRect); // Set scissor rects
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // Set primitive topology
+	commandList->IASetVertexBuffers(0, 1, &vertexBufferView); // Set vertex buffer
+	commandList->DrawInstanced(3, 1, 0, 0); // Draw 3 vertices
 
 	// Set render target to present state
-	rb = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	commandList->ResourceBarrier(1, &rb);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+	commandList->ResourceBarrier(1, &resoBarr);
 
-	hr = commandList->Close();
-	if (FAILED(hr)) {
+	result = commandList->Close();
+	if (FAILED(result)) {
 		loop = false;
 	}
 }
 
 void Render() {
-	HRESULT hr;
+	HRESULT result;
 
 	UpdatePipeline();
 
@@ -462,14 +461,14 @@ void Render() {
 	commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
 	// Last command in queue
-	hr = commandQueue->Signal(fence[frameIndex], fenceValue[frameIndex]);
-	if (FAILED(hr)) {
+	result = commandQueue->Signal(fence[frameIndex], fenceValue[frameIndex]);
+	if (FAILED(result)) {
 		loop = false;
 	}
 
 	// Present the backbuffer
-	hr = swapChain->Present(0, 0);
-	if (FAILED(hr)) {
+	result = swapChain->Present(0, 0);
+	if (FAILED(result)) {
 		loop = false;
 	}
 }
@@ -491,9 +490,6 @@ void CleanD3D() {
 	SAFE_RELEASE(commandQueue);
 	SAFE_RELEASE(rtvDescriptorHeap);
 	SAFE_RELEASE(commandList);
-	SAFE_RELEASE(pipelineStateObject);
-	SAFE_RELEASE(rootSignature);
-	SAFE_RELEASE(vertexBuffer);
 
 	for (int i = 0; i < frameBufferCount; ++i)
 	{
@@ -501,6 +497,10 @@ void CleanD3D() {
 		SAFE_RELEASE(commandAllocator[i]);
 		SAFE_RELEASE(fence[i]);
 	};
+
+	SAFE_RELEASE(pipelineStateObject);
+	SAFE_RELEASE(rootSignature);
+	SAFE_RELEASE(vertexBuffer);
 }
 
 void WaitForPreviousFrame() {
