@@ -19,3 +19,10 @@
 #pragma comment (lib, "dxgi.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 #pragma comment (lib, "dxguid.lib")
+
+#define DEFAULT_WINDOW_WIDTH 800
+#define DEFAULT_WINDOW_HEIGHT 600
+
+float currentWindowWidth = DEFAULT_WINDOW_WIDTH;
+float currentWindowHeight = DEFAULT_WINDOW_HEIGHT;
+bool fullScreen = false;

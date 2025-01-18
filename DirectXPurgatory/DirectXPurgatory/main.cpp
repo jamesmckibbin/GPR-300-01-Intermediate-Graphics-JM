@@ -11,9 +11,6 @@ bool loop = true;
 
 // Window Stuff (not Windows)
 HWND hWnd;
-int winWidth = 800;
-int winHeight = 600;
-bool fullscreen = false;
 
 // D3D Stuff
 const int frameBufferCount = 2; // Number of buffers to swap between
@@ -40,7 +37,9 @@ D3D12_VERTEX_BUFFER_VIEW vertexBufferView; // Pointer to vertex data in GPU
 
 // Vertex Definition
 struct Vertex {
+	Vertex(float x, float y, float z, float r, float g, float b, float a) : pos(x, y, z), color(r, g, b, a) {}
 	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT4 color;
 };
 
 // Function Declarations
@@ -56,7 +55,7 @@ int main(int argc, char* args[]) {
 	SDL_Window* window = SDL_CreateWindow(
 		"DirectX 12 Purgatory", 
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-		800, 600, 0);
+		DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, 0);
 	hWnd = GetActiveWindow();
 
 	// Initialize Direct3D
@@ -142,8 +141,8 @@ bool InitD3D() {
 
 	// Display descriptor
 	DXGI_MODE_DESC backBufferDesc = {};
-	backBufferDesc.Width = winWidth;
-	backBufferDesc.Height = winHeight;
+	backBufferDesc.Width = DEFAULT_WINDOW_WIDTH;
+	backBufferDesc.Height = DEFAULT_WINDOW_HEIGHT;
 	backBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	// Sampling descriptor
@@ -158,7 +157,7 @@ bool InitD3D() {
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapChainDesc.OutputWindow = hWnd;
 	swapChainDesc.SampleDesc = sampleDesc;
-	swapChainDesc.Windowed = !fullscreen;
+	swapChainDesc.Windowed = !fullScreen;
 
 	// Create the swap chain
 	IDXGISwapChain* tempSwapChain;
@@ -209,7 +208,6 @@ bool InitD3D() {
 	if (FAILED(result)) {
 		return false;
 	}
-	commandList->Close(); // Close for now, will be reopened in loop
 
 	// Create fences
 	for (int i = 0; i < frameBufferCount; i++) {
@@ -281,7 +279,8 @@ bool InitD3D() {
 	// Create input layout
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
 	// Fill out input layout descriptor
@@ -312,9 +311,9 @@ bool InitD3D() {
 
 	// Le triangle
 	Vertex vList[] = {
-		{ { 0.0f, 0.5f, 0.5f } },
-		{ { -0.5f, -0.5f, 0.5f } },
-		{ { 0.5f, -0.5f, 0.5f } },
+		{ 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		{ 0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+		{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
 	};
 	int vBufferSize = sizeof(vList);
 
@@ -379,16 +378,16 @@ bool InitD3D() {
 	// Fill out the Viewport
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	viewport.Width = winWidth;
-	viewport.Height = winHeight;
+	viewport.Width = currentWindowWidth;
+	viewport.Height = currentWindowHeight;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
 	// Fill out a scissor rect
 	scissorRect.left = 0;
 	scissorRect.top = 0;
-	scissorRect.right = winWidth;
-	scissorRect.bottom = winHeight;
+	scissorRect.right = currentWindowWidth;
+	scissorRect.bottom = currentWindowHeight;
 
 	return true;
 }
