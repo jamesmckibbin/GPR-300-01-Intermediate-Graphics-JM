@@ -132,10 +132,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="app.h" />
+    <ClInclude Include="gconst.h" />
+    <ClInclude Include="renderslop.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="app.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="renderslop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\SDL2\lib\x64\SDL2.lib" />

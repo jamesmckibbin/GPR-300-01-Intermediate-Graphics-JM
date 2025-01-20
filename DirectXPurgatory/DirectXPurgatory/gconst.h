@@ -1,9 +1,5 @@
 #pragma once
 
-#define IID_PPV_ARGS(ppType) __uuidof(**(ppType)), IID_PPV_ARGS_Helper(ppType)
-
-#define SAFE_RELEASE(p) { if ( (p) ) { (p)->Release(); (p) = 0; } }
-
 #include <windows.h>
 #include <windowsx.h>
 #include <wrl/client.h>
@@ -15,6 +11,9 @@
 #include <vector>
 #include <SDL.h>
 
+#define IID_PPV_ARGS(ppType) __uuidof(**(ppType)), IID_PPV_ARGS_Helper(ppType)
+#define SAFE_RELEASE(p) { if ( (p) ) { (p)->Release(); (p) = 0; } }
+
 #pragma comment (lib, "d3d12.lib")
 #pragma comment (lib, "dxgi.lib")
 #pragma comment (lib, "d3dcompiler.lib")
@@ -22,7 +21,3 @@
 
 #define DEFAULT_WINDOW_WIDTH 800
 #define DEFAULT_WINDOW_HEIGHT 600
-
-float currentWindowWidth = DEFAULT_WINDOW_WIDTH;
-float currentWindowHeight = DEFAULT_WINDOW_HEIGHT;
-bool fullScreen = false;
