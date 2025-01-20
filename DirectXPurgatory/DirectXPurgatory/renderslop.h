@@ -8,17 +8,16 @@ https://github.com/galek/SDL-Directx12
 
 #include "gconst.h"
 
-const int frameBufferCount = 2;
+const int frameBufferCount = 3;
 
 struct Vertex {
-	Vertex(float x, float y, float z, float r, float g, float b, float a, float u, float v) : pos(x, y, z), color(r, g, b, a), tex(u, v) {}
+	Vertex(float x, float y, float z, float r, float g, float b, float a) : pos(x, y, z), color(r, g, b, a) {}
 	DirectX::XMFLOAT3 pos;
 	DirectX::XMFLOAT4 color;
-	DirectX::XMFLOAT2 tex;
 };
 
-struct ConstantBuffer {
-	DirectX::XMFLOAT4 colorMultiplier;
+struct ConstantBufferPerObject {
+	DirectX::XMFLOAT4X4 wvpMat;
 };
 
 class RenderSlop {
@@ -59,7 +58,7 @@ private:
 	ID3D12RootSignature* rootSignature;
 	ID3D12PipelineState* pipelineStateObject;
 
-	// Verticies & Indicies
+	// Vertex & Index Buffers
 	ID3D12Resource* vertexBuffer;
 	ID3D12Resource* indexBuffer;
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
@@ -70,10 +69,26 @@ private:
 	ID3D12DescriptorHeap* dsDescriptorHeap;
 
 	// Constant Buffer
-	ID3D12DescriptorHeap* mainDescriptorHeap[frameBufferCount];
-	ID3D12Resource* constantBufferUploadHeap[frameBufferCount];
-	ConstantBuffer cbColorMultiplierData;
-	UINT8* cbColorMultiplierGPUAddress[frameBufferCount];
+	int ConstantBufferPerObjectAlignedSize = (sizeof(ConstantBufferPerObject) + 255) & ~255;
+	ConstantBufferPerObject cbPerObject;
+	ID3D12Resource* constantBufferUploadHeaps[frameBufferCount];
+	UINT8* cbvGPUAddress[frameBufferCount];
+
+	// Camera
+	DirectX::XMFLOAT4X4 cameraProjMat;
+	DirectX::XMFLOAT4X4 cameraViewMat;
+	DirectX::XMFLOAT4 cameraPosition;
+	DirectX::XMFLOAT4 cameraTarget;
+	DirectX::XMFLOAT4 cameraUp;
+
+	// Cubes
+	DirectX::XMFLOAT4X4 cube1WorldMat;
+	DirectX::XMFLOAT4X4 cube1RotMat;
+	DirectX::XMFLOAT4 cube1Position;
+	DirectX::XMFLOAT4X4 cube2WorldMat;
+	DirectX::XMFLOAT4X4 cube2RotMat;
+	DirectX::XMFLOAT4 cube2PositionOffset;
+	int numCubeIndices;
 	
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;

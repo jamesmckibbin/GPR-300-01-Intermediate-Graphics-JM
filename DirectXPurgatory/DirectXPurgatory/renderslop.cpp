@@ -2,6 +2,8 @@
 
 #include "app.h"
 
+using namespace DirectX;
+
 bool RenderSlop::Init(const HWND& window, bool screenState, float width, float height)
 {
 	HRESULT result;
@@ -70,26 +72,30 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	descriptorTableRanges[0].RegisterSpace = 0;
 	descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	// Create Descriptor Table
-	D3D12_ROOT_DESCRIPTOR_TABLE descriptorTable;
-	descriptorTable.NumDescriptorRanges = _countof(descriptorTableRanges);
-	descriptorTable.pDescriptorRanges = &descriptorTableRanges[0];
+	// Create Root Descriptor
+	D3D12_ROOT_DESCRIPTOR rootCBVDescriptor;
+	rootCBVDescriptor.RegisterSpace = 0;
+	rootCBVDescriptor.ShaderRegister = 0;
 
+	// Create Root Parameters
 	D3D12_ROOT_PARAMETER  rootParameters[1];
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[0].DescriptorTable = descriptorTable;
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[0].Descriptor = rootCBVDescriptor;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 
-	// Init Root Signature
-	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
-	rootSignatureDesc.Init(_countof(rootParameters), rootParameters, 0, nullptr,
+	// Create Root Signature Descriptor
+	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	rootSignatureDesc.Init(_countof(rootParameters),
+		rootParameters,
+		0,
+		nullptr,
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
 
-	// Get Root Signature Bytecode
+	// Create Root Signature
 	ID3DBlob* signature;
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
 	if (FAILED(result))
@@ -97,7 +103,6 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 		return false;
 	}
 
-	// Create Root Signature
 	result = device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
 	if (FAILED(result))
 	{
@@ -124,19 +129,19 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	inputLayoutDesc.pInputElementDescs = inputLayout;
 
 	// Create PSO Descriptor
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {}; // PSO descriptor
-	psoDesc.InputLayout = inputLayoutDesc; // Describes out input layout
-	psoDesc.pRootSignature = rootSignature; // The root signature associated with this PSO
-	psoDesc.VS = vertexShader.GetBytecode(); // Vertex shader bytcode
-	psoDesc.PS = pixelShader.GetBytecode(); // Pixel shader bytecode
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE; // Topology type
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // Format of render target
-	psoDesc.SampleDesc = sampleDesc; // Must be same sample description as swapchain and depth buffer
-	psoDesc.SampleMask = 0xffffffff; // Multi-sampling
-	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT); // Default rasterizer state
-	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT); // Default blend state
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+	psoDesc.InputLayout = inputLayoutDesc;
+	psoDesc.pRootSignature = rootSignature;
+	psoDesc.VS = vertexShader.GetBytecode();
+	psoDesc.PS = pixelShader.GetBytecode();
+	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	psoDesc.SampleDesc = sampleDesc;
+	psoDesc.SampleMask = 0xffffffff;
+	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT); // a default depth stencil state
+	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
 	// Create PSO
 	result = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
@@ -147,11 +152,41 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 
 	// Verticies
 	Vertex vList[] = {
-		// Quad
-		{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.f, 0.f},
-		{ 0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f, 0.f, 0.f },
-		{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.f, 0.f },
-		{ 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.f, 0.f },
+		// Front
+		{ -0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		{  0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 1.0f, 1.0f },
+		{ -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+		{  0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+
+		// Right
+		{  0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		{  0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 1.0f, 1.0f },
+		{  0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+		{  0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+
+		// Left
+		{ -0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		{ -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 1.0f, 1.0f },
+		{ -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+		{ -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+
+		// Back
+		{  0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		{ -0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 1.0f, 1.0f },
+		{  0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+		{ -0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+
+		// Top
+		{ -0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		{ 0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 1.0f, 1.0f },
+		{ 0.5f,  0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+		{ -0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+
+		// Bottom
+		{  0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		{ -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 1.0f, 1.0f },
+		{  0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+		{ -0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
 	};
 	int vBufferSize = sizeof(vList);
 
@@ -190,10 +225,32 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 
 	// Indicies
 	DWORD iList[] = {
+		// Front
 		0, 1, 2,
-		0, 3, 1
+		0, 3, 1,
+
+		// Left
+		4, 5, 6,
+		4, 7, 5,
+
+		// Right
+		8, 9, 10,
+		8, 11, 9,
+
+		// Back
+		12, 13, 14,
+		12, 15, 13,
+
+		// Top
+		16, 17, 18,
+		16, 19, 17,
+
+		// Bottom
+		20, 21, 22,
+		20, 23, 21,
 	};
 	int iBufferSize = sizeof(iList);
+	numCubeIndices = sizeof(iList) / sizeof(DWORD);
 
 	// Indicies Default Heap
 	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(iBufferSize);
@@ -226,11 +283,6 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(indexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	commandList->ResourceBarrier(1, &resoBarr);
 
-	// Create Index Buffer View
-	indexBufferView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
-	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
-	indexBufferView.SizeInBytes = iBufferSize;
-
 	// Create Depth Stencil Buffer Heap
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
 	dsvHeapDesc.NumDescriptors = 1;
@@ -260,30 +312,11 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&depthOptimizedClearValue,
 		IID_PPV_ARGS(&depthStencilBuffer));
-	result = device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsDescriptorHeap));
-	if (FAILED(result))
-	{
-		return false;
-	}
 	dsDescriptorHeap->SetName(L"Depth/Stencil Resource Heap");
 
 	device->CreateDepthStencilView(depthStencilBuffer, &depthStencilDesc, dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	// Create Constant Buffer Heap For Each Frame
-	for (int i = 0; i < frameBufferCount; ++i)
-	{
-		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-		heapDesc.NumDescriptors = 1;
-		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		result = device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mainDescriptorHeap[i]));
-		if (FAILED(result))
-		{
-			return false;
-		}
-	}
-
-	// Create Resource Heap, Descriptor Heap, & Pointer For Each Frame
+	// Create Constant Buffer Resource Heap
 	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(1024 * 64);
 	for (int i = 0; i < frameBufferCount; ++i)
 	{
@@ -293,19 +326,17 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 			&resoDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
-			IID_PPV_ARGS(&constantBufferUploadHeap[i]));
-		constantBufferUploadHeap[i]->SetName(L"Constant Buffer Upload Resource Heap");
+			IID_PPV_ARGS(&constantBufferUploadHeaps[i]));
+		constantBufferUploadHeaps[i]->SetName(L"Constant Buffer Upload Resource Heap");
 
-		D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-		cbvDesc.BufferLocation = constantBufferUploadHeap[i]->GetGPUVirtualAddress();
-		cbvDesc.SizeInBytes = (sizeof(ConstantBuffer) + 255) & ~255;
-		device->CreateConstantBufferView(&cbvDesc, mainDescriptorHeap[i]->GetCPUDescriptorHandleForHeapStart());
-
-		ZeroMemory(&cbColorMultiplierData, sizeof(cbColorMultiplierData));
+		ZeroMemory(&cbPerObject, sizeof(cbPerObject));
 
 		CD3DX12_RANGE readRange(0, 0);
-		result = constantBufferUploadHeap[i]->Map(0, &readRange, reinterpret_cast<void**>(&cbColorMultiplierGPUAddress[i]));
-		memcpy(cbColorMultiplierGPUAddress[i], &cbColorMultiplierData, sizeof(cbColorMultiplierData));
+
+		result = constantBufferUploadHeaps[i]->Map(0, &readRange, reinterpret_cast<void**>(&cbvGPUAddress[i]));
+
+		memcpy(cbvGPUAddress[i], &cbPerObject, sizeof(cbPerObject)); // Cube 1
+		memcpy(cbvGPUAddress[i] + ConstantBufferPerObjectAlignedSize, &cbPerObject, sizeof(cbPerObject)); // Cube 2
 	}
 
 	// Execute Command List
@@ -326,6 +357,11 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	vertexBufferView.StrideInBytes = sizeof(Vertex);
 	vertexBufferView.SizeInBytes = vBufferSize;
 
+	// Create Index Buffer View
+	indexBufferView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
+	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	indexBufferView.SizeInBytes = iBufferSize;
+
 	// Define Viewport
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
@@ -339,6 +375,39 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	scissorRect.top = 0;
 	scissorRect.right = (LONG)width;
 	scissorRect.bottom = (LONG)height;
+
+	// build projection and view matrix
+	DirectX::XMMATRIX tmpMat = DirectX::XMMatrixPerspectiveFovLH(45.0f * (3.14f / 180.0f), (float)width / (float)height, 0.1f, 1000.0f);
+	XMStoreFloat4x4(&cameraProjMat, tmpMat);
+
+	// set starting camera state
+	cameraPosition = DirectX::XMFLOAT4(0.0f, 2.0f, -4.0f, 0.0f);
+	cameraTarget = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	cameraUp = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
+
+	// build view matrix
+	DirectX::XMVECTOR cPos = XMLoadFloat4(&cameraPosition);
+	DirectX::XMVECTOR cTarg = XMLoadFloat4(&cameraTarget);
+	DirectX::XMVECTOR cUp = XMLoadFloat4(&cameraUp);
+	tmpMat = DirectX::XMMatrixLookAtLH(cPos, cTarg, cUp);
+	XMStoreFloat4x4(&cameraViewMat, tmpMat);
+
+	// set starting cubes position
+	// first cube
+	cube1Position = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR posVec = XMLoadFloat4(&cube1Position);
+
+	tmpMat = DirectX::XMMatrixTranslationFromVector(posVec);
+	XMStoreFloat4x4(&cube1RotMat, DirectX::XMMatrixIdentity());
+	XMStoreFloat4x4(&cube1WorldMat, tmpMat);
+
+	// second cube
+	cube2PositionOffset = DirectX::XMFLOAT4(1.5f, 0.0f, 0.0f, 0.0f);
+	posVec = DirectX::XMLoadFloat4(&cube2PositionOffset) + DirectX::XMLoadFloat4(&cube1Position);
+
+	tmpMat = DirectX::XMMatrixTranslationFromVector(posVec);
+	XMStoreFloat4x4(&cube2RotMat, DirectX::XMMatrixIdentity());
+	XMStoreFloat4x4(&cube2WorldMat, tmpMat);
 
 	return true;
 }
@@ -379,40 +448,73 @@ void RenderSlop::UnInit()
 
 	for (int i = 0; i < frameBufferCount; ++i)
 	{
-		SAFE_RELEASE(mainDescriptorHeap[i]);
-		SAFE_RELEASE(constantBufferUploadHeap[i]);
+		SAFE_RELEASE(constantBufferUploadHeaps[i]);
 	};
 }
 
 void RenderSlop::Update()
 {
-	// update app logic, such as moving the camera or figuring out what objects are in view
-	static float rIncrement = 0.00002f;
-	static float gIncrement = 0.00006f;
-	static float bIncrement = 0.00009f;
+	// create rotation matrices
+	DirectX::XMMATRIX rotXMat = DirectX::XMMatrixRotationX(0.0001f);
+	DirectX::XMMATRIX rotYMat = DirectX::XMMatrixRotationY(0.0002f);
+	DirectX::XMMATRIX rotZMat = DirectX::XMMatrixRotationZ(0.0003f);
 
-	cbColorMultiplierData.colorMultiplier.x += rIncrement;
-	cbColorMultiplierData.colorMultiplier.y += gIncrement;
-	cbColorMultiplierData.colorMultiplier.z += bIncrement;
+	// add rotation to cube1's rotation matrix and store it
+	DirectX::XMMATRIX rotMat = XMLoadFloat4x4(&cube1RotMat) * rotXMat * rotYMat * rotZMat;
+	XMStoreFloat4x4(&cube1RotMat, rotMat);
 
-	if (cbColorMultiplierData.colorMultiplier.x >= 1.0 || cbColorMultiplierData.colorMultiplier.x <= 0.0f)
-	{
-		cbColorMultiplierData.colorMultiplier.x = cbColorMultiplierData.colorMultiplier.x >= 1.0f ? 1.0f : 0.0f;
-		rIncrement = -rIncrement;
-	}
-	if (cbColorMultiplierData.colorMultiplier.y >= 1.0 || cbColorMultiplierData.colorMultiplier.y <= 0.0f)
-	{
-		cbColorMultiplierData.colorMultiplier.y = cbColorMultiplierData.colorMultiplier.y >= 1.0f ? 1.0f : 0.0f;
-		gIncrement = -gIncrement;
-	}
-	if (cbColorMultiplierData.colorMultiplier.z >= 1.0 || cbColorMultiplierData.colorMultiplier.z <= 0.0f)
-	{
-		cbColorMultiplierData.colorMultiplier.z = cbColorMultiplierData.colorMultiplier.z >= 1.0f ? 1.0f : 0.0f;
-		bIncrement = -bIncrement;
-	}
+	// create translation matrix for cube 1 from cube 1's position vector
+	DirectX::XMMATRIX translationMat = DirectX::XMMatrixTranslationFromVector(XMLoadFloat4(&cube1Position));
+
+	// create cube1's world matrix by first rotating the cube, then positioning the rotated cube
+	DirectX::XMMATRIX worldMat = rotMat * translationMat;
+
+	// store cube1's world matrix
+	XMStoreFloat4x4(&cube1WorldMat, worldMat);
+
+	// update constant buffer for cube1
+	// create the wvp matrix and store in constant buffer
+	DirectX::XMMATRIX viewMat = XMLoadFloat4x4(&cameraViewMat); // load view matrix
+	DirectX::XMMATRIX projMat = XMLoadFloat4x4(&cameraProjMat); // load projection matrix
+	DirectX::XMMATRIX wvpMat = XMLoadFloat4x4(&cube1WorldMat) * viewMat * projMat; // create wvp matrix
+	DirectX::XMMATRIX transposed = XMMatrixTranspose(wvpMat); // must transpose wvp matrix for the gpu
+	XMStoreFloat4x4(&cbPerObject.wvpMat, transposed); // store transposed wvp matrix in constant buffer
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
-	memcpy(cbColorMultiplierGPUAddress[frameIndex], &cbColorMultiplierData, sizeof(cbColorMultiplierData));
+	memcpy(cbvGPUAddress[frameIndex], &cbPerObject, sizeof(cbPerObject));
+
+	// now do cube2's world matrix
+	// create rotation matrices for cube2
+	rotXMat = DirectX::XMMatrixRotationX(0.0003f);
+	rotYMat = DirectX::XMMatrixRotationY(0.0002f);
+	rotZMat = DirectX::XMMatrixRotationZ(0.0001f);
+
+	// add rotation to cube2's rotation matrix and store it
+	rotMat = rotZMat * (XMLoadFloat4x4(&cube2RotMat) * (rotXMat * rotYMat));
+	XMStoreFloat4x4(&cube2RotMat, rotMat);
+
+	// create translation matrix for cube 2 to offset it from cube 1 (its position relative to cube1
+	DirectX::XMMATRIX translationOffsetMat = DirectX::XMMatrixTranslationFromVector(XMLoadFloat4(&cube2PositionOffset));
+
+	// we want cube 2 to be half the size of cube 1, so we scale it by .5 in all dimensions
+	DirectX::XMMATRIX scaleMat = DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f);
+
+	// reuse worldMat. 
+	// first we scale cube2. scaling happens relative to point 0,0,0, so you will almost always want to scale first
+	// then we translate it. 
+	// then we rotate it. rotation always rotates around point 0,0,0
+	// finally we move it to cube 1's position, which will cause it to rotate around cube 1
+	worldMat = scaleMat * translationOffsetMat * rotMat * translationMat;
+
+	wvpMat = XMLoadFloat4x4(&cube2WorldMat) * viewMat * projMat; // create wvp matrix
+	transposed = XMMatrixTranspose(wvpMat); // must transpose wvp matrix for the gpu
+	XMStoreFloat4x4(&cbPerObject.wvpMat, transposed); // store transposed wvp matrix in constant buffer
+
+	// copy our ConstantBuffer instance to the mapped constant buffer resource
+	memcpy(cbvGPUAddress[frameIndex] + ConstantBufferPerObjectAlignedSize, &cbPerObject, sizeof(cbPerObject));
+
+	// store cube2's world matrix
+	XMStoreFloat4x4(&cube2WorldMat, worldMat);
 }
 
 void RenderSlop::UpdatePipeline()
@@ -448,22 +550,24 @@ void RenderSlop::UpdatePipeline()
 	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 
 	// Clear render target and depth buffer
-	const float clearColor[] = { 0.4f, 0.1f, 0.4f, 1.0f };
+	const float clearColor[] = { 0.3f, 0.3f, 0.3f, 1.0f };
 	commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 	commandList->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 	// PUT RENDER COMMANDS HERE
-	ID3D12DescriptorHeap* descriptorHeaps[] = { mainDescriptorHeap[frameIndex] };
-	commandList->SetGraphicsRootSignature(rootSignature); // Set root signature
-	commandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-	commandList->SetGraphicsRootDescriptorTable(0, mainDescriptorHeap[frameIndex]->GetGPUDescriptorHandleForHeapStart());
-	commandList->RSSetViewports(1, &viewport); // Set viewports
-	commandList->RSSetScissorRects(1, &scissorRect); // Set scissor rects
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // Set primitive topology
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView); // Set vertex buffer
+	commandList->SetGraphicsRootSignature(rootSignature);
+
+	commandList->RSSetViewports(1, &viewport);
+	commandList->RSSetScissorRects(1, &scissorRect);
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 	commandList->IASetIndexBuffer(&indexBufferView);
-	commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
-	commandList->DrawIndexedInstanced(6, 1, 0, 4, 0);
+	
+	commandList->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[frameIndex]->GetGPUVirtualAddress());
+	commandList->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
+
+	commandList->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[frameIndex]->GetGPUVirtualAddress() + ConstantBufferPerObjectAlignedSize);
+	commandList->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 
 	// Set render target to present state
 	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
