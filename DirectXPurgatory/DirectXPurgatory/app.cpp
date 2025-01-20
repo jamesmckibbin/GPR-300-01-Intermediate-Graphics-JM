@@ -10,11 +10,6 @@ void Application::Create()
 	hWnd = GetActiveWindow();
 }
 
-void Application::Destroy()
-{
-
-}
-
 HWND Application::GetWindow() { return hWnd; }
 
 bool Application::IsRunning() { return running; }

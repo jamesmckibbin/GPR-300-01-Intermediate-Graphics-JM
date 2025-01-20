@@ -13,7 +13,6 @@ enum SCREEN_STATE {
 class Application {
 public:
 	void Create();
-	void Destroy();
 
 	HWND GetWindow();
 	bool IsRunning();

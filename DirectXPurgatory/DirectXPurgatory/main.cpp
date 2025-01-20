@@ -24,7 +24,6 @@ int main(int argc, char* args[]) {
 		return 1;
 	}
 
-	// Loop application
 	while (mainApp->IsRunning()) 
 	{
 		SDL_Event windowEvent;
@@ -42,7 +41,6 @@ int main(int argc, char* args[]) {
 		}
 	}
 
-	// Cleanup Direct3D
 	renderSlop->WaitForPreviousFrame();
 	renderSlop->CloseFenceEventHandle();
 	renderSlop->UnInit();

@@ -17,7 +17,7 @@ struct ConstantBuffer {
 
 class RenderSlop {
 public:
-	bool Init(const HWND& hWnd, bool screenState, float width, float height);
+	bool Init(const HWND& window, bool screenState, float width, float height);
 	void UnInit();
 	void Update();
 	void UpdatePipeline();
@@ -25,8 +25,14 @@ public:
 	void WaitForPreviousFrame();
 	void CloseFenceEventHandle();
 private:
+	bool FindCompatibleAdapter(IDXGIAdapter1* adap);
+	void CreateSwapChain(const HWND& window, DXGI_SAMPLE_DESC sampleDesc, bool screenState);
+	bool CreateCommandList();
+	bool CreateFence();
+
 	// Device & Swapchain
 	ID3D12Device* device;
+	IDXGIFactory4* dxgiFactory;
 	IDXGISwapChain3* swapChain;
 
 	// Commands
@@ -66,4 +72,18 @@ private:
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT scissorRect;
+
+};
+
+class Shader {
+public:
+	bool Init(LPCWSTR filename, LPCSTR entryFunc, LPCSTR target);
+	ID3DBlob* GetBlob();
+	ID3DBlob* GetErrorBlob();
+	D3D12_SHADER_BYTECODE GetBytecode();
+
+private:
+	ID3DBlob* shaderBlob;
+	ID3DBlob* errorBlob;
+	D3D12_SHADER_BYTECODE shaderBytecode;
 };
