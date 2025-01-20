@@ -8,6 +8,39 @@ void Application::Create()
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, 0);
 	hWnd = GetActiveWindow();
+
+	// Initialize RenderSlop
+	renderer = new RenderSlop();
+	if (!renderer->Init(
+		hWnd,
+		screenState,
+		currentWindowWidth,
+		currentWindowHeight))
+	{
+		MessageBox(0, L"Failed to initialize Direct3D 12", L"Error", MB_OK);
+		renderer->UnInit();
+		running = false;
+	}
+}
+
+void Application::Destroy()
+{
+	renderer->WaitForPreviousFrame();
+	renderer->CloseFenceEventHandle();
+	renderer->UnInit();
+
+	delete renderer;
+	renderer = nullptr;
+}
+
+void Application::Update()
+{
+	renderer->Update();
+}
+
+void Application::Draw()
+{
+	renderer->Render();
 }
 
 HWND Application::GetWindow() { return hWnd; }

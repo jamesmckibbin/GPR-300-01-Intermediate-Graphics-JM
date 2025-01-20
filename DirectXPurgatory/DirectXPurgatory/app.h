@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gconst.h"
+#include "renderslop.h"
 
 static bool running = true;
 
@@ -13,6 +13,9 @@ enum SCREEN_STATE {
 class Application {
 public:
 	void Create();
+	void Destroy();
+	void Update();
+	void Draw();
 
 	HWND GetWindow();
 	bool IsRunning();
@@ -22,11 +25,11 @@ public:
 
 	void StopRunning();
 
-	friend class RenderSlop;
-
 private:
 	HWND hWnd;
 	float currentWindowWidth = DEFAULT_WINDOW_WIDTH;
 	float currentWindowHeight = DEFAULT_WINDOW_HEIGHT;
 	SCREEN_STATE screenState = SS_WINDOWED;
+
+	RenderSlop* renderer;
 };

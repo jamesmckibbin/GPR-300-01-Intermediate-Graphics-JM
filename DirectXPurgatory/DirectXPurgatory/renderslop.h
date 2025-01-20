@@ -1,5 +1,11 @@
 #pragma once
 
+/*
+Thank you so much to these websites for helping me set up this project.
+https://www.braynzarsoft.net/viewtutorial/q16390-04-directx-12-braynzar-soft-tutorials
+https://github.com/galek/SDL-Directx12
+*/
+
 #include "gconst.h"
 
 const int frameBufferCount = 2;
