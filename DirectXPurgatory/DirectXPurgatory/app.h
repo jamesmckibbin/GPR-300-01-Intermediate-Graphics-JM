@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderslop.h"
+#include "timer.h"
 
 static bool running = true;
 
@@ -32,4 +33,5 @@ private:
 	SCREEN_STATE screenState = SS_WINDOWED;
 
 	RenderSlop* renderer;
+	Timer timer;
 };

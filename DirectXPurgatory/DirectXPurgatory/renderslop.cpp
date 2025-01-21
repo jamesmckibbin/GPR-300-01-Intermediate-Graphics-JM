@@ -452,12 +452,12 @@ void RenderSlop::UnInit()
 	};
 }
 
-void RenderSlop::Update()
+void RenderSlop::Update(float dt)
 {
 	// create rotation matrices
-	DirectX::XMMATRIX rotXMat = DirectX::XMMatrixRotationX(0.0001f);
-	DirectX::XMMATRIX rotYMat = DirectX::XMMatrixRotationY(0.0002f);
-	DirectX::XMMATRIX rotZMat = DirectX::XMMatrixRotationZ(0.0003f);
+	DirectX::XMMATRIX rotXMat = DirectX::XMMatrixRotationX(0.0001f * dt);
+	DirectX::XMMATRIX rotYMat = DirectX::XMMatrixRotationY(0.0002f * dt);
+	DirectX::XMMATRIX rotZMat = DirectX::XMMatrixRotationZ(0.0003f * dt);
 
 	// add rotation to cube1's rotation matrix and store it
 	DirectX::XMMATRIX rotMat = XMLoadFloat4x4(&cube1RotMat) * rotXMat * rotYMat * rotZMat;
@@ -485,9 +485,9 @@ void RenderSlop::Update()
 
 	// now do cube2's world matrix
 	// create rotation matrices for cube2
-	rotXMat = DirectX::XMMatrixRotationX(0.0003f);
-	rotYMat = DirectX::XMMatrixRotationY(0.0002f);
-	rotZMat = DirectX::XMMatrixRotationZ(0.0001f);
+	rotXMat = DirectX::XMMatrixRotationX(0.0003f * dt);
+	rotYMat = DirectX::XMMatrixRotationY(0.0002f * dt);
+	rotZMat = DirectX::XMMatrixRotationZ(0.0001f * dt);
 
 	// add rotation to cube2's rotation matrix and store it
 	rotMat = rotZMat * (XMLoadFloat4x4(&cube2RotMat) * (rotXMat * rotYMat));

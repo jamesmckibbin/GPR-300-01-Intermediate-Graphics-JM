@@ -24,7 +24,7 @@ class RenderSlop {
 public:
 	bool Init(const HWND& window, bool screenState, float width, float height);
 	void UnInit();
-	void Update();
+	void Update(float dt);
 	void UpdatePipeline();
 	void Render();
 	void WaitForPreviousFrame();

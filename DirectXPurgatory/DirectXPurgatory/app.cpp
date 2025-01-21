@@ -35,7 +35,8 @@ void Application::Destroy()
 
 void Application::Update()
 {
-	renderer->Update();
+	float dt = timer.GetFrameDelta();
+	renderer->Update(dt);
 }
 
 void Application::Draw()

@@ -135,11 +135,13 @@
     <ClInclude Include="app.h" />
     <ClInclude Include="gconst.h" />
     <ClInclude Include="renderslop.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderslop.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\SDL2\lib\x64\SDL2.lib" />
