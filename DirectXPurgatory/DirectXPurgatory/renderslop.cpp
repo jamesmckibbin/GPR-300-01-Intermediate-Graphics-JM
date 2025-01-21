@@ -547,7 +547,7 @@ void RenderSlop::UpdatePipeline()
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 	// Set render target to merger
-	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
 	// Clear render target and depth buffer
 	const float clearColor[] = { 0.3f, 0.3f, 0.3f, 1.0f };
