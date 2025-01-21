@@ -11,9 +11,9 @@ https://github.com/galek/SDL-Directx12
 const int frameBufferCount = 3;
 
 struct Vertex {
-	Vertex(float x, float y, float z, float r, float g, float b, float a) : pos(x, y, z), color(r, g, b, a) {}
+	Vertex(float x, float y, float z, float u, float v) : pos(x, y, z), texCoord(u, v) {}
 	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT4 color;
+	DirectX::XMFLOAT2 texCoord;
 };
 
 struct ConstantBufferPerObject {
@@ -89,6 +89,15 @@ private:
 	DirectX::XMFLOAT4X4 cube2RotMat;
 	DirectX::XMFLOAT4 cube2PositionOffset;
 	int numCubeIndices;
+
+	// Textures
+	ID3D12Resource* textureBuffer;
+	int LoadImageDataFromFile(BYTE** imageData, D3D12_RESOURCE_DESC& resourceDescription, LPCWSTR filename, int& bytesPerRow);
+	DXGI_FORMAT GetDXGIFormatFromWICFormat(WICPixelFormatGUID& wicFormatGUID);
+	WICPixelFormatGUID GetConvertToWICFormat(WICPixelFormatGUID& wicFormatGUID);
+	int GetDXGIFormatBitsPerPixel(DXGI_FORMAT& dxgiFormat);
+	ID3D12DescriptorHeap* mainDescriptorHeap;
+	ID3D12Resource* textureBufferUploadHeap;
 	
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;

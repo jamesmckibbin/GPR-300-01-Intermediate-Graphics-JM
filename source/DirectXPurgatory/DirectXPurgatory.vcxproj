@@ -72,7 +72,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx;C:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include;C:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL2\include;C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include;C:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include;C:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
