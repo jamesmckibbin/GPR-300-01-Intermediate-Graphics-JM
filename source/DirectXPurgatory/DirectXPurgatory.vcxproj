@@ -159,8 +159,8 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\libs\SDL2\lib\x64\SDL2.lib" />
-    <Library Include="..\..\libs\SDL2\lib\x64\SDL2main.lib" />
+    <Library Include="..\..\libs\SDL2\SDL2.lib" />
+    <Library Include="..\..\libs\SDL2\SDL2main.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
