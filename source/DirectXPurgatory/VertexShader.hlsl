@@ -1,24 +1,33 @@
 struct VS_INPUT
 {
     float4 pos : POSITION;
+    float3 norm : NORMALS;
     float2 texCoord : TEXCOORD;
 };
 
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
+    float3 worldPos : WORLDPOSITION;
+    float4 camPos : CAMERAPOSITION;
+    float3 norm : NORMALS;
     float2 texCoord : TEXCOORD;
 };
 
 cbuffer ConstantBuffer : register(b0)
 {
-    float4x4 wvpMat;
+    float4x4 wMat;
+    float4x4 vpMat;
+    float4 camPos;
 };
 
 VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
-    output.pos = mul(input.pos, wvpMat);
+    output.worldPos = (float3)mul(wMat, input.pos);
+    output.pos = mul(input.pos, mul(wMat, vpMat));
+    output.camPos = camPos;
+    output.norm = mul(transpose((float3x3)wMat), input.norm);
     output.texCoord = input.texCoord;
     return output;
 }

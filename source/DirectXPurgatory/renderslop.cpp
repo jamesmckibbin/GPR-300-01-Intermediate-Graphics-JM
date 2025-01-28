@@ -145,7 +145,8 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "NORMALS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
 	// Fill Input Layout Descriptor
@@ -557,6 +558,7 @@ void RenderSlop::UnInit()
 
 void RenderSlop::Update(float dt)
 {
+
 	// create rotation matrices
 	DirectX::XMMATRIX rotXMat = DirectX::XMMatrixRotationX(0.0001f * dt);
 	DirectX::XMMATRIX rotYMat = DirectX::XMMatrixRotationY(0.0002f * dt);
@@ -579,9 +581,14 @@ void RenderSlop::Update(float dt)
 	// create the wvp matrix and store in constant buffer
 	DirectX::XMMATRIX viewMat = XMLoadFloat4x4(&cameraViewMat); // load view matrix
 	DirectX::XMMATRIX projMat = XMLoadFloat4x4(&cameraProjMat); // load projection matrix
-	DirectX::XMMATRIX wvpMat = XMLoadFloat4x4(&cube1WorldMat) * viewMat * projMat; // create wvp matrix
-	DirectX::XMMATRIX transposed = XMMatrixTranspose(wvpMat); // must transpose wvp matrix for the gpu
-	XMStoreFloat4x4(&cbPerObject.wvpMat, transposed); // store transposed wvp matrix in constant buffer
+	DirectX::XMMATRIX wMat = XMLoadFloat4x4(&cube1WorldMat); // create world matrix
+	DirectX::XMMATRIX vpMat = viewMat * projMat; // create view projection matrix
+	DirectX::XMMATRIX transposed = XMMatrixTranspose(wMat); // must transpose w matrix for the gpu
+	XMStoreFloat4x4(&cbPerObject.wMat, transposed); // store transposed w matrix in constant buffer
+	transposed = XMMatrixTranspose(vpMat); // must transpose vp matrix for the gpu
+	XMStoreFloat4x4(&cbPerObject.vpMat, transposed); // store transposed vp matrix in constant buffer
+	DirectX::XMVECTOR cPos = XMLoadFloat4(&cameraPosition);
+	XMStoreFloat4(&cbPerObject.camPos, cPos);
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
 	memcpy(cbvGPUAddress[frameIndex], &cbPerObject, sizeof(cbPerObject));
@@ -609,9 +616,14 @@ void RenderSlop::Update(float dt)
 	// finally we move it to cube 1's position, which will cause it to rotate around cube 1
 	worldMat = scaleMat * translationOffsetMat * rotMat * translationMat;
 
-	wvpMat = XMLoadFloat4x4(&cube2WorldMat) * viewMat * projMat; // create wvp matrix
-	transposed = XMMatrixTranspose(wvpMat); // must transpose wvp matrix for the gpu
-	XMStoreFloat4x4(&cbPerObject.wvpMat, transposed); // store transposed wvp matrix in constant buffer
+	wMat = XMLoadFloat4x4(&cube2WorldMat); // create w matrix
+	vpMat = viewMat * projMat; // create vp matrix
+	transposed = XMMatrixTranspose(wMat); // must transpose w matrix for the gpu
+	XMStoreFloat4x4(&cbPerObject.wMat, transposed); // store transposed w matrix in constant buffer
+	transposed = XMMatrixTranspose(vpMat); // must transpose vp matrix for the gpu
+	XMStoreFloat4x4(&cbPerObject.vpMat, transposed); // store transposed vp matrix in constant buffer
+	cPos = XMLoadFloat4(&cameraPosition);
+	XMStoreFloat4(&cbPerObject.camPos, cPos);
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
 	memcpy(cbvGPUAddress[frameIndex] + ConstantBufferPerObjectAlignedSize, &cbPerObject, sizeof(cbPerObject));

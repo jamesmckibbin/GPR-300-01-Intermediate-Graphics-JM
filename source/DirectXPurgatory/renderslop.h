@@ -11,13 +11,16 @@ https://github.com/galek/SDL-Directx12
 const int frameBufferCount = 3;
 
 struct Vertex {
-	Vertex(float x, float y, float z, float u, float v) : pos(x, y, z), texCoord(u, v) {}
+	Vertex(float x, float y, float z, float u, float v) : pos(x, y, z), normals(x, y, z), texCoord(u, v) {}
 	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT3 normals;
 	DirectX::XMFLOAT2 texCoord;
 };
 
 struct ConstantBufferPerObject {
-	DirectX::XMFLOAT4X4 wvpMat;
+	DirectX::XMFLOAT4X4 wMat;
+	DirectX::XMFLOAT4X4 vpMat;
+	DirectX::XMFLOAT4 camPos;
 };
 
 class RenderSlop {
