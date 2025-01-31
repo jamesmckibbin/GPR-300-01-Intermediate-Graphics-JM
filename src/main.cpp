@@ -1,10 +1,31 @@
-﻿#include <iostream>
-#include "SDL.h"
+#include "app.h"
 
-using namespace std;
+int main(int argc, char* args[]) {
 
-int main()
-{
-	cout << "Hello CMake." << endl;
+	Application* mainApp = new Application();
+	mainApp->Create();
+
+	while (mainApp->IsRunning()) 
+	{
+		SDL_Event windowEvent;
+		if (SDL_PollEvent(&windowEvent)) 
+		{
+			if (windowEvent.type == SDL_EVENT_QUIT) 
+			{
+				mainApp->StopRunning();
+			}
+		}
+		else 
+		{
+			mainApp->Update();
+			mainApp->Draw();
+		}
+	}
+
+	mainApp->Destroy();
+
+	delete mainApp;
+	mainApp = nullptr;
+
 	return 0;
 }
