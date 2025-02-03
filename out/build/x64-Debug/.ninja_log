@@ -1,0 +1,25 @@
+# ninja log v6
+16	889	7603190621601563	src/CMakeFiles/app.dir/timer.cpp.obj	f7bf697b49109c90
+3	896	7603190621477147	src/CMakeFiles/app.dir/app.cpp.obj	cc9f49ac60d80cfe
+9	902	7603190621527734	src/CMakeFiles/app.dir/main.cpp.obj	adbc218e3a160926
+5	855	7603194404888685	src/CMakeFiles/app.dir/renderslop.cpp.obj	c22ef70e8c9a76bf
+55	896	7603235607306022	CMakeFiles/app.dir/src/app.cpp.obj	c0d57eaa327888d
+6	422	7603205504551525	src/app.exe	6684e187cdf89d0
+61	890	7603235607374124	CMakeFiles/app.dir/src/main.cpp.obj	ac770192a26b46f2
+56	67	7603228315208252	clean	8c45b54705a541e8
+70	905	7603231128148505	CMakeFiles/app.dir/src/timer.cpp.obj	fc34af0f666e78a7
+5	848	7603245574213809	CMakeFiles/app.dir/src/renderslop.cpp.obj	dae7dc00adf7be10
+6	186	7603249793655910	app.exe	1fd1a5c7d17dafdd
+9	888	7603250130637744	CMakeFiles/app.dir/src/main.cpp.obj	ac770192a26b46f2
+5	894	7603250130582303	CMakeFiles/app.dir/src/app.cpp.obj	c0d57eaa327888d
+18	899	7603250130711174	CMakeFiles/app.dir/src/timer.cpp.obj	fc34af0f666e78a7
+14	905	7603250130677957	CMakeFiles/app.dir/src/renderslop.cpp.obj	dae7dc00adf7be10
+905	1124	7603250139588786	app.exe	1fd1a5c7d17dafdd
+58	878	7603250284696652	CMakeFiles/app.dir/src/renderslop.cpp.obj	dae7dc00adf7be10
+879	1089	7603250292902975	app.exe	1fd1a5c7d17dafdd
+62	73	7603251060534828	clean	8c45b54705a541e8
+17	850	7603251099450390	CMakeFiles/app.dir/src/main.cpp.obj	ac770192a26b46f2
+24	856	7603251099517904	CMakeFiles/app.dir/src/timer.cpp.obj	fc34af0f666e78a7
+11	862	7603251099397866	CMakeFiles/app.dir/src/app.cpp.obj	c0d57eaa327888d
+20	881	7603251099480521	CMakeFiles/app.dir/src/renderslop.cpp.obj	dae7dc00adf7be10
+881	1078	7603251108098900	app.exe	1fd1a5c7d17dafdd

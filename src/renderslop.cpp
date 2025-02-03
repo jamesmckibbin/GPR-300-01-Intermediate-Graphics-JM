@@ -135,11 +135,11 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	}
 
 	// Create Shaders
-	Shader vertexShader;
-	vertexShader.Init(L"VertexShader.hlsl", "main", "vs_5_0");
+	Shader vertexShader{};
+	vertexShader.Init(L"shaders/VertexShader.hlsl", "main", "vs_5_0");
 
-	Shader pixelShader;
-	pixelShader.Init(L"PixelShader.hlsl", "main", "ps_5_0");
+	Shader pixelShader{};
+	pixelShader.Init(L"shaders/PixelShader.hlsl", "main", "ps_5_0");
 
 	// Create Input Layout
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
@@ -369,7 +369,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	D3D12_RESOURCE_DESC textureDesc;
 	int imageBytesPerRow;
 	BYTE* imageData;
-	int imageSize = LoadImageDataFromFile(&imageData, textureDesc, L"gato.png", imageBytesPerRow);
+	int imageSize = LoadImageDataFromFile(&imageData, textureDesc, L"assets/gato.png", imageBytesPerRow);
 
 	// Assert Image Data
 	if (imageSize <= 0)
@@ -1069,7 +1069,7 @@ bool Shader::Init(LPCWSTR filename, LPCSTR entryFunc, LPCSTR target)
 	HRESULT result;
 
 	result = D3DCompileFromFile(filename, nullptr, nullptr,
-		entryFunc, target, D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		entryFunc, target, 0,
 		0, &shaderBlob, &errorBlob);
 	if (FAILED(result))
 	{

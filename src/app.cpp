@@ -4,9 +4,7 @@ void Application::Create()
 {
 	// Create a window using SDL
 	SDL_Window* window = SDL_CreateWindow(
-		"DirectX 12 Purgatory",
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, 0);
+		"DirectX 12 Purgatory", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, 0);
 	hWnd = GetActiveWindow();
 
 	// Initialize RenderSlop
@@ -17,7 +15,7 @@ void Application::Create()
 		currentWindowWidth,
 		currentWindowHeight))
 	{
-		MessageBox(0, L"Failed to initialize Direct3D 12", L"Error", MB_OK);
+		MessageBox(0, "Failed to initialize Direct3D 12", "Error", MB_OK);
 		renderer->UnInit();
 		running = false;
 	}
