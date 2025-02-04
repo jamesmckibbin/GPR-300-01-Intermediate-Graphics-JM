@@ -3,13 +3,13 @@
 3	896	7603190621477147	src/CMakeFiles/app.dir/app.cpp.obj	cc9f49ac60d80cfe
 9	902	7603190621527734	src/CMakeFiles/app.dir/main.cpp.obj	adbc218e3a160926
 487	542	7603292132889512	ImGui.lib	cf183bf6f3cfe568
-15	1092	7603539149933754	CMakeFiles/app.dir/src/app.cpp.obj	cf16e771d17e8548
+5	888	7603570334798677	CMakeFiles/app.dir/src/app.cpp.obj	cf16e771d17e8548
 5	855	7603194404888685	src/CMakeFiles/app.dir/renderslop.cpp.obj	c22ef70e8c9a76bf
 29	1087	7603539150073340	CMakeFiles/app.dir/src/timer.cpp.obj	671bcc645b2f9583
-21	1078	7603539149994351	CMakeFiles/app.dir/src/main.cpp.obj	7c91ffb7f0f9fb5c
+10	908	7603570334843750	CMakeFiles/app.dir/src/main.cpp.obj	7c91ffb7f0f9fb5c
 62	73	7603251060534828	clean	8c45b54705a541e8
-25	1098	7603539150033038	CMakeFiles/app.dir/src/renderslop.cpp.obj	160b1843b1e908b0
-1098	1368	7603539160761083	app.exe	cf5f4b42e1fc31c2
+68	899	7603570860291630	CMakeFiles/app.dir/src/renderslop.cpp.obj	160b1843b1e908b0
+899	1131	7603570868609482	app.exe	cf5f4b42e1fc31c2
 56	299	7603539150342940	CMakeFiles/app.dir/libs/imgui/imgui_tables.cpp.obj	15636aa0ab6e7d1f
 37	317	7603539150157828	CMakeFiles/app.dir/libs/imgui/imgui_demo.cpp.obj	e4f2dc2070f78704
 42	339	7603539150192887	CMakeFiles/app.dir/libs/imgui/imgui_draw.cpp.obj	491c9ffae6b6d4b2
@@ -17,8 +17,4 @@
 51	403	7603539150294820	CMakeFiles/app.dir/libs/imgui/imgui_impl_sdl3.cpp.obj	6d4eff88497ad7aa
 46	464	7603539150250815	CMakeFiles/app.dir/libs/imgui/imgui_impl_dx12.cpp.obj	bb74e28161f38b95
 33	527	7603539150118637	CMakeFiles/app.dir/libs/imgui/imgui.cpp.obj	1e757b87c129e391
-3	124	7603539941261838	build.ninja	dd5e77b35bad4d97
-18	1123	7603566695360560	CMakeFiles/app.dir/src/main.cpp.obj	7c91ffb7f0f9fb5c
-12	1129	7603566695300337	CMakeFiles/app.dir/src/app.cpp.obj	cf16e771d17e8548
-6	881	7603567267555555	CMakeFiles/app.dir/src/renderslop.cpp.obj	160b1843b1e908b0
-882	1138	7603567276311449	app.exe	cf5f4b42e1fc31c2
+3	124	7603570958777853	build.ninja	dd5e77b35bad4d97
