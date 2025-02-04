@@ -4,6 +4,8 @@
 
 using namespace DirectX;
 
+DescriptorHeapAllocator RenderSlop::fontDescriptorHeapAlloc = {};
+
 bool RenderSlop::Init(const HWND& window, bool screenState, float width, float height)
 {
 	HRESULT result;
@@ -361,8 +363,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 
 		result = constantBufferUploadHeaps[i]->Map(0, &readRange, reinterpret_cast<void**>(&cbvGPUAddress[i]));
 
-		memcpy(cbvGPUAddress[i], &cbPerObject, sizeof(cbPerObject)); // Cube 1
-		memcpy(cbvGPUAddress[i] + ConstantBufferPerObjectAlignedSize, &cbPerObject, sizeof(cbPerObject)); // Cube 2
+		memcpy(cbvGPUAddress[i], &cbPerObject, sizeof(cbPerObject)); // Cube
 	}
 
 	// Load Image From File
@@ -440,6 +441,14 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	srvDesc.Texture2D.MipLevels = 1;
 	device->CreateShaderResourceView(textureBuffer, &srvDesc, mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
+	// Create Font Descriptor Heap
+	result = device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&fontDescriptorHeap));
+	if (FAILED(result))
+	{
+		running = false;
+	}
+	RenderSlop::fontDescriptorHeapAlloc.Create(device, fontDescriptorHeap);
+
 	// Execute Command List
 	commandList->Close();
 	ID3D12CommandList* ppCommandLists[] = { commandList };
@@ -505,13 +514,18 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	XMStoreFloat4x4(&cube1RotMat, DirectX::XMMatrixIdentity());
 	XMStoreFloat4x4(&cube1WorldMat, tmpMat);
 
-	// second cube
-	cube2PositionOffset = DirectX::XMFLOAT4(1.5f, 0.0f, 0.0f, 0.0f);
-	posVec = DirectX::XMLoadFloat4(&cube2PositionOffset) + DirectX::XMLoadFloat4(&cube1Position);
-
-	tmpMat = DirectX::XMMatrixTranslationFromVector(posVec);
-	XMStoreFloat4x4(&cube2RotMat, DirectX::XMMatrixIdentity());
-	XMStoreFloat4x4(&cube2WorldMat, tmpMat);
+	ImGui_ImplDX12_InitInfo init_info = {};
+	init_info.Device = device;
+	init_info.CommandQueue = commandQueue;
+	init_info.NumFramesInFlight = frameBufferCount;
+	init_info.RTVFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	init_info.DSVFormat = DXGI_FORMAT_UNKNOWN;
+	init_info.SrvDescriptorHeap = mainDescriptorHeap;
+	init_info.SrvDescriptorAllocFn = [](ImGui_ImplDX12_InitInfo*, D3D12_CPU_DESCRIPTOR_HANDLE* out_cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE* out_gpu_handle) { return fontDescriptorHeapAlloc.Alloc(out_cpu_handle, out_gpu_handle); };
+	init_info.SrvDescriptorFreeFn = [](ImGui_ImplDX12_InitInfo*, D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle) { return fontDescriptorHeapAlloc.Free(cpu_handle, gpu_handle); };
+	if (!ImGui_ImplDX12_Init(&init_info)) {
+		return false;
+	}
 
 	return true;
 }
@@ -554,18 +568,14 @@ void RenderSlop::UnInit()
 	{
 		SAFE_RELEASE(constantBufferUploadHeaps[i]);
 	};
+
+	ImGui_ImplDX12_Shutdown();
 }
 
 void RenderSlop::Update(float dt)
 {
-
-	// create rotation matrices
-	DirectX::XMMATRIX rotXMat = DirectX::XMMatrixRotationX(0.0001f * dt);
-	DirectX::XMMATRIX rotYMat = DirectX::XMMatrixRotationY(0.0002f * dt);
-	DirectX::XMMATRIX rotZMat = DirectX::XMMatrixRotationZ(0.0003f * dt);
-
 	// add rotation to cube1's rotation matrix and store it
-	DirectX::XMMATRIX rotMat = XMLoadFloat4x4(&cube1RotMat) * rotXMat * rotYMat * rotZMat;
+	DirectX::XMMATRIX rotMat = XMLoadFloat4x4(&cube1RotMat);
 	XMStoreFloat4x4(&cube1RotMat, rotMat);
 
 	// create translation matrix for cube 1 from cube 1's position vector
@@ -592,44 +602,6 @@ void RenderSlop::Update(float dt)
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
 	memcpy(cbvGPUAddress[frameIndex], &cbPerObject, sizeof(cbPerObject));
-
-	// now do cube2's world matrix
-	// create rotation matrices for cube2
-	rotXMat = DirectX::XMMatrixRotationX(0.0003f * dt);
-	rotYMat = DirectX::XMMatrixRotationY(0.0002f * dt);
-	rotZMat = DirectX::XMMatrixRotationZ(0.0001f * dt);
-
-	// add rotation to cube2's rotation matrix and store it
-	rotMat = rotZMat * (XMLoadFloat4x4(&cube2RotMat) * (rotXMat * rotYMat));
-	XMStoreFloat4x4(&cube2RotMat, rotMat);
-
-	// create translation matrix for cube 2 to offset it from cube 1 (its position relative to cube1
-	DirectX::XMMATRIX translationOffsetMat = DirectX::XMMatrixTranslationFromVector(XMLoadFloat4(&cube2PositionOffset));
-
-	// we want cube 2 to be half the size of cube 1, so we scale it by .5 in all dimensions
-	DirectX::XMMATRIX scaleMat = DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f);
-
-	// reuse worldMat. 
-	// first we scale cube2. scaling happens relative to point 0,0,0, so you will almost always want to scale first
-	// then we translate it. 
-	// then we rotate it. rotation always rotates around point 0,0,0
-	// finally we move it to cube 1's position, which will cause it to rotate around cube 1
-	worldMat = scaleMat * translationOffsetMat * rotMat * translationMat;
-
-	wMat = XMLoadFloat4x4(&cube2WorldMat); // create w matrix
-	vpMat = viewMat * projMat; // create vp matrix
-	transposed = XMMatrixTranspose(wMat); // must transpose w matrix for the gpu
-	XMStoreFloat4x4(&cbPerObject.wMat, transposed); // store transposed w matrix in constant buffer
-	transposed = XMMatrixTranspose(vpMat); // must transpose vp matrix for the gpu
-	XMStoreFloat4x4(&cbPerObject.vpMat, transposed); // store transposed vp matrix in constant buffer
-	cPos = XMLoadFloat4(&cameraPosition);
-	XMStoreFloat4(&cbPerObject.camPos, cPos);
-
-	// copy our ConstantBuffer instance to the mapped constant buffer resource
-	memcpy(cbvGPUAddress[frameIndex] + ConstantBufferPerObjectAlignedSize, &cbPerObject, sizeof(cbPerObject));
-
-	// store cube2's world matrix
-	XMStoreFloat4x4(&cube2WorldMat, worldMat);
 }
 
 void RenderSlop::UpdatePipeline()
@@ -686,8 +658,18 @@ void RenderSlop::UpdatePipeline()
 	commandList->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[frameIndex]->GetGPUVirtualAddress());
 	commandList->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 
-	commandList->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[frameIndex]->GetGPUVirtualAddress() + ConstantBufferPerObjectAlignedSize);
-	commandList->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
+	// Render ImGui
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("Holy shit");
+	ImGui::Text("It actually shows on screen");
+	ImGui::End();
+
+	ImGui::Render();
+	commandList->SetDescriptorHeaps(1, &fontDescriptorHeap);
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 
 	// Set render target to present state
 	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
@@ -1089,3 +1071,40 @@ ID3DBlob* Shader::GetBlob() { return shaderBlob; }
 ID3DBlob* Shader::GetErrorBlob() { return errorBlob; }
 
 D3D12_SHADER_BYTECODE Shader::GetBytecode() { return shaderBytecode; }
+
+void DescriptorHeapAllocator::Create(ID3D12Device* device, ID3D12DescriptorHeap* heap)
+{
+	IM_ASSERT(Heap == nullptr && FreeIndices.empty());
+	Heap = heap;
+	D3D12_DESCRIPTOR_HEAP_DESC desc = heap->GetDesc();
+	HeapType = desc.Type;
+	HeapStartCpu = Heap->GetCPUDescriptorHandleForHeapStart();
+	HeapStartGpu = Heap->GetGPUDescriptorHandleForHeapStart();
+	HeapHandleIncrement = device->GetDescriptorHandleIncrementSize(HeapType);
+	FreeIndices.reserve((int)desc.NumDescriptors);
+	for (int n = desc.NumDescriptors; n > 0; n--)
+		FreeIndices.push_back(n);
+}
+
+void DescriptorHeapAllocator::Destroy()
+{
+	Heap = nullptr;
+	FreeIndices.clear();
+}
+
+void DescriptorHeapAllocator::Alloc(D3D12_CPU_DESCRIPTOR_HANDLE* out_cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE* out_gpu_desc_handle)
+{
+	IM_ASSERT(FreeIndices.Size > 0);
+	int idx = FreeIndices.back();
+	FreeIndices.pop_back();
+	out_cpu_desc_handle->ptr = HeapStartCpu.ptr + (idx * HeapHandleIncrement);
+	out_gpu_desc_handle->ptr = HeapStartGpu.ptr + (idx * HeapHandleIncrement);
+}
+
+void DescriptorHeapAllocator::Free(D3D12_CPU_DESCRIPTOR_HANDLE out_cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE out_gpu_desc_handle)
+{
+	int cpu_idx = (int)((out_cpu_desc_handle.ptr - HeapStartCpu.ptr) / HeapHandleIncrement);
+	int gpu_idx = (int)((out_gpu_desc_handle.ptr - HeapStartGpu.ptr) / HeapHandleIncrement);
+	IM_ASSERT(cpu_idx == gpu_idx);
+	FreeIndices.push_back(cpu_idx);
+}

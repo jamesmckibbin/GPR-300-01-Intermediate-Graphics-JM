@@ -51,7 +51,7 @@ build cmake_object_order_depends_target_app: phony || .
 
 build CMakeFiles\app.dir\src\app.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\src\app.cpp || cmake_object_order_depends_target_app
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  INCLUDES = -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -external:W0
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
   OBJECT_DIR = CMakeFiles\app.dir
   OBJECT_FILE_DIR = CMakeFiles\app.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\app.dir\
@@ -59,7 +59,7 @@ build CMakeFiles\app.dir\src\app.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\
 
 build CMakeFiles\app.dir\src\main.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\src\main.cpp || cmake_object_order_depends_target_app
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  INCLUDES = -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -external:W0
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
   OBJECT_DIR = CMakeFiles\app.dir
   OBJECT_FILE_DIR = CMakeFiles\app.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\app.dir\
@@ -67,7 +67,7 @@ build CMakeFiles\app.dir\src\main.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:
 
 build CMakeFiles\app.dir\src\renderslop.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\src\renderslop.cpp || cmake_object_order_depends_target_app
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  INCLUDES = -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -external:W0
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
   OBJECT_DIR = CMakeFiles\app.dir
   OBJECT_FILE_DIR = CMakeFiles\app.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\app.dir\
@@ -75,9 +75,65 @@ build CMakeFiles\app.dir\src\renderslop.cpp.obj: CXX_COMPILER__app_unscanned_Deb
 
 build CMakeFiles\app.dir\src\timer.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\src\timer.cpp || cmake_object_order_depends_target_app
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  INCLUDES = -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -external:IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -external:W0
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
   OBJECT_DIR = CMakeFiles\app.dir
   OBJECT_FILE_DIR = CMakeFiles\app.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\app.dir\
+  TARGET_PDB = app.pdb
+
+build CMakeFiles\app.dir\libs\imgui\imgui.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui\imgui.cpp || cmake_object_order_depends_target_app
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
+  OBJECT_DIR = CMakeFiles\app.dir
+  OBJECT_FILE_DIR = CMakeFiles\app.dir\libs\imgui
+  TARGET_COMPILE_PDB = CMakeFiles\app.dir\
+  TARGET_PDB = app.pdb
+
+build CMakeFiles\app.dir\libs\imgui\imgui_demo.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui\imgui_demo.cpp || cmake_object_order_depends_target_app
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
+  OBJECT_DIR = CMakeFiles\app.dir
+  OBJECT_FILE_DIR = CMakeFiles\app.dir\libs\imgui
+  TARGET_COMPILE_PDB = CMakeFiles\app.dir\
+  TARGET_PDB = app.pdb
+
+build CMakeFiles\app.dir\libs\imgui\imgui_draw.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui\imgui_draw.cpp || cmake_object_order_depends_target_app
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
+  OBJECT_DIR = CMakeFiles\app.dir
+  OBJECT_FILE_DIR = CMakeFiles\app.dir\libs\imgui
+  TARGET_COMPILE_PDB = CMakeFiles\app.dir\
+  TARGET_PDB = app.pdb
+
+build CMakeFiles\app.dir\libs\imgui\imgui_impl_dx12.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui\imgui_impl_dx12.cpp || cmake_object_order_depends_target_app
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
+  OBJECT_DIR = CMakeFiles\app.dir
+  OBJECT_FILE_DIR = CMakeFiles\app.dir\libs\imgui
+  TARGET_COMPILE_PDB = CMakeFiles\app.dir\
+  TARGET_PDB = app.pdb
+
+build CMakeFiles\app.dir\libs\imgui\imgui_impl_sdl3.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui\imgui_impl_sdl3.cpp || cmake_object_order_depends_target_app
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
+  OBJECT_DIR = CMakeFiles\app.dir
+  OBJECT_FILE_DIR = CMakeFiles\app.dir\libs\imgui
+  TARGET_COMPILE_PDB = CMakeFiles\app.dir\
+  TARGET_PDB = app.pdb
+
+build CMakeFiles\app.dir\libs\imgui\imgui_tables.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui\imgui_tables.cpp || cmake_object_order_depends_target_app
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
+  OBJECT_DIR = CMakeFiles\app.dir
+  OBJECT_FILE_DIR = CMakeFiles\app.dir\libs\imgui
+  TARGET_COMPILE_PDB = CMakeFiles\app.dir\
+  TARGET_PDB = app.pdb
+
+build CMakeFiles\app.dir\libs\imgui\imgui_widgets.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui\imgui_widgets.cpp || cmake_object_order_depends_target_app
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
+  OBJECT_DIR = CMakeFiles\app.dir
+  OBJECT_FILE_DIR = CMakeFiles\app.dir\libs\imgui
   TARGET_COMPILE_PDB = CMakeFiles\app.dir\
   TARGET_PDB = app.pdb
 
@@ -89,7 +145,7 @@ build CMakeFiles\app.dir\src\timer.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$
 #############################################
 # Link the executable app.exe
 
-build app.exe: CXX_EXECUTABLE_LINKER__app_Debug CMakeFiles\app.dir\src\app.cpp.obj CMakeFiles\app.dir\src\main.cpp.obj CMakeFiles\app.dir\src\renderslop.cpp.obj CMakeFiles\app.dir\src\timer.cpp.obj
+build app.exe: CXX_EXECUTABLE_LINKER__app_Debug CMakeFiles\app.dir\src\app.cpp.obj CMakeFiles\app.dir\src\main.cpp.obj CMakeFiles\app.dir\src\renderslop.cpp.obj CMakeFiles\app.dir\src\timer.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_demo.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_draw.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_impl_dx12.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_impl_sdl3.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_tables.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_widgets.cpp.obj
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = d3d12.lib  dxgi.lib  d3dcompiler.lib  dxguid.lib  SDL3.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

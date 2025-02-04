@@ -204,6 +204,9 @@ DirectXPurgatory_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 DirectXPurgatory_SOURCE_DIR:STATIC=C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM
 
+//Dependencies for the target
+ImGui_LIB_DEPENDS:STATIC=general;SDL3;
+
 
 ########################
 # INTERNAL cache entries

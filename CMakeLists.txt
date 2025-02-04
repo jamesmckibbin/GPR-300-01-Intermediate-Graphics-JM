@@ -9,12 +9,16 @@ set(SDL_INCLUDES "libs/SDL3/include")
 set(SDL_LIBRARY_PATH "libs/SDL3/")
 set(DIRECTX_INCLUDES "libs/DirectX12/include/directx/")
 set(DXGUID_INCLUDES "libs/DirectX12/include/dxguid/")
+set(IMGUI_PATH "${PROJECT_SOURCE_DIR}/libs/imgui/")
 
-add_executable(app ${SOURCES} ${HEADERS})
+file(GLOB IMGUI_SOURCES ${IMGUI_PATH}/*.cpp)
 
-target_include_directories(app SYSTEM PRIVATE ${SDL_INCLUDES})
-target_include_directories(app SYSTEM PRIVATE ${DIRECTX_INCLUDES})
-target_include_directories(app SYSTEM PRIVATE ${DXGUID_INCLUDES})
+add_executable(app ${SOURCES} ${IMGUI_SOURCES})
+
+target_include_directories(app PUBLIC ${SDL_INCLUDES})
+target_include_directories(app PUBLIC ${DIRECTX_INCLUDES})
+target_include_directories(app PUBLIC ${DXGUID_INCLUDES})
+target_include_directories(app PUBLIC ${IMGUI_PATH})
 
 target_link_directories(app PUBLIC ${SDL_LIBRARY_PATH})
 target_link_libraries(app PUBLIC d3d12)

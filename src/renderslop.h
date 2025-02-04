@@ -8,7 +8,7 @@ https://github.com/galek/SDL-Directx12
 
 #include "gconst.h"
 
-const int frameBufferCount = 3;
+const int frameBufferCount = 2;
 
 struct Vertex {
 	Vertex(float x, float y, float z, float u, float v) : pos(x, y, z), normals(x, y, z), texCoord(u, v) {}
@@ -21,6 +21,22 @@ struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 wMat;
 	DirectX::XMFLOAT4X4 vpMat;
 	DirectX::XMFLOAT4 camPos;
+};
+
+// From DirectX12 ImGui Examples
+struct DescriptorHeapAllocator
+{
+	ID3D12DescriptorHeap* Heap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_TYPE  HeapType = D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES;
+	D3D12_CPU_DESCRIPTOR_HANDLE HeapStartCpu;
+	D3D12_GPU_DESCRIPTOR_HANDLE HeapStartGpu;
+	UINT                        HeapHandleIncrement;
+	ImVector<int>               FreeIndices;
+
+	void Create(ID3D12Device* device, ID3D12DescriptorHeap* heap);
+	void Destroy();
+	void Alloc(D3D12_CPU_DESCRIPTOR_HANDLE* out_cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE* out_gpu_desc_handle);
+	void Free(D3D12_CPU_DESCRIPTOR_HANDLE out_cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE out_gpu_desc_handle);
 };
 
 class RenderSlop {
@@ -84,13 +100,10 @@ private:
 	DirectX::XMFLOAT4 cameraTarget;
 	DirectX::XMFLOAT4 cameraUp;
 
-	// Cubes
+	// Cube
 	DirectX::XMFLOAT4X4 cube1WorldMat;
 	DirectX::XMFLOAT4X4 cube1RotMat;
 	DirectX::XMFLOAT4 cube1Position;
-	DirectX::XMFLOAT4X4 cube2WorldMat;
-	DirectX::XMFLOAT4X4 cube2RotMat;
-	DirectX::XMFLOAT4 cube2PositionOffset;
 	int numCubeIndices;
 
 	// Textures
@@ -101,6 +114,10 @@ private:
 	int GetDXGIFormatBitsPerPixel(DXGI_FORMAT& dxgiFormat);
 	ID3D12DescriptorHeap* mainDescriptorHeap;
 	ID3D12Resource* textureBufferUploadHeap;
+
+	// ImGui Reqs
+	ID3D12DescriptorHeap* fontDescriptorHeap;
+	static DescriptorHeapAllocator fontDescriptorHeapAlloc;
 	
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;

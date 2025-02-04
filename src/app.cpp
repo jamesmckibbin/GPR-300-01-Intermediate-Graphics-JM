@@ -7,7 +7,16 @@ void Application::Create()
 		"DirectX 12 Purgatory", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, 0);
 	hWnd = GetActiveWindow();
 
-	// Initialize RenderSlop
+	// Initialize ImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	ImGui::StyleColorsDark();
+	ImGui_ImplSDL3_InitForD3D(window);
+
+	// Initialize Renderer & ImGui for DirectX
 	renderer = new RenderSlop();
 	if (!renderer->Init(
 		hWnd,
@@ -26,6 +35,9 @@ void Application::Destroy()
 	renderer->WaitForPreviousFrame();
 	renderer->CloseFenceEventHandle();
 	renderer->UnInit();
+
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
 
 	delete renderer;
 	renderer = nullptr;
