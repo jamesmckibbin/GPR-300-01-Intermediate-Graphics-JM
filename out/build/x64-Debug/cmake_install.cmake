@@ -1,8 +1,8 @@
-# Install script for directory: C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM
+# Install script for directory: C:/Users/james.mckibbin/Documents/Repos/GPR-300-01-Intermediate-Graphics-JM
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/install/x64-debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/james.mckibbin/Documents/Repos/GPR-300-01-Intermediate-Graphics-JM/out/install/x64-debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,8 +34,8 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/src/cmake_install.cmake")
-  include("C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/cmake_install.cmake")
+  include("C:/Users/james.mckibbin/Documents/Repos/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/src/cmake_install.cmake")
+  include("C:/Users/james.mckibbin/Documents/Repos/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/cmake_install.cmake")
 
 endif()
 
@@ -47,5 +47,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/james.mckibbin/Documents/Repos/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

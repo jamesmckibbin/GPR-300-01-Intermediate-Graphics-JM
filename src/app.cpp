@@ -45,6 +45,17 @@ void Application::Destroy()
 
 void Application::Update()
 {
+	SDL_Event windowEvent;
+	if (SDL_PollEvent(&windowEvent))
+	{
+		if (windowEvent.type == SDL_EVENT_QUIT)
+		{
+			StopRunning();
+		}
+
+		ImGui_ImplSDL3_ProcessEvent(&windowEvent);
+	}
+
 	float dt = timer.GetFrameDelta();
 	renderer->Update(dt);
 }

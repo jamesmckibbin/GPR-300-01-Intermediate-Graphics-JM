@@ -613,6 +613,8 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
+	dsaModifiers = {1.0f, 1.0f, 1.0f};
+
 	return true;
 }
 
@@ -672,6 +674,8 @@ void Renderer::Update(float dt)
 	XMStoreFloat4x4(&cbPerObject.vpMat, transposed); // store transposed vp matrix in constant buffer
 	DirectX::XMVECTOR cPos = XMLoadFloat4(&cameraPosition);
 	XMStoreFloat4(&cbPerObject.camPos, cPos);
+	DirectX::XMVECTOR dsa = XMLoadFloat3(&dsaModifiers);
+	XMStoreFloat3(&cbPerObject.dsaMod, dsa);
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
 	memcpy(cbvGPUAddress[assets->GetFrameIndex()], &cbPerObject, sizeof(cbPerObject));
@@ -726,24 +730,13 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 
 	// Render Quad
-	assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
-	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	assets->GetCommandList()->IASetVertexBuffers(0, 1, &quadVertexBufferView);
-	assets->GetCommandList()->IASetIndexBuffer(&quadIndexBufferView);
-	assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	//assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
+	//assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//assets->GetCommandList()->IASetVertexBuffers(0, 1, &quadVertexBufferView);
+	//assets->GetCommandList()->IASetIndexBuffer(&quadIndexBufferView);
+	//assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-	// Render ImGui
-	ImGui_ImplDX12_NewFrame();
-	ImGui_ImplSDL3_NewFrame();
-	ImGui::NewFrame();
-
-	ImGui::Begin("Holy shit");
-	ImGui::Text("It actually shows on screen");
-	ImGui::End();
-
-	ImGui::Render();
-	assets->GetCommandList()->SetDescriptorHeaps(1, &fontDescriptorHeap);
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), assets->GetCommandList());
+	RenderImGui();
 
 	// Set render target to present state
 	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(assets->GetRenderTarget(assets->GetFrameIndex()), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
@@ -805,6 +798,26 @@ void Renderer::WaitForPreviousFrame()
 }
 
 void Renderer::CloseFenceEventHandle() { CloseHandle(assets->GetFenceEvent()); }
+
+void Renderer::RenderImGui()
+{
+	// Render ImGui
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("Menu");
+	if (ImGui::CollapsingHeader("Lighting Settings")) {
+		ImGui::SliderFloat("Diffuse", &dsaModifiers.x, 0.0f, 1.0f);
+		ImGui::SliderFloat("Specular", &dsaModifiers.y, 0.0f, 1.0f);
+		ImGui::SliderFloat("Ambient", &dsaModifiers.z, 0.0f, 1.0f);
+	}
+	ImGui::End();
+
+	ImGui::Render();
+	assets->GetCommandList()->SetDescriptorHeaps(1, &fontDescriptorHeap);
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), assets->GetCommandList());
+}
 
 int Renderer::LoadImageDataFromFile(BYTE** imageData, D3D12_RESOURCE_DESC& resourceDescription, LPCWSTR filename, int& bytesPerRow)
 {

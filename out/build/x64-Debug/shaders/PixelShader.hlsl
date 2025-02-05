@@ -6,6 +6,7 @@ struct VS_OUTPUT
     float4 pos : SV_POSITION;
     float3 worldPos : WORLDPOSITION;
     float4 camPos : CAMERAPOSITION;
+    float3 dsa : DSA;
     float3 norm : NORMALS;
     float2 texCoord : TEXCOORD;
 };
@@ -21,8 +22,8 @@ float4 main(VS_OUTPUT input) : SV_TARGET
     float3 toEye = normalize((float3)input.camPos - input.worldPos);
     float3 h = normalize(_LightDirection + toEye);
     float specularFactor = pow(max(dot(normal, h), 0.0f), 128);
-    float3 lightColor = mul(diffuseFactor + specularFactor, _LightColor);
-    lightColor += _AmbientColor;
+    float3 lightColor = mul(mul(input.dsa.x, diffuseFactor) + mul(input.dsa.y, specularFactor), _LightColor);
+    lightColor += mul(_AmbientColor, input.dsa.z);
     float3 objectColor = t1.Sample(s1, input.texCoord).rgb;
     float3 passColor = objectColor * lightColor;
     return float4(passColor, 1.0f);

@@ -14,6 +14,7 @@ struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 wMat;
 	DirectX::XMFLOAT4X4 vpMat;
 	DirectX::XMFLOAT4 camPos;
+	DirectX::XMFLOAT3 dsaMod;
 };
 
 // From DirectX12 ImGui Examples
@@ -42,6 +43,8 @@ public:
 	void WaitForPreviousFrame();
 	void CloseFenceEventHandle();
 private:
+
+	void RenderImGui();
 
 	RenderAssets* assets;
 
@@ -97,6 +100,7 @@ private:
 	// ImGui Reqs
 	ID3D12DescriptorHeap* fontDescriptorHeap;
 	static DescriptorHeapAllocator fontDescriptorHeapAlloc;
+	DirectX::XMFLOAT3 dsaModifiers;
 	
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;

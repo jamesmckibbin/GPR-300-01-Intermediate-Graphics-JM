@@ -7,19 +7,8 @@ int main(int argc, char* args[]) {
 
 	while (mainApp->IsRunning()) 
 	{
-		SDL_Event windowEvent;
-		if (SDL_PollEvent(&windowEvent)) 
-		{
-			if (windowEvent.type == SDL_EVENT_QUIT) 
-			{
-				mainApp->StopRunning();
-			}
-		}
-		else 
-		{
-			mainApp->Update();
-			mainApp->Draw();
-		}
+		mainApp->Update();
+		mainApp->Draw();
 	}
 
 	mainApp->Destroy();

@@ -23,11 +23,11 @@ target_include_directories(app PUBLIC ${DIRECTXTK_INCLUDES})
 target_include_directories(app PUBLIC ${IMGUI_PATH})
 
 target_link_directories(app PUBLIC ${SDL_LIBRARY_PATH})
+target_link_libraries(app PUBLIC SDL3)
 target_link_libraries(app PUBLIC d3d12)
 target_link_libraries(app PUBLIC dxgi)
 target_link_libraries(app PUBLIC d3dcompiler)
 target_link_libraries(app PUBLIC dxguid)
-target_link_libraries(app PUBLIC SDL3)
 target_link_libraries(app PUBLIC DirectXTK12)
 
 add_custom_command(TARGET app POST_BUILD
