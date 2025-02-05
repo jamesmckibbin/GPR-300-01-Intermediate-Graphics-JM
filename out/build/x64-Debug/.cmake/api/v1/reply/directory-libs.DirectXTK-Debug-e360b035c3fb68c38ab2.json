@@ -1,0 +1,142 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"libs/DirectXTK/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 371,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 381,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 386,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 389,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 417,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/DirectXTK12.lib"
+			],
+			"targetId" : "DirectXTK12::@ee53c7a2ebc0c1508d58",
+			"targetIndex" : 9,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "share/directxtk12",
+			"exportName" : "DirectXTK12-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "DirectXTK12::@ee53c7a2ebc0c1508d58",
+					"index" : 9
+				}
+			],
+			"paths" : 
+			[
+				"libs/DirectXTK/CMakeFiles/Export/dc79b1416ca4e830525952dfb83a96c7/DirectXTK12-targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "include/directxtk12",
+			"paths" : 
+			[
+				"libs/DirectXTK/Inc/BufferHelpers.h",
+				"libs/DirectXTK/Inc/CommonStates.h",
+				"libs/DirectXTK/Inc/DDSTextureLoader.h",
+				"libs/DirectXTK/Inc/DescriptorHeap.h",
+				"libs/DirectXTK/Inc/DirectXHelpers.h",
+				"libs/DirectXTK/Inc/Effects.h",
+				"libs/DirectXTK/Inc/EffectPipelineStateDescription.h",
+				"libs/DirectXTK/Inc/GeometricPrimitive.h",
+				"libs/DirectXTK/Inc/GraphicsMemory.h",
+				"libs/DirectXTK/Inc/Model.h",
+				"libs/DirectXTK/Inc/PostProcess.h",
+				"libs/DirectXTK/Inc/PrimitiveBatch.h",
+				"libs/DirectXTK/Inc/RenderTargetState.h",
+				"libs/DirectXTK/Inc/ResourceUploadBatch.h",
+				"libs/DirectXTK/Inc/ScreenGrab.h",
+				"libs/DirectXTK/Inc/SpriteBatch.h",
+				"libs/DirectXTK/Inc/SpriteFont.h",
+				"libs/DirectXTK/Inc/VertexTypes.h",
+				"libs/DirectXTK/Inc/WICTextureLoader.h",
+				"libs/DirectXTK/Inc/GamePad.h",
+				"libs/DirectXTK/Inc/Keyboard.h",
+				"libs/DirectXTK/Inc/Mouse.h",
+				"libs/DirectXTK/Inc/SimpleMath.h",
+				"libs/DirectXTK/Inc/SimpleMath.inl",
+				"libs/DirectXTK/Inc/Audio.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "share/directxtk12",
+			"paths" : 
+			[
+				"out/build/x64-Debug/libs/DirectXTK/directxtk12-config.cmake",
+				"out/build/x64-Debug/libs/DirectXTK/directxtk12-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"out/build/x64-Debug/libs/DirectXTK/DirectXTK12.pc"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "libs/DirectXTK",
+		"source" : "libs/DirectXTK"
+	}
+}

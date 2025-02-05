@@ -205,6 +205,36 @@ build CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
 
 build rebuild_cache: phony CMakeFiles\rebuild_cache.util
 
+
+#############################################
+# Utility command for list_install_components
+
+build list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build CMakeFiles\install.util: CUSTOM_COMMAND all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build install: phony CMakeFiles\install.util
+
+
+#############################################
+# Utility command for install/local
+
+build CMakeFiles\install\local.util: CUSTOM_COMMAND all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build install\local: phony CMakeFiles\install\local.util
+
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
 # C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/CMakeLists.txt
@@ -232,6 +262,36 @@ build src\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
   restat = 1
 
 build src\rebuild_cache: phony src\CMakeFiles\rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build src\list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build src\CMakeFiles\install.util: CUSTOM_COMMAND src\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\src && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build src\install: phony src\CMakeFiles\install.util
+
+
+#############################################
+# Utility command for install/local
+
+build src\CMakeFiles\install\local.util: CUSTOM_COMMAND src\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\src && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build src\install\local: phony src\CMakeFiles\install\local.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -261,6 +321,36 @@ build libs\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
 
 build libs\rebuild_cache: phony libs\CMakeFiles\rebuild_cache.util
 
+
+#############################################
+# Utility command for list_install_components
+
+build libs\list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build libs\CMakeFiles\install.util: CUSTOM_COMMAND libs\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build libs\install: phony libs\CMakeFiles\install.util
+
+
+#############################################
+# Utility command for install/local
+
+build libs\CMakeFiles\install\local.util: CUSTOM_COMMAND libs\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build libs\install\local: phony libs\CMakeFiles\install\local.util
+
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
 # C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/libs/CMakeLists.txt
@@ -289,8 +379,1050 @@ build libs\SDL3\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
 
 build libs\SDL3\rebuild_cache: phony libs\SDL3\CMakeFiles\rebuild_cache.util
 
+
+#############################################
+# Utility command for list_install_components
+
+build libs\SDL3\list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build libs\SDL3\CMakeFiles\install.util: CUSTOM_COMMAND libs\SDL3\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\SDL3 && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build libs\SDL3\install: phony libs\SDL3\CMakeFiles\install.util
+
+
+#############################################
+# Utility command for install/local
+
+build libs\SDL3\CMakeFiles\install\local.util: CUSTOM_COMMAND libs\SDL3\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\SDL3 && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build libs\SDL3\install\local: phony libs\SDL3\CMakeFiles\install\local.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/libs/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target DirectXTK12
+
+
+#############################################
+# Order-only phony target for DirectXTK12
+
+build cmake_object_order_depends_target_DirectXTK12: phony || libs\DirectXTK\Shaders\Compiled\SpriteEffect_SpriteVertexShader.inc
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YcC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+
+#############################################
+# Additional output files.
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\.\cmake_pch.cxx.pch: phony libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.obj
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\AlphaTestEffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\AlphaTestEffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\BasicEffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\BasicEffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\BasicPostProcess.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\BasicPostProcess.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\BufferHelpers.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\BufferHelpers.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\CommonStates.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\CommonStates.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DDSTextureLoader.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\DDSTextureLoader.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DebugEffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\DebugEffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DescriptorHeap.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\DescriptorHeap.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DirectXHelpers.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\DirectXHelpers.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DualPostProcess.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\DualPostProcess.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DualTextureEffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\DualTextureEffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EffectCommon.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\EffectCommon.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EffectFactory.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\EffectFactory.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EffectPipelineStateDescription.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\EffectPipelineStateDescription.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EffectTextureFactory.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\EffectTextureFactory.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EnvironmentMapEffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\EnvironmentMapEffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\GeometricPrimitive.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\GeometricPrimitive.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\GraphicsMemory.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\GraphicsMemory.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\LinearAllocator.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\LinearAllocator.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\Model.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Model.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ModelLoadCMO.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\ModelLoadCMO.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ModelLoadSDKMESH.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\ModelLoadSDKMESH.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ModelLoadVBO.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\ModelLoadVBO.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\NormalMapEffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\NormalMapEffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\PBREffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\PBREffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\PBREffectFactory.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\PBREffectFactory.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\PrimitiveBatch.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\PrimitiveBatch.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ResourceUploadBatch.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\ResourceUploadBatch.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ScreenGrab.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\ScreenGrab.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\SkinnedEffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\SkinnedEffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\SpriteBatch.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\SpriteBatch.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\SpriteFont.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\SpriteFont.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ToneMapPostProcess.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\ToneMapPostProcess.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\VertexTypes.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\VertexTypes.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\WICTextureLoader.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\WICTextureLoader.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\BinaryReader.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\BinaryReader.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\GamePad.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\GamePad.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\Geometry.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Geometry.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\Keyboard.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Keyboard.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\Mouse.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Mouse.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\SimpleMath.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\SimpleMath.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\AudioEngine.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\AudioEngine.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\DynamicSoundEffectInstance.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\DynamicSoundEffectInstance.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\SoundCommon.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\SoundCommon.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\SoundEffect.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\SoundEffect.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\SoundEffectInstance.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\SoundEffectInstance.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\SoundStreamInstance.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\SoundStreamInstance.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\WaveBank.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\WaveBank.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\WaveBankReader.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\WaveBankReader.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+build libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\WAVFileReader.cpp.obj: CXX_COMPILER__DirectXTK12_unscanned_Debug C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio\WAVFileReader.cpp | libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.hxx libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.pch || cmake_object_order_depends_target_DirectXTK12
+  DEFINES = -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Wall /EHsc /GR /sdl /Zc:inline /fp:fast /permissive- /Zc:__cplusplus /JMC- /ZH:SHA_256 /Zc:preprocessor /wd5104 /wd5105 /Zc:lambda /external:W4 /YuC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx /FpC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/./cmake_pch.cxx.pch /FIC:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/CMakeFiles/DirectXTK12.dir/cmake_pch.hxx
+  INCLUDES = -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK\Shaders\Compiled -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Audio
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  OBJECT_FILE_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target DirectXTK12
+
+
+#############################################
+# Link the static library lib\DirectXTK12.lib
+
+build lib\DirectXTK12.lib: CXX_STATIC_LIBRARY_LINKER__DirectXTK12_Debug libs\DirectXTK\CMakeFiles\DirectXTK12.dir\cmake_pch.cxx.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\AlphaTestEffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\BasicEffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\BasicPostProcess.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\BufferHelpers.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\CommonStates.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DDSTextureLoader.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DebugEffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DescriptorHeap.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DirectXHelpers.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DualPostProcess.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\DualTextureEffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EffectCommon.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EffectFactory.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EffectPipelineStateDescription.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EffectTextureFactory.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\EnvironmentMapEffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\GeometricPrimitive.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\GraphicsMemory.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\LinearAllocator.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\Model.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ModelLoadCMO.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ModelLoadSDKMESH.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ModelLoadVBO.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\NormalMapEffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\PBREffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\PBREffectFactory.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\PrimitiveBatch.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ResourceUploadBatch.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ScreenGrab.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\SkinnedEffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\SpriteBatch.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\SpriteFont.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\ToneMapPostProcess.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\VertexTypes.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\WICTextureLoader.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\BinaryReader.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\GamePad.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\Geometry.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\Keyboard.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\Mouse.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Src\SimpleMath.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\AudioEngine.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\DynamicSoundEffectInstance.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\SoundCommon.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\SoundEffect.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\SoundEffectInstance.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\SoundStreamInstance.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\WaveBank.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\WaveBankReader.cpp.obj libs\DirectXTK\CMakeFiles\DirectXTK12.dir\Audio\WAVFileReader.cpp.obj
+  LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  LINK_FLAGS = /machine:x64
+  OBJECT_DIR = libs\DirectXTK\CMakeFiles\DirectXTK12.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_COMPILE_PDB = libs\DirectXTK\CMakeFiles\DirectXTK12.dir\DirectXTK12.pdb
+  TARGET_FILE = lib\DirectXTK12.lib
+  TARGET_PDB = lib\DirectXTK12.pdb
+
+
+#############################################
+# Utility command for Experimental
+
+build libs\DirectXTK\Experimental: phony libs\DirectXTK\CMakeFiles\Experimental
+
+
+#############################################
+# Utility command for Nightly
+
+build libs\DirectXTK\Nightly: phony libs\DirectXTK\CMakeFiles\Nightly
+
+
+#############################################
+# Utility command for Continuous
+
+build libs\DirectXTK\Continuous: phony libs\DirectXTK\CMakeFiles\Continuous
+
+
+#############################################
+# Utility command for NightlyMemoryCheck
+
+build libs\DirectXTK\NightlyMemoryCheck: phony libs\DirectXTK\CMakeFiles\NightlyMemoryCheck
+
+
+#############################################
+# Utility command for NightlyStart
+
+build libs\DirectXTK\NightlyStart: phony libs\DirectXTK\CMakeFiles\NightlyStart
+
+
+#############################################
+# Utility command for NightlyUpdate
+
+build libs\DirectXTK\NightlyUpdate: phony libs\DirectXTK\CMakeFiles\NightlyUpdate
+
+
+#############################################
+# Utility command for NightlyConfigure
+
+build libs\DirectXTK\NightlyConfigure: phony libs\DirectXTK\CMakeFiles\NightlyConfigure
+
+
+#############################################
+# Utility command for NightlyBuild
+
+build libs\DirectXTK\NightlyBuild: phony libs\DirectXTK\CMakeFiles\NightlyBuild
+
+
+#############################################
+# Utility command for NightlyTest
+
+build libs\DirectXTK\NightlyTest: phony libs\DirectXTK\CMakeFiles\NightlyTest
+
+
+#############################################
+# Utility command for NightlyCoverage
+
+build libs\DirectXTK\NightlyCoverage: phony libs\DirectXTK\CMakeFiles\NightlyCoverage
+
+
+#############################################
+# Utility command for NightlyMemCheck
+
+build libs\DirectXTK\NightlyMemCheck: phony libs\DirectXTK\CMakeFiles\NightlyMemCheck
+
+
+#############################################
+# Utility command for NightlySubmit
+
+build libs\DirectXTK\NightlySubmit: phony libs\DirectXTK\CMakeFiles\NightlySubmit
+
+
+#############################################
+# Utility command for ExperimentalStart
+
+build libs\DirectXTK\ExperimentalStart: phony libs\DirectXTK\CMakeFiles\ExperimentalStart
+
+
+#############################################
+# Utility command for ExperimentalUpdate
+
+build libs\DirectXTK\ExperimentalUpdate: phony libs\DirectXTK\CMakeFiles\ExperimentalUpdate
+
+
+#############################################
+# Utility command for ExperimentalConfigure
+
+build libs\DirectXTK\ExperimentalConfigure: phony libs\DirectXTK\CMakeFiles\ExperimentalConfigure
+
+
+#############################################
+# Utility command for ExperimentalBuild
+
+build libs\DirectXTK\ExperimentalBuild: phony libs\DirectXTK\CMakeFiles\ExperimentalBuild
+
+
+#############################################
+# Utility command for ExperimentalTest
+
+build libs\DirectXTK\ExperimentalTest: phony libs\DirectXTK\CMakeFiles\ExperimentalTest
+
+
+#############################################
+# Utility command for ExperimentalCoverage
+
+build libs\DirectXTK\ExperimentalCoverage: phony libs\DirectXTK\CMakeFiles\ExperimentalCoverage
+
+
+#############################################
+# Utility command for ExperimentalMemCheck
+
+build libs\DirectXTK\ExperimentalMemCheck: phony libs\DirectXTK\CMakeFiles\ExperimentalMemCheck
+
+
+#############################################
+# Utility command for ExperimentalSubmit
+
+build libs\DirectXTK\ExperimentalSubmit: phony libs\DirectXTK\CMakeFiles\ExperimentalSubmit
+
+
+#############################################
+# Utility command for ContinuousStart
+
+build libs\DirectXTK\ContinuousStart: phony libs\DirectXTK\CMakeFiles\ContinuousStart
+
+
+#############################################
+# Utility command for ContinuousUpdate
+
+build libs\DirectXTK\ContinuousUpdate: phony libs\DirectXTK\CMakeFiles\ContinuousUpdate
+
+
+#############################################
+# Utility command for ContinuousConfigure
+
+build libs\DirectXTK\ContinuousConfigure: phony libs\DirectXTK\CMakeFiles\ContinuousConfigure
+
+
+#############################################
+# Utility command for ContinuousBuild
+
+build libs\DirectXTK\ContinuousBuild: phony libs\DirectXTK\CMakeFiles\ContinuousBuild
+
+
+#############################################
+# Utility command for ContinuousTest
+
+build libs\DirectXTK\ContinuousTest: phony libs\DirectXTK\CMakeFiles\ContinuousTest
+
+
+#############################################
+# Utility command for ContinuousCoverage
+
+build libs\DirectXTK\ContinuousCoverage: phony libs\DirectXTK\CMakeFiles\ContinuousCoverage
+
+
+#############################################
+# Utility command for ContinuousMemCheck
+
+build libs\DirectXTK\ContinuousMemCheck: phony libs\DirectXTK\CMakeFiles\ContinuousMemCheck
+
+
+#############################################
+# Utility command for ContinuousSubmit
+
+build libs\DirectXTK\ContinuousSubmit: phony libs\DirectXTK\CMakeFiles\ContinuousSubmit
+
+
+#############################################
+# Utility command for edit_cache
+
+build libs\DirectXTK\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build libs\DirectXTK\edit_cache: phony libs\DirectXTK\CMakeFiles\edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build libs\DirectXTK\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM -BC:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build libs\DirectXTK\rebuild_cache: phony libs\DirectXTK\CMakeFiles\rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build libs\DirectXTK\list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build libs\DirectXTK\CMakeFiles\install.util: CUSTOM_COMMAND libs\DirectXTK\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build libs\DirectXTK\install: phony libs\DirectXTK\CMakeFiles\install.util
+
+
+#############################################
+# Utility command for install/local
+
+build libs\DirectXTK\CMakeFiles\install\local.util: CUSTOM_COMMAND libs\DirectXTK\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build libs\DirectXTK\install\local: phony libs\DirectXTK\CMakeFiles\install\local.util
+
+
+#############################################
+# Custom command for libs\DirectXTK\Shaders\Compiled\SpriteEffect_SpriteVertexShader.inc
+
+build libs\DirectXTK\Shaders\Compiled\SpriteEffect_SpriteVertexShader.inc | ${cmake_ninja_workdir}libs\DirectXTK\Shaders\Compiled\SpriteEffect_SpriteVertexShader.inc: CUSTOM_COMMAND C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\CompileShaders.cmd C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\AlphaTestEffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\BasicEffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\DebugEffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\DualTextureEffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\EnvironmentMapEffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\GenerateMips.hlsl C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\NormalMapEffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\PBREffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\PostProcess.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\RootSig.fxh C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\SkinnedEffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\SpriteEffect.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\ToneMap.fx C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\Common.fxh C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\Lighting.fxh C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\PBRCommon.fxh C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\PixelPacking_Velocity.hlsli C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\Skinning.fxh C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\Structures.fxh C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders\Utilities.fxh
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Src\Shaders && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E env CompileShadersOutput="C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/Shaders/Compiled" "DirectXShaderCompiler=C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/dxc.exe"  CompileShaders.cmd dxil > C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK/Shaders/Compiled/compileshaders.log"
+  DESC = Generating HLSL shaders...
+  pool = console
+  restat = 1
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\Experimental
+
+build libs\DirectXTK\CMakeFiles\Experimental | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\Experimental: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D Experimental"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\Nightly
+
+build libs\DirectXTK\CMakeFiles\Nightly | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\Nightly: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D Nightly"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\Continuous
+
+build libs\DirectXTK\CMakeFiles\Continuous | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\Continuous: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D Continuous"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlyMemoryCheck
+
+build libs\DirectXTK\CMakeFiles\NightlyMemoryCheck | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlyMemoryCheck: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlyMemoryCheck"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlyStart
+
+build libs\DirectXTK\CMakeFiles\NightlyStart | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlyStart: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlyStart"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlyUpdate
+
+build libs\DirectXTK\CMakeFiles\NightlyUpdate | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlyUpdate: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlyUpdate"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlyConfigure
+
+build libs\DirectXTK\CMakeFiles\NightlyConfigure | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlyConfigure: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlyConfigure"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlyBuild
+
+build libs\DirectXTK\CMakeFiles\NightlyBuild | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlyBuild: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlyBuild"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlyTest
+
+build libs\DirectXTK\CMakeFiles\NightlyTest | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlyTest: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlyTest"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlyCoverage
+
+build libs\DirectXTK\CMakeFiles\NightlyCoverage | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlyCoverage: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlyCoverage"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlyMemCheck
+
+build libs\DirectXTK\CMakeFiles\NightlyMemCheck | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlyMemCheck: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlyMemCheck"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\NightlySubmit
+
+build libs\DirectXTK\CMakeFiles\NightlySubmit | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\NightlySubmit: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D NightlySubmit"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ExperimentalStart
+
+build libs\DirectXTK\CMakeFiles\ExperimentalStart | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ExperimentalStart: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ExperimentalStart"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ExperimentalUpdate
+
+build libs\DirectXTK\CMakeFiles\ExperimentalUpdate | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ExperimentalUpdate: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ExperimentalUpdate"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ExperimentalConfigure
+
+build libs\DirectXTK\CMakeFiles\ExperimentalConfigure | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ExperimentalConfigure: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ExperimentalConfigure"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ExperimentalBuild
+
+build libs\DirectXTK\CMakeFiles\ExperimentalBuild | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ExperimentalBuild: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ExperimentalBuild"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ExperimentalTest
+
+build libs\DirectXTK\CMakeFiles\ExperimentalTest | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ExperimentalTest: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ExperimentalTest"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ExperimentalCoverage
+
+build libs\DirectXTK\CMakeFiles\ExperimentalCoverage | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ExperimentalCoverage: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ExperimentalCoverage"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ExperimentalMemCheck
+
+build libs\DirectXTK\CMakeFiles\ExperimentalMemCheck | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ExperimentalMemCheck: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ExperimentalMemCheck"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ExperimentalSubmit
+
+build libs\DirectXTK\CMakeFiles\ExperimentalSubmit | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ExperimentalSubmit: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ExperimentalSubmit"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ContinuousStart
+
+build libs\DirectXTK\CMakeFiles\ContinuousStart | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ContinuousStart: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ContinuousStart"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ContinuousUpdate
+
+build libs\DirectXTK\CMakeFiles\ContinuousUpdate | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ContinuousUpdate: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ContinuousUpdate"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ContinuousConfigure
+
+build libs\DirectXTK\CMakeFiles\ContinuousConfigure | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ContinuousConfigure: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ContinuousConfigure"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ContinuousBuild
+
+build libs\DirectXTK\CMakeFiles\ContinuousBuild | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ContinuousBuild: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ContinuousBuild"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ContinuousTest
+
+build libs\DirectXTK\CMakeFiles\ContinuousTest | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ContinuousTest: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ContinuousTest"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ContinuousCoverage
+
+build libs\DirectXTK\CMakeFiles\ContinuousCoverage | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ContinuousCoverage: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ContinuousCoverage"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ContinuousMemCheck
+
+build libs\DirectXTK\CMakeFiles\ContinuousMemCheck | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ContinuousMemCheck: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ContinuousMemCheck"
+  pool = console
+
+
+#############################################
+# Custom command for libs\DirectXTK\CMakeFiles\ContinuousSubmit
+
+build libs\DirectXTK\CMakeFiles\ContinuousSubmit | ${cmake_ninja_workdir}libs\DirectXTK\CMakeFiles\ContinuousSubmit: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\out\build\x64-Debug\libs\DirectXTK && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe" -D ContinuousSubmit"
+  pool = console
+
 # =============================================================================
 # Target aliases.
+
+build Continuous: phony libs\DirectXTK\Continuous
+
+build ContinuousBuild: phony libs\DirectXTK\ContinuousBuild
+
+build ContinuousConfigure: phony libs\DirectXTK\ContinuousConfigure
+
+build ContinuousCoverage: phony libs\DirectXTK\ContinuousCoverage
+
+build ContinuousMemCheck: phony libs\DirectXTK\ContinuousMemCheck
+
+build ContinuousStart: phony libs\DirectXTK\ContinuousStart
+
+build ContinuousSubmit: phony libs\DirectXTK\ContinuousSubmit
+
+build ContinuousTest: phony libs\DirectXTK\ContinuousTest
+
+build ContinuousUpdate: phony libs\DirectXTK\ContinuousUpdate
+
+build DirectXTK12: phony lib\DirectXTK12.lib
+
+build DirectXTK12.lib: phony lib\DirectXTK12.lib
+
+build Experimental: phony libs\DirectXTK\Experimental
+
+build ExperimentalBuild: phony libs\DirectXTK\ExperimentalBuild
+
+build ExperimentalConfigure: phony libs\DirectXTK\ExperimentalConfigure
+
+build ExperimentalCoverage: phony libs\DirectXTK\ExperimentalCoverage
+
+build ExperimentalMemCheck: phony libs\DirectXTK\ExperimentalMemCheck
+
+build ExperimentalStart: phony libs\DirectXTK\ExperimentalStart
+
+build ExperimentalSubmit: phony libs\DirectXTK\ExperimentalSubmit
+
+build ExperimentalTest: phony libs\DirectXTK\ExperimentalTest
+
+build ExperimentalUpdate: phony libs\DirectXTK\ExperimentalUpdate
+
+build Nightly: phony libs\DirectXTK\Nightly
+
+build NightlyBuild: phony libs\DirectXTK\NightlyBuild
+
+build NightlyConfigure: phony libs\DirectXTK\NightlyConfigure
+
+build NightlyCoverage: phony libs\DirectXTK\NightlyCoverage
+
+build NightlyMemCheck: phony libs\DirectXTK\NightlyMemCheck
+
+build NightlyMemoryCheck: phony libs\DirectXTK\NightlyMemoryCheck
+
+build NightlyStart: phony libs\DirectXTK\NightlyStart
+
+build NightlySubmit: phony libs\DirectXTK\NightlySubmit
+
+build NightlyTest: phony libs\DirectXTK\NightlyTest
+
+build NightlyUpdate: phony libs\DirectXTK\NightlyUpdate
 
 build app: phony app.exe
 
@@ -309,7 +1441,14 @@ build all: phony app.exe src\all libs\all
 #############################################
 # Folder: C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs
 
-build libs\all: phony libs\SDL3\all
+build libs\all: phony libs\SDL3\all libs\DirectXTK\all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/build/x64-Debug/libs/DirectXTK
+
+build libs\DirectXTK\all: phony lib\DirectXTK12.lib
 
 # =============================================================================
 
@@ -332,14 +1471,14 @@ build src\all: phony
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\src\CMakeLists.txt C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake CMakeCache.txt CMakeFiles\3.29.5-msvc4\CMakeCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\build\CompilerAndLinker.cmake C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\build\DirectXTK12-config.cmake.in C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\build\DirectXTK12.pc.in C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\build\JoinPaths.cmake C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\src\CMakeLists.txt C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CTest.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CTestTargets.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckIncludeFileCXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\DartConfiguration.tcl.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\GNUInstallDirs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\WriteBasicConfigVersionFile.cmake CMakeCache.txt CMakeFiles\3.29.5-msvc4\CMakeCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\src\CMakeLists.txt C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake CMakeCache.txt CMakeFiles\3.29.5-msvc4\CMakeCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeSystem.cmake: phony
+build C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\build\CompilerAndLinker.cmake C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\build\DirectXTK12-config.cmake.in C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\build\DirectXTK12.pc.in C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\build\JoinPaths.cmake C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\CMakeLists.txt C$:\Dev\Repositories\GPR-300-01-Intermediate-Graphics-JM\src\CMakeLists.txt C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CTest.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CTestTargets.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckIncludeFileCXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\DartConfiguration.tcl.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\GNUInstallDirs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\WriteBasicConfigVersionFile.cmake CMakeCache.txt CMakeFiles\3.29.5-msvc4\CMakeCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.29.5-msvc4\CMakeSystem.cmake: phony
 
 
 #############################################
