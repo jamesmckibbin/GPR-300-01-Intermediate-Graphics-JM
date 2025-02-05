@@ -206,8 +206,8 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	Vertex quadVList[] = {
 		// Front
 		{ -1.0f,  1.0f, 0.0f, 0.0f, 0.0f },
-		{ -1.0f, -1.0f, 0.0f, 0.0f, 1.0f },
 		{  1.0f, -1.0f, 0.0f, 1.0f, 1.0f },
+		{ -1.0f, -1.0f, 0.0f, 0.0f, 1.0f },
 		{  1.0f,  1.0f, 0.0f, 1.0f, 0.0f },
 	};
 	int quadVBufferSize = sizeof(quadVList);
@@ -309,7 +309,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	UINT32 quadIList[] = {
 		// Front
 		0, 1, 2,
-		0, 2, 3,
+		0, 3, 1,
 	};
 	int quadIBufferSize = sizeof(quadIList);
 
@@ -488,7 +488,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	// Create SRV Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = 1;
+	heapDesc.NumDescriptors = 2;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mainDescriptorHeap));
@@ -504,6 +504,18 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 	assets->GetDevice()->CreateShaderResourceView(textureBuffer, &srvDesc, mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+
+	// Handle to next texture slot
+	D3D12_CPU_DESCRIPTOR_HANDLE fbHandle = mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	fbHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	// Create SRV to write to
+	srvDesc = {};
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.Format = textureDesc.Format;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	assets->GetDevice()->CreateShaderResourceView(frameBuffer, &srvDesc, fbHandle);
 
 	// Create Font Descriptor Heap
 	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&fontDescriptorHeap));
@@ -538,6 +550,16 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	cubeIndexBufferView.BufferLocation = cubeIndexBuffer->GetGPUVirtualAddress();
 	cubeIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 	cubeIndexBufferView.SizeInBytes = cubeIBufferSize;
+
+	// Create VBV
+	quadVertexBufferView.BufferLocation = quadVertexBuffer->GetGPUVirtualAddress();
+	quadVertexBufferView.StrideInBytes = sizeof(Vertex);
+	quadVertexBufferView.SizeInBytes = quadVBufferSize;
+
+	// Create Index Buffer View
+	quadIndexBufferView.BufferLocation = quadIndexBuffer->GetGPUVirtualAddress();
+	quadIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	quadIndexBufferView.SizeInBytes = quadIBufferSize;
 
 	// Define Viewport
 	viewport.TopLeftX = 0;
@@ -682,31 +704,33 @@ void Renderer::UpdatePipeline()
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(assets->GetRtvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), assets->GetFrameIndex(), assets->GetRtvDescriptorSize());
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	// Set render target to merger
-	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-
-	// Clear render target and depth buffer
-	const float clearColor[] = { 0.3f, 0.3f, 0.3f, 1.0f };
-	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
 	assets->GetCommandList()->RSSetViewports(1, &viewport);
 	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 
-	// PUT RENDER COMMANDS HERE
 	assets->GetCommandList()->SetGraphicsRootSignature(rootSignature);
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mainDescriptorHeap };
 	assets->GetCommandList()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, mainDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, DirectX::Colors::LightSteelBlue, 0, nullptr);
+	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, mainDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	
+	// Render Scene
+	assets->GetCommandList()->SetPipelineState(pipelineStateObject);
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
-	
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
+
+	// Render Quad
+	assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
+	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	assets->GetCommandList()->IASetVertexBuffers(0, 1, &quadVertexBufferView);
+	assets->GetCommandList()->IASetIndexBuffer(&quadIndexBufferView);
+	assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
 	// Render ImGui
 	ImGui_ImplDX12_NewFrame();

@@ -1,4 +1,4 @@
-Texture2D t1 : register(t0);
+Texture2D t1 : register(t1);
 SamplerState s1 : register(s0);
 
 struct VS_OUTPUT
@@ -9,5 +9,5 @@ struct VS_OUTPUT
 
 float4 main(VS_OUTPUT input) : SV_TARGET
 {
-    return t1.Sample(s1, input.texCoord);
+    return float4(t1.Sample(s1, input.texCoord).rgb, 1.0f);
 }
