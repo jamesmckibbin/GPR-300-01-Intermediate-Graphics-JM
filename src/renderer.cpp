@@ -603,6 +603,10 @@ void Renderer::UnInit()
 		WaitForPreviousFrame();
 	}
 
+	assets->UnInit();
+	delete assets;
+	assets = nullptr;
+
 	SAFE_RELEASE(pipelineStateObject);
 	SAFE_RELEASE(rootSignature);
 	SAFE_RELEASE(cubeVertexBuffer);
@@ -686,6 +690,9 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
+	assets->GetCommandList()->RSSetViewports(1, &viewport);
+	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
+
 	// PUT RENDER COMMANDS HERE
 	assets->GetCommandList()->SetGraphicsRootSignature(rootSignature);
 
@@ -694,8 +701,6 @@ void Renderer::UpdatePipeline()
 
 	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, mainDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
-	assets->GetCommandList()->RSSetViewports(1, &viewport);
-	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
