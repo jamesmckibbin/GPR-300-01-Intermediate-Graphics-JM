@@ -17,7 +17,7 @@ void Application::Create()
 	ImGui_ImplSDL3_InitForD3D(window);
 
 	// Initialize Renderer & ImGui for DirectX
-	renderer = new RenderSlop();
+	renderer = new Renderer();
 	if (!renderer->Init(
 		hWnd,
 		screenState,

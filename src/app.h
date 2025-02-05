@@ -1,6 +1,6 @@
 #pragma once
 
-#include "renderslop.h"
+#include "renderer.h"
 #include "timer.h"
 
 static bool running = true;
@@ -32,6 +32,6 @@ private:
 	float currentWindowHeight = DEFAULT_WINDOW_HEIGHT;
 	SCREEN_STATE screenState = SS_WINDOWED;
 
-	RenderSlop* renderer;
+	Renderer* renderer;
 	Timer timer;
 };

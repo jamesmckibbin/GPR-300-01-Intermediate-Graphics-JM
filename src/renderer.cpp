@@ -1,70 +1,25 @@
-#include "renderslop.h"
+#include "renderer.h"
 
 #include "app.h"
 
 using namespace DirectX;
 
-DescriptorHeapAllocator RenderSlop::fontDescriptorHeapAlloc = {};
+DescriptorHeapAllocator Renderer::fontDescriptorHeapAlloc = {};
 
-bool RenderSlop::Init(const HWND& window, bool screenState, float width, float height)
+bool Renderer::Init(const HWND& window, bool screenState, float width, float height)
 {
 	HRESULT result;
 
-	// Find Compatible Adapter
-	IDXGIAdapter1* adapter = {};
-	if (!FindCompatibleAdapter(adapter)) {
-		return false;
-	}
-
-	// Create Device
-	result = D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device));
-	if (FAILED(result)) {
-		return false;
-	}
-
-	// Create Command Queue
-	D3D12_COMMAND_QUEUE_DESC cqDesc = {};
-	result = device->CreateCommandQueue(&cqDesc, IID_PPV_ARGS(&commandQueue));
-	if (FAILED(result)) {
+	// Create Render Assets
+	assets = new RenderAssets();
+	if (!assets->Init(window, screenState))
+	{
 		return false;
 	}
 
 	// Create Sample Descriptor
 	DXGI_SAMPLE_DESC sampleDesc = {};
 	sampleDesc.Count = 1;
-
-	// Create Swap Chain
-	CreateSwapChain(window, sampleDesc, screenState);
-
-	// Create RTV Descriptor Heap
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-	rtvHeapDesc.NumDescriptors = frameBufferCount;
-	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	result = device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
-	if (FAILED(result)) {
-		return false;
-	}
-
-	// Get Size & First Handle of RTV Descriptor
-	rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
-
-	// Create RTV Per Buffer
-	for (int i = 0; i < frameBufferCount; i++) {
-		result = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTargets[i]));
-		if (FAILED(result)) {
-			return false;
-		}
-		device->CreateRenderTargetView(renderTargets[i], nullptr, rtvHandle);
-		rtvHandle.Offset(1, rtvDescriptorSize);
-	}
-
-	// Create Command Allocators & Command List
-	CreateCommandList();
-
-	// Create Fence & Fence Event Handle
-	CreateFence();
 
 	// Create Root Descriptor
 	D3D12_ROOT_DESCRIPTOR rootCBVDescriptor;
@@ -130,7 +85,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 		return false;
 	}
 
-	result = device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+	result = assets->GetDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
 	if (FAILED(result))
 	{
 		return false;
@@ -172,7 +127,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
 	// Create PSO
-	result = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
+	result = assets->GetDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
 	if (FAILED(result))
 	{
 		return false;
@@ -221,7 +176,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	// Verticies Default Heap
 	CD3DX12_HEAP_PROPERTIES dHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_RESOURCE_DESC resoDesc = CD3DX12_RESOURCE_DESC::Buffer(vBufferSize);
-	device->CreateCommittedResource(
+	assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
@@ -233,7 +188,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	// Verticies Upload Heap
 	CD3DX12_HEAP_PROPERTIES uHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	ID3D12Resource* vBufferUploadHeap;
-	device->CreateCommittedResource(
+	assets->GetDevice()->CreateCommittedResource(
 		&uHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
@@ -247,9 +202,9 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	vertexData.pData = reinterpret_cast<BYTE*>(vList);
 	vertexData.RowPitch = vBufferSize;
 	vertexData.SlicePitch = vBufferSize;
-	UpdateSubresources(commandList, vertexBuffer, vBufferUploadHeap, 0, 0, 1, &vertexData);
+	UpdateSubresources(assets->GetCommandList(), vertexBuffer, vBufferUploadHeap, 0, 0, 1, &vertexData);
 	CD3DX12_RESOURCE_BARRIER resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(vertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-	commandList->ResourceBarrier(1, &resoBarr);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Indicies
 	DWORD iList[] = {
@@ -282,7 +237,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 
 	// Indicies Default Heap
 	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(iBufferSize);
-	device->CreateCommittedResource(
+	assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
@@ -293,7 +248,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 
 	// Indicies Upload Heap
 	ID3D12Resource* iBufferUploadHeap;
-	device->CreateCommittedResource(
+	assets->GetDevice()->CreateCommittedResource(
 		&uHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
@@ -307,16 +262,16 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	indexData.pData = reinterpret_cast<BYTE*>(iList);
 	indexData.RowPitch = iBufferSize;
 	indexData.SlicePitch = iBufferSize;
-	UpdateSubresources(commandList, indexBuffer, iBufferUploadHeap, 0, 0, 1, &indexData);
+	UpdateSubresources(assets->GetCommandList(), indexBuffer, iBufferUploadHeap, 0, 0, 1, &indexData);
 	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(indexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-	commandList->ResourceBarrier(1, &resoBarr);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Create Depth Stencil Buffer Heap
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
 	dsvHeapDesc.NumDescriptors = 1;
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	result = device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsDescriptorHeap));
+	result = assets->GetDevice()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsDescriptorHeap));
 	if (FAILED(result))
 	{
 		return false;
@@ -333,7 +288,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	depthOptimizedClearValue.DepthStencil.Stencil = 0;
 
 	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
-	device->CreateCommittedResource(
+	assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
@@ -342,13 +297,13 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 		IID_PPV_ARGS(&depthStencilBuffer));
 	dsDescriptorHeap->SetName(L"Depth/Stencil Resource Heap");
 
-	device->CreateDepthStencilView(depthStencilBuffer, &depthStencilDesc, dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+	assets->GetDevice()->CreateDepthStencilView(depthStencilBuffer, &depthStencilDesc, dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 	// Create Constant Buffer Resource Heap
 	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(1024 * 64);
-	for (int i = 0; i < frameBufferCount; ++i)
+	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
 	{
-		result = device->CreateCommittedResource(
+		result = assets->GetDevice()->CreateCommittedResource(
 			&uHeapProp,
 			D3D12_HEAP_FLAG_NONE,
 			&resoDesc,
@@ -380,7 +335,7 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	}
 
 	// Texture Buffer Default Heap
-	result = device->CreateCommittedResource(
+	result = assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&textureDesc,
@@ -395,11 +350,11 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	textureBuffer->SetName(L"Texture Buffer Resource Heap");
 
 	UINT64 textureUploadBufferSize;
-	device->GetCopyableFootprints(&textureDesc, 0, 1, 0, nullptr, nullptr, nullptr, &textureUploadBufferSize);
+	assets->GetDevice()->GetCopyableFootprints(&textureDesc, 0, 1, 0, nullptr, nullptr, nullptr, &textureUploadBufferSize);
 
 	// Texture Buffer Upload Heap
 	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(textureUploadBufferSize);
-	result = device->CreateCommittedResource(
+	result = assets->GetDevice()->CreateCommittedResource(
 		&uHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
@@ -419,15 +374,15 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	textureData.pData = &imageData[0];
 	textureData.RowPitch = imageBytesPerRow;
 	textureData.SlicePitch = imageBytesPerRow * textureDesc.Height;
-	UpdateSubresources(commandList, textureBuffer, textureBufferUploadHeap, 0, 0, 1, &textureData);
-	commandList->ResourceBarrier(1, &resoBarr);
+	UpdateSubresources(assets->GetCommandList(), textureBuffer, textureBufferUploadHeap, 0, 0, 1, &textureData);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Create SRV Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.NumDescriptors = 1;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	result = device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mainDescriptorHeap));
+	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mainDescriptorHeap));
 	if (FAILED(result))
 	{
 		running = false;
@@ -439,24 +394,24 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	srvDesc.Format = textureDesc.Format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
-	device->CreateShaderResourceView(textureBuffer, &srvDesc, mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+	assets->GetDevice()->CreateShaderResourceView(textureBuffer, &srvDesc, mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 	// Create Font Descriptor Heap
-	result = device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&fontDescriptorHeap));
+	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&fontDescriptorHeap));
 	if (FAILED(result))
 	{
 		running = false;
 	}
-	RenderSlop::fontDescriptorHeapAlloc.Create(device, fontDescriptorHeap);
+	Renderer::fontDescriptorHeapAlloc.Create(assets->GetDevice(), fontDescriptorHeap);
 
 	// Execute Command List
-	commandList->Close();
-	ID3D12CommandList* ppCommandLists[] = { commandList };
-	commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+	assets->GetCommandList()->Close();
+	ID3D12CommandList* ppCommandLists[] = { assets->GetCommandList() };
+	assets->GetCommandQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
 	// Increment Fence Value
-	fenceValue[frameIndex]++;
-	result = commandQueue->Signal(fence[frameIndex], fenceValue[frameIndex]);
+	assets->IncrementFenceValue(assets->GetFrameIndex());
+	result = assets->GetCommandQueue()->Signal(assets->GetFence(assets->GetFrameIndex()), assets->GetFenceValue(assets->GetFrameIndex()));
 	if (FAILED(result))
 	{
 		return false;
@@ -515,9 +470,9 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	XMStoreFloat4x4(&cube1WorldMat, tmpMat);
 
 	ImGui_ImplDX12_InitInfo init_info = {};
-	init_info.Device = device;
-	init_info.CommandQueue = commandQueue;
-	init_info.NumFramesInFlight = frameBufferCount;
+	init_info.Device = assets->GetDevice();
+	init_info.CommandQueue = assets->GetCommandQueue();
+	init_info.NumFramesInFlight = FRAME_BUFFER_COUNT;
 	init_info.RTVFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	init_info.DSVFormat = DXGI_FORMAT_UNKNOWN;
 	init_info.SrvDescriptorHeap = mainDescriptorHeap;
@@ -530,31 +485,14 @@ bool RenderSlop::Init(const HWND& window, bool screenState, float width, float h
 	return true;
 }
 
-void RenderSlop::UnInit()
+void Renderer::UnInit()
 {
 	// Wait for GPU to finish
-	for (int i = 0; i < frameBufferCount; ++i)
+	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
 	{
-		frameIndex = i;
+		assets->SetFrameIndex(i);
 		WaitForPreviousFrame();
 	}
-
-	// Assert not fullscreen
-	swapChain->SetFullscreenState(false, NULL);
-
-	// Release objects
-	SAFE_RELEASE(device);
-	SAFE_RELEASE(swapChain);
-	SAFE_RELEASE(commandQueue);
-	SAFE_RELEASE(rtvDescriptorHeap);
-	SAFE_RELEASE(commandList);
-
-	for (int i = 0; i < frameBufferCount; ++i)
-	{
-		SAFE_RELEASE(renderTargets[i]);
-		SAFE_RELEASE(commandAllocator[i]);
-		SAFE_RELEASE(fence[i]);
-	};
 
 	SAFE_RELEASE(pipelineStateObject);
 	SAFE_RELEASE(rootSignature);
@@ -564,7 +502,7 @@ void RenderSlop::UnInit()
 	SAFE_RELEASE(depthStencilBuffer);
 	SAFE_RELEASE(dsDescriptorHeap);
 
-	for (int i = 0; i < frameBufferCount; ++i)
+	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
 	{
 		SAFE_RELEASE(constantBufferUploadHeaps[i]);
 	};
@@ -572,7 +510,7 @@ void RenderSlop::UnInit()
 	ImGui_ImplDX12_Shutdown();
 }
 
-void RenderSlop::Update(float dt)
+void Renderer::Update(float dt)
 {
 	// add rotation to cube1's rotation matrix and store it
 	DirectX::XMMATRIX rotMat = XMLoadFloat4x4(&cube1RotMat);
@@ -601,10 +539,10 @@ void RenderSlop::Update(float dt)
 	XMStoreFloat4(&cbPerObject.camPos, cPos);
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
-	memcpy(cbvGPUAddress[frameIndex], &cbPerObject, sizeof(cbPerObject));
+	memcpy(cbvGPUAddress[assets->GetFrameIndex()], &cbPerObject, sizeof(cbPerObject));
 }
 
-void RenderSlop::UpdatePipeline()
+void Renderer::UpdatePipeline()
 {
 	HRESULT result;
 
@@ -612,13 +550,13 @@ void RenderSlop::UpdatePipeline()
 	WaitForPreviousFrame();
 
 	// Reset allocator when GPU is done
-	result = commandAllocator[frameIndex]->Reset();
+	result = assets->GetCommandAllocator(assets->GetFrameIndex())->Reset();
 	if (FAILED(result)) {
 		running = false;
 	}
 
 	// Reset command lists
-	result = commandList->Reset(commandAllocator[frameIndex], pipelineStateObject);
+	result = assets->GetCommandList()->Reset(assets->GetCommandAllocator(assets->GetFrameIndex()), pipelineStateObject);
 	if (FAILED(result)) {
 		running = false;
 	}
@@ -626,37 +564,37 @@ void RenderSlop::UpdatePipeline()
 	CD3DX12_RESOURCE_BARRIER resoBarr;
 
 	// Reset render target to write
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	commandList->ResourceBarrier(1, &resoBarr);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(assets->GetRenderTarget(assets->GetFrameIndex()), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Get handle to render target and depth buffer for merger stage
-	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, rtvDescriptorSize);
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(assets->GetRtvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), assets->GetFrameIndex(), assets->GetRtvDescriptorSize());
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 	// Set render target to merger
-	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
 	// Clear render target and depth buffer
 	const float clearColor[] = { 0.3f, 0.3f, 0.3f, 1.0f };
-	commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-	commandList->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 	// PUT RENDER COMMANDS HERE
-	commandList->SetGraphicsRootSignature(rootSignature);
+	assets->GetCommandList()->SetGraphicsRootSignature(rootSignature);
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mainDescriptorHeap };
-	commandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	assets->GetCommandList()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-	commandList->SetGraphicsRootDescriptorTable(1, mainDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, mainDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
-	commandList->RSSetViewports(1, &viewport);
-	commandList->RSSetScissorRects(1, &scissorRect);
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-	commandList->IASetIndexBuffer(&indexBufferView);
+	assets->GetCommandList()->RSSetViewports(1, &viewport);
+	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
+	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	assets->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
+	assets->GetCommandList()->IASetIndexBuffer(&indexBufferView);
 	
-	commandList->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[frameIndex]->GetGPUVirtualAddress());
-	commandList->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
+	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
+	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 
 	// Render ImGui
 	ImGui_ImplDX12_NewFrame();
@@ -668,172 +606,71 @@ void RenderSlop::UpdatePipeline()
 	ImGui::End();
 
 	ImGui::Render();
-	commandList->SetDescriptorHeaps(1, &fontDescriptorHeap);
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+	assets->GetCommandList()->SetDescriptorHeaps(1, &fontDescriptorHeap);
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), assets->GetCommandList());
 
 	// Set render target to present state
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	commandList->ResourceBarrier(1, &resoBarr);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(assets->GetRenderTarget(assets->GetFrameIndex()), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
-	result = commandList->Close();
+	result = assets->GetCommandList()->Close();
 	if (FAILED(result)) {
 		running = false;
 	}
 }
 
-void RenderSlop::Render()
+void Renderer::Render()
 {
 	HRESULT result;
 
 	UpdatePipeline();
 
 	// Create array of command lists
-	ID3D12CommandList* ppCommandLists[] = { commandList };
+	ID3D12CommandList* ppCommandLists[] = { assets->GetCommandList() };
 
 	// Execute command lists
-	commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+	assets->GetCommandQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
 	// Last command in queue
-	result = commandQueue->Signal(fence[frameIndex], fenceValue[frameIndex]);
+	result = assets->GetCommandQueue()->Signal(assets->GetFence(assets->GetFrameIndex()), assets->GetFenceValue(assets->GetFrameIndex()));
 	if (FAILED(result)) {
 		running = false;
 	}
 
 	// Present the backbuffer
-	result = swapChain->Present(0, 0);
+	result = assets->GetSwapChain()->Present(0, 0);
 	if (FAILED(result)) {
 		running = false;
 	}
 }
 
-void RenderSlop::WaitForPreviousFrame()
+void Renderer::WaitForPreviousFrame()
 {
 	HRESULT result;
 
 	// Swap to correct buffer
-	frameIndex = swapChain->GetCurrentBackBufferIndex();
+	assets->SetFrameIndex(assets->GetSwapChain()->GetCurrentBackBufferIndex());
 
 	// Check if GPU has finished executing
-	if (fence[frameIndex]->GetCompletedValue() < fenceValue[frameIndex])
+	if (assets->GetFence(assets->GetFrameIndex())->GetCompletedValue() < assets->GetFenceValue(assets->GetFrameIndex()))
 	{
 		// Fence create an event
-		result = fence[frameIndex]->SetEventOnCompletion(fenceValue[frameIndex], fenceEvent);
+		result = assets->GetFence(assets->GetFrameIndex())->SetEventOnCompletion(assets->GetFenceValue(assets->GetFrameIndex()), assets->GetFenceEvent());
 		if (FAILED(result)) {
 			running = false;
 		}
 
 		// Wait for event to finish
-		WaitForSingleObject(fenceEvent, INFINITE);
+		WaitForSingleObject(assets->GetFenceEvent(), INFINITE);
 	}
 
 	// Increment for next frame
-	fenceValue[frameIndex]++;
+	assets->IncrementFenceValue(assets->GetFrameIndex());
 }
 
-void RenderSlop::CloseFenceEventHandle() { CloseHandle(fenceEvent); }
+void Renderer::CloseFenceEventHandle() { CloseHandle(assets->GetFenceEvent()); }
 
-bool RenderSlop::FindCompatibleAdapter(IDXGIAdapter1* adap)
-{
-	HRESULT result;
-
-	result = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
-	if (FAILED(result)) {
-		return false;
-	}
-
-	int adapterIndex = 0;
-	bool adapterFound = false;
-
-	// Find adapter with DirectX 12 compatibility
-	while (dxgiFactory->EnumAdapters1(adapterIndex, &adap) != DXGI_ERROR_NOT_FOUND) {
-		DXGI_ADAPTER_DESC1 desc;
-		adap->GetDesc1(&desc);
-
-		// Software adapter check
-		if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {
-			adapterIndex++;
-			continue;
-		}
-
-		// Compatibility check
-		result = D3D12CreateDevice(adap, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr);
-		if (SUCCEEDED(result)) {
-			adapterFound = true;
-			break;
-		}
-
-		adapterIndex++;
-	}
-
-	return true;
-}
-
-void RenderSlop::CreateSwapChain(const HWND& window, DXGI_SAMPLE_DESC sampleDesc, bool screenState)
-{
-	// Display descriptor
-	DXGI_MODE_DESC backBufferDesc = {};
-	backBufferDesc.Width = DEFAULT_WINDOW_WIDTH;
-	backBufferDesc.Height = DEFAULT_WINDOW_HEIGHT;
-	backBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-	// Describe the swap chain
-	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-	swapChainDesc.BufferCount = frameBufferCount;
-	swapChainDesc.BufferDesc = backBufferDesc;
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	swapChainDesc.OutputWindow = window;
-	swapChainDesc.SampleDesc = sampleDesc;
-	swapChainDesc.Windowed = !screenState;
-
-	// Create the swap chain
-	IDXGISwapChain* tempSwapChain;
-	dxgiFactory->CreateSwapChain(commandQueue, &swapChainDesc, &tempSwapChain);
-	swapChain = static_cast<IDXGISwapChain3*>(tempSwapChain);
-	frameIndex = swapChain->GetCurrentBackBufferIndex();
-}
-
-bool RenderSlop::CreateCommandList()
-{
-	HRESULT result;
-	// Create command allocators
-	for (int i = 0; i < frameBufferCount; i++) {
-		result = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator[i]));
-		if (FAILED(result)) {
-			return false;
-		}
-	}
-
-	// Create command list
-	result = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator[0], NULL, IID_PPV_ARGS(&commandList));
-	if (FAILED(result)) {
-		return false;
-	}
-
-	return true;
-}
-
-bool RenderSlop::CreateFence()
-{
-	HRESULT result;
-
-	for (int i = 0; i < frameBufferCount; i++) {
-		result = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence[i]));
-		if (FAILED(result)) {
-			return false;
-		}
-		fenceValue[i] = 0;
-	}
-
-	fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-	if (fenceEvent == nullptr) {
-		return false;
-	}
-
-	return true;
-}
-
-int RenderSlop::LoadImageDataFromFile(BYTE** imageData, D3D12_RESOURCE_DESC& resourceDescription, LPCWSTR filename, int& bytesPerRow)
+int Renderer::LoadImageDataFromFile(BYTE** imageData, D3D12_RESOURCE_DESC& resourceDescription, LPCWSTR filename, int& bytesPerRow)
 {
 	HRESULT hr;
 
@@ -960,7 +797,7 @@ int RenderSlop::LoadImageDataFromFile(BYTE** imageData, D3D12_RESOURCE_DESC& res
 	return imageSize;
 }
 
-DXGI_FORMAT RenderSlop::GetDXGIFormatFromWICFormat(WICPixelFormatGUID& wicFormatGUID)
+DXGI_FORMAT Renderer::GetDXGIFormatFromWICFormat(WICPixelFormatGUID& wicFormatGUID)
 {
 	if (wicFormatGUID == GUID_WICPixelFormat128bppRGBAFloat) return DXGI_FORMAT_R32G32B32A32_FLOAT;
 	else if (wicFormatGUID == GUID_WICPixelFormat64bppRGBAHalf) return DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -982,7 +819,7 @@ DXGI_FORMAT RenderSlop::GetDXGIFormatFromWICFormat(WICPixelFormatGUID& wicFormat
 	else return DXGI_FORMAT_UNKNOWN;
 }
 
-WICPixelFormatGUID RenderSlop::GetConvertToWICFormat(WICPixelFormatGUID& wicFormatGUID)
+WICPixelFormatGUID Renderer::GetConvertToWICFormat(WICPixelFormatGUID& wicFormatGUID)
 {
 	if (wicFormatGUID == GUID_WICPixelFormatBlackWhite) return GUID_WICPixelFormat8bppGray;
 	else if (wicFormatGUID == GUID_WICPixelFormat1bppIndexed) return GUID_WICPixelFormat32bppRGBA;
@@ -1024,7 +861,7 @@ WICPixelFormatGUID RenderSlop::GetConvertToWICFormat(WICPixelFormatGUID& wicForm
 	else return GUID_WICPixelFormatDontCare;
 }
 
-int RenderSlop::GetDXGIFormatBitsPerPixel(DXGI_FORMAT& dxgiFormat)
+int Renderer::GetDXGIFormatBitsPerPixel(DXGI_FORMAT& dxgiFormat)
 {
 	if (dxgiFormat == DXGI_FORMAT_R32G32B32A32_FLOAT) return 128;
 	else if (dxgiFormat == DXGI_FORMAT_R16G16B16A16_FLOAT) return 64;

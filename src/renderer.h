@@ -7,15 +7,7 @@ https://github.com/galek/SDL-Directx12
 */
 
 #include "gconst.h"
-
-const int frameBufferCount = 2;
-
-struct Vertex {
-	Vertex(float x, float y, float z, float u, float v) : pos(x, y, z), normals(x, y, z), texCoord(u, v) {}
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 normals;
-	DirectX::XMFLOAT2 texCoord;
-};
+#include "renderassets.h"
 
 struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 wMat;
@@ -39,7 +31,7 @@ struct DescriptorHeapAllocator
 	void Free(D3D12_CPU_DESCRIPTOR_HANDLE out_cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE out_gpu_desc_handle);
 };
 
-class RenderSlop {
+class Renderer {
 public:
 	bool Init(const HWND& window, bool screenState, float width, float height);
 	void UnInit();
@@ -49,29 +41,8 @@ public:
 	void WaitForPreviousFrame();
 	void CloseFenceEventHandle();
 private:
-	bool FindCompatibleAdapter(IDXGIAdapter1* adap);
-	void CreateSwapChain(const HWND& window, DXGI_SAMPLE_DESC sampleDesc, bool screenState);
-	bool CreateCommandList();
-	bool CreateFence();
 
-	// Device & Swapchain
-	ID3D12Device* device;
-	IDXGIFactory4* dxgiFactory;
-	IDXGISwapChain3* swapChain;
-
-	// Commands
-	ID3D12CommandQueue* commandQueue;
-	ID3D12CommandAllocator* commandAllocator[frameBufferCount];
-	ID3D12GraphicsCommandList* commandList;
-	ID3D12Fence* fence[frameBufferCount];
-	HANDLE fenceEvent;
-	UINT64 fenceValue[frameBufferCount];
-
-	// Render Target View
-	ID3D12DescriptorHeap* rtvDescriptorHeap;
-	ID3D12Resource* renderTargets[frameBufferCount];
-	int frameIndex;
-	int rtvDescriptorSize;
+	RenderAssets* assets;
 
 	// Root Signature & Pipeline State Object
 	ID3D12RootSignature* rootSignature;
@@ -90,8 +61,8 @@ private:
 	// Constant Buffer
 	int ConstantBufferPerObjectAlignedSize = (sizeof(ConstantBufferPerObject) + 255) & ~255;
 	ConstantBufferPerObject cbPerObject;
-	ID3D12Resource* constantBufferUploadHeaps[frameBufferCount];
-	UINT8* cbvGPUAddress[frameBufferCount];
+	ID3D12Resource* constantBufferUploadHeaps[FRAME_BUFFER_COUNT];
+	UINT8* cbvGPUAddress[FRAME_BUFFER_COUNT];
 
 	// Camera
 	DirectX::XMFLOAT4X4 cameraProjMat;
