@@ -83,6 +83,7 @@ private:
 
 	// Cube
 	DirectX::XMFLOAT4X4 cube1WorldMat;
+	DirectX::XMFLOAT4X4 cube1DefaultRotMat;
 	DirectX::XMFLOAT4X4 cube1RotMat;
 	DirectX::XMFLOAT4 cube1Position;
 	int numCubeIndices;
@@ -101,6 +102,9 @@ private:
 	ID3D12DescriptorHeap* fontDescriptorHeap;
 	static DescriptorHeapAllocator fontDescriptorHeapAlloc;
 	DirectX::XMFLOAT3 dsaModifiers;
+	bool rotateX, rotateY, rotateZ;
+	float rotateSpeed = 1.0f;
+	bool resetCube;
 	
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;

@@ -597,6 +597,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	DirectX::XMVECTOR posVec = XMLoadFloat4(&cube1Position);
 
 	tmpMat = DirectX::XMMatrixTranslationFromVector(posVec);
+	XMStoreFloat4x4(&cube1DefaultRotMat, DirectX::XMMatrixIdentity());
 	XMStoreFloat4x4(&cube1RotMat, DirectX::XMMatrixIdentity());
 	XMStoreFloat4x4(&cube1WorldMat, tmpMat);
 
@@ -651,6 +652,24 @@ void Renderer::Update(float dt)
 {
 	// add rotation to cube1's rotation matrix and store it
 	DirectX::XMMATRIX rotMat = XMLoadFloat4x4(&cube1RotMat);
+	if (rotateX) {
+		DirectX::XMMATRIX rotMatX = XMMatrixRotationX(rotateSpeed * 0.002f * dt);
+		rotMat *= rotMatX;
+	}
+	if (rotateY) {
+		DirectX::XMMATRIX rotMatY = XMMatrixRotationY(rotateSpeed * 0.002f * dt);
+		rotMat *= rotMatY;
+	}
+	if (rotateZ) {
+		DirectX::XMMATRIX rotMatZ = XMMatrixRotationZ(rotateSpeed * 0.002f * dt);
+		rotMat *= rotMatZ;
+	}
+	if (resetCube) {
+		rotateX = false;
+		rotateY = false;
+		rotateZ = false;
+		rotMat = XMLoadFloat4x4(&cube1DefaultRotMat);
+	}
 	XMStoreFloat4x4(&cube1RotMat, rotMat);
 
 	// create translation matrix for cube 1 from cube 1's position vector
@@ -811,6 +830,13 @@ void Renderer::RenderImGui()
 		ImGui::SliderFloat("Diffuse", &dsaModifiers.x, 0.0f, 1.0f);
 		ImGui::SliderFloat("Specular", &dsaModifiers.y, 0.0f, 1.0f);
 		ImGui::SliderFloat("Ambient", &dsaModifiers.z, 0.0f, 1.0f);
+	}
+	if (ImGui::CollapsingHeader("Cube Settings")) {
+		resetCube = ImGui::Button("Reset Cube");
+		ImGui::Checkbox("Rotate X", &rotateX);
+		ImGui::Checkbox("Rotate Y", &rotateY);
+		ImGui::Checkbox("Rotate Z", &rotateZ);
+		ImGui::SliderFloat("Rotate Speed", &rotateSpeed, 0.0f, 1.0f);
 	}
 	ImGui::End();
 
