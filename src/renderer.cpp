@@ -29,7 +29,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	// Create Descriptor Range
 	D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[1];
 	descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorTableRanges[0].NumDescriptors = 1;
+	descriptorTableRanges[0].NumDescriptors = 2;
 	descriptorTableRanges[0].BaseShaderRegister = 0;
 	descriptorTableRanges[0].RegisterSpace = 0;
 	descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
@@ -98,6 +98,13 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	Shader pixelShader{};
 	pixelShader.Init(L"shaders/PixelShader.hlsl", "main", "ps_5_0");
 
+	// Create PP Shaders
+	Shader ppVertexShader{};
+	ppVertexShader.Init(L"shaders/PPVertexShader.hlsl", "main", "vs_5_0");
+
+	Shader ppPixelShader{};
+	ppPixelShader.Init(L"shaders/PPPixelShader.hlsl", "main", "ps_5_0");
+
 	// Create Input Layout
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 	{
@@ -133,8 +140,30 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
+	// Create Framebuffer PSO Descriptor
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC fbPsoDesc = {};
+	fbPsoDesc.InputLayout = inputLayoutDesc;
+	fbPsoDesc.pRootSignature = rootSignature;
+	fbPsoDesc.VS = ppVertexShader.GetBytecode();
+	fbPsoDesc.PS = ppPixelShader.GetBytecode();
+	fbPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	fbPsoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	fbPsoDesc.SampleDesc = sampleDesc;
+	fbPsoDesc.SampleMask = 0xffffffff;
+	fbPsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	fbPsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	fbPsoDesc.NumRenderTargets = 1;
+	fbPsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// Create Framebuffer PSO
+	result = assets->GetDevice()->CreateGraphicsPipelineState(&fbPsoDesc, IID_PPV_ARGS(&fbPipelineStateObject));
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 	// Verticies
-	Vertex vList[] = {
+	Vertex cubeVList[] = {
 		// Front
 		{ -0.5f,  0.5f, -0.5f, 0.0f, 0.0f },
 		{  0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
@@ -171,43 +200,84 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		{  0.5f, -0.5f, -0.5f, 0.0f, 1.0f },
 		{ -0.5f, -0.5f,  0.5f, 1.0f, 0.0f },
 	};
-	int vBufferSize = sizeof(vList);
+	int cubeVBufferSize = sizeof(cubeVList);
 
-	// Verticies Default Heap
+	// Verticies
+	Vertex quadVList[] = {
+		// Front
+		{ -1.0f,  1.0f, 0.0f, 0.0f, 0.0f },
+		{ -1.0f, -1.0f, 0.0f, 0.0f, 1.0f },
+		{  1.0f, -1.0f, 0.0f, 1.0f, 1.0f },
+		{  1.0f,  1.0f, 0.0f, 1.0f, 0.0f },
+	};
+	int quadVBufferSize = sizeof(quadVList);
+
+	// Cube Verticies Default Heap
 	CD3DX12_HEAP_PROPERTIES dHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resoDesc = CD3DX12_RESOURCE_DESC::Buffer(vBufferSize);
+	CD3DX12_RESOURCE_DESC resoDesc = CD3DX12_RESOURCE_DESC::Buffer(cubeVBufferSize);
 	assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
-		IID_PPV_ARGS(&vertexBuffer));
-	vertexBuffer->SetName(L"Vertex Buffer Resource Heap");
+		IID_PPV_ARGS(&cubeVertexBuffer));
+	cubeVertexBuffer->SetName(L"Cube Vertex Buffer Resource Heap");
 
-	// Verticies Upload Heap
+	// Cube Verticies Upload Heap
 	CD3DX12_HEAP_PROPERTIES uHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	ID3D12Resource* vBufferUploadHeap;
+	ID3D12Resource* cubeVBufferUploadHeap;
 	assets->GetDevice()->CreateCommittedResource(
 		&uHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&vBufferUploadHeap));
-	vBufferUploadHeap->SetName(L"Vertex Buffer Upload Resource Heap");
+		IID_PPV_ARGS(&cubeVBufferUploadHeap));
+	cubeVBufferUploadHeap->SetName(L"Cube Vertex Buffer Upload Resource Heap");
 
-	// Copy Verticies to Default Heap
-	D3D12_SUBRESOURCE_DATA vertexData = {};
-	vertexData.pData = reinterpret_cast<BYTE*>(vList);
-	vertexData.RowPitch = vBufferSize;
-	vertexData.SlicePitch = vBufferSize;
-	UpdateSubresources(assets->GetCommandList(), vertexBuffer, vBufferUploadHeap, 0, 0, 1, &vertexData);
-	CD3DX12_RESOURCE_BARRIER resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(vertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	// Cube Copy Verticies to Default Heap
+	D3D12_SUBRESOURCE_DATA cubeVertexData = {};
+	cubeVertexData.pData = reinterpret_cast<BYTE*>(cubeVList);
+	cubeVertexData.RowPitch = cubeVBufferSize;
+	cubeVertexData.SlicePitch = cubeVBufferSize;
+	UpdateSubresources(assets->GetCommandList(), cubeVertexBuffer, cubeVBufferUploadHeap, 0, 0, 1, &cubeVertexData);
+	CD3DX12_RESOURCE_BARRIER resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(cubeVertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
-	// Indicies
-	DWORD iList[] = {
+	// Quad Verticies Default Heap
+	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(quadVBufferSize);
+	assets->GetDevice()->CreateCommittedResource(
+		&dHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resoDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&quadVertexBuffer));
+	quadVertexBuffer->SetName(L"Quad Vertex Buffer Resource Heap");
+
+	// Quad Verticies Upload Heap
+	ID3D12Resource* quadVBufferUploadHeap;
+	assets->GetDevice()->CreateCommittedResource(
+		&uHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resoDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&quadVBufferUploadHeap));
+	quadVBufferUploadHeap->SetName(L"Quad Vertex Buffer Upload Resource Heap");
+
+	// Quad Copy Verticies to Default Heap
+	D3D12_SUBRESOURCE_DATA quadVertexData = {};
+	quadVertexData.pData = reinterpret_cast<BYTE*>(quadVList);
+	quadVertexData.RowPitch = quadVBufferSize;
+	quadVertexData.SlicePitch = quadVBufferSize;
+	UpdateSubresources(assets->GetCommandList(), quadVertexBuffer, quadVBufferUploadHeap, 0, 0, 1, &quadVertexData);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(quadVertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
+
+	// Cube Indicies
+	UINT32 cubeIList[] = {
 		// Front
 		0, 1, 2,
 		0, 3, 1,
@@ -232,38 +302,77 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		20, 21, 22,
 		20, 23, 21,
 	};
-	int iBufferSize = sizeof(iList);
-	numCubeIndices = sizeof(iList) / sizeof(DWORD);
+	int cubeIBufferSize = sizeof(cubeIList);
+	numCubeIndices = sizeof(cubeIList) / sizeof(UINT32);
 
-	// Indicies Default Heap
-	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(iBufferSize);
+	// Quad Indicies
+	UINT32 quadIList[] = {
+		// Front
+		0, 1, 2,
+		0, 2, 3,
+	};
+	int quadIBufferSize = sizeof(quadIList);
+
+	// Cube Indicies Default Heap
+	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(cubeIBufferSize);
 	assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
-		IID_PPV_ARGS(&indexBuffer));
-	indexBuffer->SetName(L"Index Buffer Resource Heap");
+		IID_PPV_ARGS(&cubeIndexBuffer));
+	cubeIndexBuffer->SetName(L"Cube Index Buffer Resource Heap");
 
-	// Indicies Upload Heap
-	ID3D12Resource* iBufferUploadHeap;
+	// Cube Indicies Upload Heap
+	ID3D12Resource* cubeIBufferUploadHeap;
 	assets->GetDevice()->CreateCommittedResource(
 		&uHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&iBufferUploadHeap));
-	iBufferUploadHeap->SetName(L"Index Buffer Upload Resource Heap");
+		IID_PPV_ARGS(&cubeIBufferUploadHeap));
+	cubeIBufferUploadHeap->SetName(L"Cube Index Buffer Upload Resource Heap");
 
-	// Copy Indicies to Default Heap
-	D3D12_SUBRESOURCE_DATA indexData = {};
-	indexData.pData = reinterpret_cast<BYTE*>(iList);
-	indexData.RowPitch = iBufferSize;
-	indexData.SlicePitch = iBufferSize;
-	UpdateSubresources(assets->GetCommandList(), indexBuffer, iBufferUploadHeap, 0, 0, 1, &indexData);
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(indexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	// Cube Copy Indicies to Default Heap
+	D3D12_SUBRESOURCE_DATA cubeIndexData = {};
+	cubeIndexData.pData = reinterpret_cast<BYTE*>(cubeIList);
+	cubeIndexData.RowPitch = cubeIBufferSize;
+	cubeIndexData.SlicePitch = cubeIBufferSize;
+	UpdateSubresources(assets->GetCommandList(), cubeIndexBuffer, cubeIBufferUploadHeap, 0, 0, 1, &cubeIndexData);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(cubeIndexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
+
+	// Quad Indicies Default Heap
+	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(quadIBufferSize);
+	assets->GetDevice()->CreateCommittedResource(
+		&dHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resoDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&quadIndexBuffer));
+	quadIndexBuffer->SetName(L"Quad Index Buffer Resource Heap");
+
+	// Quad Indicies Upload Heap
+	ID3D12Resource* quadIBufferUploadHeap;
+	assets->GetDevice()->CreateCommittedResource(
+		&uHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resoDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&quadIBufferUploadHeap));
+	quadIBufferUploadHeap->SetName(L"Quad Index Buffer Upload Resource Heap");
+
+	// Quad Copy Indicies to Default Heap
+	D3D12_SUBRESOURCE_DATA quadIndexData = {};
+	quadIndexData.pData = reinterpret_cast<BYTE*>(quadIList);
+	quadIndexData.RowPitch = quadIBufferSize;
+	quadIndexData.SlicePitch = quadIBufferSize;
+	UpdateSubresources(assets->GetCommandList(), quadIndexBuffer, quadIBufferUploadHeap, 0, 0, 1, &quadIndexData);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(quadIndexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Create Depth Stencil Buffer Heap
@@ -421,14 +530,14 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	delete imageData;
 
 	// Create VBV
-	vertexBufferView.BufferLocation = vertexBuffer->GetGPUVirtualAddress();
-	vertexBufferView.StrideInBytes = sizeof(Vertex);
-	vertexBufferView.SizeInBytes = vBufferSize;
+	cubeVertexBufferView.BufferLocation = cubeVertexBuffer->GetGPUVirtualAddress();
+	cubeVertexBufferView.StrideInBytes = sizeof(Vertex);
+	cubeVertexBufferView.SizeInBytes = cubeVBufferSize;
 
 	// Create Index Buffer View
-	indexBufferView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
-	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
-	indexBufferView.SizeInBytes = iBufferSize;
+	cubeIndexBufferView.BufferLocation = cubeIndexBuffer->GetGPUVirtualAddress();
+	cubeIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	cubeIndexBufferView.SizeInBytes = cubeIBufferSize;
 
 	// Define Viewport
 	viewport.TopLeftX = 0;
@@ -496,8 +605,8 @@ void Renderer::UnInit()
 
 	SAFE_RELEASE(pipelineStateObject);
 	SAFE_RELEASE(rootSignature);
-	SAFE_RELEASE(vertexBuffer);
-	SAFE_RELEASE(indexBuffer);
+	SAFE_RELEASE(cubeVertexBuffer);
+	SAFE_RELEASE(cubeIndexBuffer);
 
 	SAFE_RELEASE(depthStencilBuffer);
 	SAFE_RELEASE(dsDescriptorHeap);
@@ -555,16 +664,14 @@ void Renderer::UpdatePipeline()
 		running = false;
 	}
 
-	// Reset command lists
+	// Reset command lists and set starting PSO
 	result = assets->GetCommandList()->Reset(assets->GetCommandAllocator(assets->GetFrameIndex()), pipelineStateObject);
 	if (FAILED(result)) {
 		running = false;
 	}
 
-	CD3DX12_RESOURCE_BARRIER resoBarr;
-
 	// Reset render target to write
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(assets->GetRenderTarget(assets->GetFrameIndex()), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	CD3DX12_RESOURCE_BARRIER resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(assets->GetRenderTarget(assets->GetFrameIndex()), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Get handle to render target and depth buffer for merger stage
@@ -590,8 +697,8 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->RSSetViewports(1, &viewport);
 	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	assets->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
-	assets->GetCommandList()->IASetIndexBuffer(&indexBufferView);
+	assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
+	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
 	
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);

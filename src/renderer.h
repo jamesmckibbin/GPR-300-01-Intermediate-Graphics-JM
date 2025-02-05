@@ -47,12 +47,18 @@ private:
 	// Root Signature & Pipeline State Object
 	ID3D12RootSignature* rootSignature;
 	ID3D12PipelineState* pipelineStateObject;
+	ID3D12PipelineState* fbPipelineStateObject;
 
 	// Vertex & Index Buffers
-	ID3D12Resource* vertexBuffer;
-	ID3D12Resource* indexBuffer;
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
-	D3D12_INDEX_BUFFER_VIEW indexBufferView;
+	ID3D12Resource* cubeVertexBuffer;
+	ID3D12Resource* cubeIndexBuffer;
+	D3D12_VERTEX_BUFFER_VIEW cubeVertexBufferView;
+	D3D12_INDEX_BUFFER_VIEW cubeIndexBufferView;
+
+	ID3D12Resource* quadVertexBuffer;
+	ID3D12Resource* quadIndexBuffer;
+	D3D12_VERTEX_BUFFER_VIEW quadVertexBufferView;
+	D3D12_INDEX_BUFFER_VIEW quadIndexBufferView;
 
 	// Depth Buffer
 	ID3D12Resource* depthStencilBuffer;
