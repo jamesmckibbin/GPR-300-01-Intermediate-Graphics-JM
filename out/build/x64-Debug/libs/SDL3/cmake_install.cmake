@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/james.mckibbin/Documents/Repos/GPR-300-01-Intermediate-Graphics-JM/libs/SDL3
+# Install script for directory: C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/libs/SDL3
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/james.mckibbin/Documents/Repos/GPR-300-01-Intermediate-Graphics-JM/out/install/x64-debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Dev/Repositories/GPR-300-01-Intermediate-Graphics-JM/out/install/x64-debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

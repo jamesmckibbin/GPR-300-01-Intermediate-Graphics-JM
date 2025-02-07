@@ -16,31 +16,6 @@
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_sdl3.h>
 
-// DirectXTK Helpers
-#include "BufferHelpers.h"
-#include "CommonStates.h"
-#include "DDSTextureLoader.h"
-#include "DescriptorHeap.h"
-#include "DirectXHelpers.h"
-#include "EffectPipelineStateDescription.h"
-#include "Effects.h"
-#include "GamePad.h"
-#include "GeometricPrimitive.h"
-#include "GraphicsMemory.h"
-#include "Keyboard.h"
-#include "Model.h"
-#include "Mouse.h"
-#include "PostProcess.h"
-#include "PrimitiveBatch.h"
-#include "RenderTargetState.h"
-#include "ResourceUploadBatch.h"
-#include "ScreenGrab.h"
-#include "SimpleMath.h"
-#include "SpriteBatch.h"
-#include "SpriteFont.h"
-#include "VertexTypes.h"
-#include "WICTextureLoader.h"
-
 #define IID_PPV_ARGS(ppType) __uuidof(**(ppType)), IID_PPV_ARGS_Helper(ppType)
 #define SAFE_RELEASE(p) { if ( (p) ) { (p)->Release(); (p) = 0; } }
 

@@ -8,7 +8,7 @@ https://github.com/galek/SDL-Directx12
 
 #include "gconst.h"
 #include "renderassets.h"
-#include "rendertexture.h"
+#include "texturemanager.h"
 
 struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 wMat;
@@ -47,6 +47,7 @@ private:
 	void RenderImGui();
 
 	RenderAssets* assets;
+	TextureManager* textureManager;
 
 	// Root Signature & Pipeline State Object
 	ID3D12RootSignature* rootSignature;
