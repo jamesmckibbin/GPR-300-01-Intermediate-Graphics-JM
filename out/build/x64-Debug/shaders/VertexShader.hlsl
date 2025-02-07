@@ -9,8 +9,6 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
     float3 worldPos : WORLDPOSITION;
-    float4 camPos : CAMERAPOSITION;
-    float3 dsa : DSA;
     float3 norm : NORMALS;
     float2 texCoord : TEXCOORD;
 };
@@ -28,8 +26,6 @@ VS_OUTPUT main(VS_INPUT input)
     VS_OUTPUT output;
     output.worldPos = (float3)mul(wMat, input.pos);
     output.pos = mul(input.pos, mul(wMat, vpMat));
-    output.camPos = camPos;
-    output.dsa = dsa;
     output.norm = mul(transpose((float3x3)wMat), input.norm);
     output.texCoord = input.texCoord;
     return output;
