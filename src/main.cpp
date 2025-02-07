@@ -17,7 +17,5 @@ int main(int argc, char* args[]) {
 	delete mainApp;
 	mainApp = nullptr;
 
-
-
 	return 0;
 }

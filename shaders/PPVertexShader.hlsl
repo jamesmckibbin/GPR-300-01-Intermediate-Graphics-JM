@@ -13,7 +13,7 @@ struct VS_OUTPUT
 VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
-    output.pos = float4(input.pos.x, input.pos.y, 1.0f, 1.0f);
+    output.pos = float4(input.pos.x, input.pos.y, 0.0f, 1.0f);
     output.texCoord = input.texCoord;
     return output;
 }

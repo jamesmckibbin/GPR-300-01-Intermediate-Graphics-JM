@@ -9,8 +9,6 @@ public:
 	bool Init(const HWND& window, bool screenState);
 	void UnInit();
 
-	bool CreateFramebufferResource(int width, int height);
-
 	ID3D12Device* GetDevice() { return device; }
 	IDXGISwapChain3* GetSwapChain() { return swapChain; }
 	ID3D12CommandQueue* GetCommandQueue() { return commandQueue; }
@@ -26,7 +24,7 @@ public:
 	ID3D12DescriptorHeap* GetRtvDescriptorHeap() { return rtvDescriptorHeap; }
 	ID3D12Resource* GetRenderTarget(int index) { return renderTargets[index]; }
 	int GetRtvDescriptorSize() { return rtvDescriptorSize; }
-
+	
 private:
 
 	bool FindCompatibleAdapter(IDXGIAdapter1* adap);
@@ -49,9 +47,7 @@ private:
 
 	// Render Target View
 	ID3D12DescriptorHeap* rtvDescriptorHeap;
-	ID3D12DescriptorHeap* fbDescriptorHeap;
 	ID3D12Resource* renderTargets[FRAME_BUFFER_COUNT];
-	ID3D12Resource* frameBuffer;
 	int frameIndex;
 	int rtvDescriptorSize;
 

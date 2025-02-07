@@ -51,6 +51,8 @@ private:
 	TextureManager* textureManager;
 	ResourceManager* resourceManager;
 
+	ID3D12Resource* frameBuffer;
+
 	// Root Signature & Pipeline State Object
 	ID3D12RootSignature* rootSignature;
 	ID3D12PipelineState* pipelineStateObject;

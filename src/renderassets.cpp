@@ -74,7 +74,6 @@ void RenderAssets::UnInit()
 	SAFE_RELEASE(commandQueue);
 	SAFE_RELEASE(rtvDescriptorHeap);
 	SAFE_RELEASE(commandList);
-	SAFE_RELEASE(frameBuffer);
 
 	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
 	{
@@ -82,36 +81,6 @@ void RenderAssets::UnInit()
 		SAFE_RELEASE(commandAllocator[i]);
 		SAFE_RELEASE(fence[i]);
 	};
-}
-
-bool RenderAssets::CreateFramebufferResource(int width, int height)
-{
-	HRESULT result;
-
-	CD3DX12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-
-	D3D12_RESOURCE_DESC resDesc = {};
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-	resDesc.Width = width;
-	resDesc.Height = height;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-
-	result = device->CreateCommittedResource(
-		&heapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc,
-		D3D12_RESOURCE_STATE_COPY_SOURCE,
-		nullptr,
-		IID_PPV_ARGS(&frameBuffer));
-	if (FAILED(result)) {
-		return false;
-	}
-
-	return true;
 }
 
 bool RenderAssets::FindCompatibleAdapter(IDXGIAdapter1* adap)

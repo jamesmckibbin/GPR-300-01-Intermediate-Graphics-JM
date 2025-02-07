@@ -30,12 +30,18 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	rootCBVDescriptor.ShaderRegister = 0;
 
 	// Create Descriptor Range
-	D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[1];
+	D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[2];
 	descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorTableRanges[0].NumDescriptors = 1;
 	descriptorTableRanges[0].BaseShaderRegister = 0;
 	descriptorTableRanges[0].RegisterSpace = 0;
 	descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	descriptorTableRanges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+	descriptorTableRanges[1].NumDescriptors = 1;
+	descriptorTableRanges[1].BaseShaderRegister = 0;
+	descriptorTableRanges[1].RegisterSpace = 0;
+	descriptorTableRanges[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	// Create Descriptor Table
 	D3D12_ROOT_DESCRIPTOR_TABLE descriptorTable;
@@ -418,7 +424,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	// Create SRV Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = 1;
+	heapDesc.NumDescriptors = 2;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mainDescriptorHeap));
@@ -434,6 +440,34 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 	assets->GetDevice()->CreateShaderResourceView(textureBuffer, &srvDesc, mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+
+	// Create Framebuffer
+	D3D12_RESOURCE_DESC resDesc = {};
+	resDesc.DepthOrArraySize = 1;
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+	resDesc.Width = width;
+	resDesc.Height = height;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	result = assets->GetDevice()->CreateCommittedResource(
+		&dHeapProp, D3D12_HEAP_FLAG_NONE, &resDesc,
+		D3D12_RESOURCE_STATE_COPY_SOURCE, nullptr,
+		IID_PPV_ARGS(&frameBuffer));
+	if (FAILED(result))
+	{
+		running = false;
+	}
+
+	// Create UAV
+	D3D12_CPU_DESCRIPTOR_HANDLE fbHandle = mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	fbHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+	uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+	assets->GetDevice()->CreateUnorderedAccessView(frameBuffer, nullptr, &uavDesc, fbHandle);
 
 	// Create Font Descriptor Heap
 	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&fontDescriptorHeap));
@@ -685,11 +719,11 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 
 	// Render Quad
-	//assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
-	//assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//assets->GetCommandList()->IASetVertexBuffers(0, 1, &quadVertexBufferView);
-	//assets->GetCommandList()->IASetIndexBuffer(&quadIndexBufferView);
-	//assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
+	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	assets->GetCommandList()->IASetVertexBuffers(0, 1, &quadVertexBufferView);
+	assets->GetCommandList()->IASetIndexBuffer(&quadIndexBufferView);
+	assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
 	RenderImGui();
 
