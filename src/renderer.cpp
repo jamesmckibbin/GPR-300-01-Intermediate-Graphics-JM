@@ -18,6 +18,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	}
 
 	textureManager = new TextureManager();
+	resourceManager = new ResourceManager();
 
 	// Create Sample Descriptor
 	DXGI_SAMPLE_DESC sampleDesc = {};
@@ -214,29 +215,13 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	};
 	int quadVBufferSize = sizeof(quadVList);
 
-	// Cube Verticies Default Heap
 	CD3DX12_HEAP_PROPERTIES dHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resoDesc = CD3DX12_RESOURCE_DESC::Buffer(cubeVBufferSize);
-	assets->GetDevice()->CreateCommittedResource(
-		&dHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
-		nullptr,
-		IID_PPV_ARGS(&cubeVertexBuffer));
-	cubeVertexBuffer->SetName(L"Cube Vertex Buffer Resource Heap");
-
-	// Cube Verticies Upload Heap
 	CD3DX12_HEAP_PROPERTIES uHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	ID3D12Resource* cubeVBufferUploadHeap;
-	assets->GetDevice()->CreateCommittedResource(
-		&uHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&cubeVBufferUploadHeap));
-	cubeVBufferUploadHeap->SetName(L"Cube Vertex Buffer Upload Resource Heap");
+	CD3DX12_RESOURCE_DESC resoDesc;
+
+	// Cube Verticies Heaps
+	cubeVertexBuffer = resourceManager->CreateDefaultHeap(assets->GetDevice(), cubeVertexBuffer, L"Cube Vertex Buffer Resource Heap", cubeVBufferSize);
+	ID3D12Resource* cubeVBufferUploadHeap = resourceManager->CreateUploadHeap(assets->GetDevice(), L"Cube Vertex Buffer Upload Resource Heap", cubeVBufferSize);
 
 	// Cube Copy Verticies to Default Heap
 	D3D12_SUBRESOURCE_DATA cubeVertexData = {};
@@ -247,27 +232,9 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	CD3DX12_RESOURCE_BARRIER resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(cubeVertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
-	// Quad Verticies Default Heap
-	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(quadVBufferSize);
-	assets->GetDevice()->CreateCommittedResource(
-		&dHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
-		nullptr,
-		IID_PPV_ARGS(&quadVertexBuffer));
-	quadVertexBuffer->SetName(L"Quad Vertex Buffer Resource Heap");
-
-	// Quad Verticies Upload Heap
-	ID3D12Resource* quadVBufferUploadHeap;
-	assets->GetDevice()->CreateCommittedResource(
-		&uHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&quadVBufferUploadHeap));
-	quadVBufferUploadHeap->SetName(L"Quad Vertex Buffer Upload Resource Heap");
+	// Quad Verticies Heaps
+	quadVertexBuffer = resourceManager->CreateDefaultHeap(assets->GetDevice(), quadVertexBuffer, L"Quad Vertex Buffer Resource Heap", quadVBufferSize);
+	ID3D12Resource* quadVBufferUploadHeap = resourceManager->CreateUploadHeap(assets->GetDevice(), L"Quad Vertex Buffer Upload Resource Heap", quadVBufferSize);
 
 	// Quad Copy Verticies to Default Heap
 	D3D12_SUBRESOURCE_DATA quadVertexData = {};
@@ -315,27 +282,9 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	};
 	int quadIBufferSize = sizeof(quadIList);
 
-	// Cube Indicies Default Heap
-	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(cubeIBufferSize);
-	assets->GetDevice()->CreateCommittedResource(
-		&dHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
-		nullptr,
-		IID_PPV_ARGS(&cubeIndexBuffer));
-	cubeIndexBuffer->SetName(L"Cube Index Buffer Resource Heap");
-
-	// Cube Indicies Upload Heap
-	ID3D12Resource* cubeIBufferUploadHeap;
-	assets->GetDevice()->CreateCommittedResource(
-		&uHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&cubeIBufferUploadHeap));
-	cubeIBufferUploadHeap->SetName(L"Cube Index Buffer Upload Resource Heap");
+	// Cube Indicies Heaps
+	cubeIndexBuffer = resourceManager->CreateDefaultHeap(assets->GetDevice(), cubeIndexBuffer, L"Cube Index Buffer Resource Heap", cubeIBufferSize);
+	ID3D12Resource* cubeIBufferUploadHeap = resourceManager->CreateUploadHeap(assets->GetDevice(), L"Cube Index Buffer Upload Resource Heap", cubeIBufferSize);
 
 	// Cube Copy Indicies to Default Heap
 	D3D12_SUBRESOURCE_DATA cubeIndexData = {};
@@ -346,27 +295,9 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(cubeIndexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
-	// Quad Indicies Default Heap
-	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(quadIBufferSize);
-	assets->GetDevice()->CreateCommittedResource(
-		&dHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
-		nullptr,
-		IID_PPV_ARGS(&quadIndexBuffer));
-	quadIndexBuffer->SetName(L"Quad Index Buffer Resource Heap");
-
-	// Quad Indicies Upload Heap
-	ID3D12Resource* quadIBufferUploadHeap;
-	assets->GetDevice()->CreateCommittedResource(
-		&uHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&quadIBufferUploadHeap));
-	quadIBufferUploadHeap->SetName(L"Quad Index Buffer Upload Resource Heap");
+	// Quad Indicies Heaps
+	quadIndexBuffer = resourceManager->CreateDefaultHeap(assets->GetDevice(), quadIndexBuffer, L"Quad Index Buffer Resource Heap", quadIBufferSize);
+	ID3D12Resource* quadIBufferUploadHeap = resourceManager->CreateUploadHeap(assets->GetDevice(), L"Quad Index Buffer Upload Resource Heap", quadIBufferSize);
 
 	// Quad Copy Indicies to Default Heap
 	D3D12_SUBRESOURCE_DATA quadIndexData = {};
@@ -487,7 +418,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	// Create SRV Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = 2;
+	heapDesc.NumDescriptors = 1;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mainDescriptorHeap));
@@ -510,6 +441,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	{
 		running = false;
 	}
+
 	Renderer::fontDescriptorHeapAlloc.Create(assets->GetDevice(), fontDescriptorHeap);
 
 	// Execute Command List
@@ -622,13 +554,26 @@ void Renderer::UnInit()
 	delete textureManager;
 	textureManager = nullptr;
 
+	delete resourceManager;
+	resourceManager = nullptr;
+
 	SAFE_RELEASE(pipelineStateObject);
+	SAFE_RELEASE(fbPipelineStateObject);
 	SAFE_RELEASE(rootSignature);
 	SAFE_RELEASE(cubeVertexBuffer);
 	SAFE_RELEASE(cubeIndexBuffer);
+	SAFE_RELEASE(quadVertexBuffer);
+	SAFE_RELEASE(quadIndexBuffer);
 
 	SAFE_RELEASE(depthStencilBuffer);
 	SAFE_RELEASE(dsDescriptorHeap);
+
+	fontDescriptorHeapAlloc.Destroy();
+
+	SAFE_RELEASE(textureBuffer);
+	SAFE_RELEASE(textureBufferUploadHeap);
+	SAFE_RELEASE(mainDescriptorHeap);
+	SAFE_RELEASE(fontDescriptorHeap);
 
 	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
 	{
@@ -872,8 +817,9 @@ void DescriptorHeapAllocator::Create(ID3D12Device* device, ID3D12DescriptorHeap*
 	HeapStartGpu = Heap->GetGPUDescriptorHandleForHeapStart();
 	HeapHandleIncrement = device->GetDescriptorHandleIncrementSize(HeapType);
 	FreeIndices.reserve((int)desc.NumDescriptors);
-	for (int n = desc.NumDescriptors; n > 0; n--)
+	for (int n = desc.NumDescriptors; n > 0; n--) {
 		FreeIndices.push_back(n);
+	}
 }
 
 void DescriptorHeapAllocator::Destroy()

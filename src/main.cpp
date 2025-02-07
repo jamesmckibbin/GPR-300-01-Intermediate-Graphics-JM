@@ -1,9 +1,10 @@
 #include "app.h"
 
 int main(int argc, char* args[]) {
-
+	
 	Application* mainApp = new Application();
-	mainApp->Create();
+
+    mainApp->Create();
 
 	while (mainApp->IsRunning()) 
 	{
@@ -15,6 +16,8 @@ int main(int argc, char* args[]) {
 
 	delete mainApp;
 	mainApp = nullptr;
+
+
 
 	return 0;
 }

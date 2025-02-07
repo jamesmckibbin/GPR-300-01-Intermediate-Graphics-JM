@@ -74,6 +74,7 @@ void RenderAssets::UnInit()
 	SAFE_RELEASE(commandQueue);
 	SAFE_RELEASE(rtvDescriptorHeap);
 	SAFE_RELEASE(commandList);
+	SAFE_RELEASE(frameBuffer);
 
 	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
 	{

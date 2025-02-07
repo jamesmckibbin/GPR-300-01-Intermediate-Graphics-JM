@@ -9,6 +9,7 @@ https://github.com/galek/SDL-Directx12
 #include "gconst.h"
 #include "renderassets.h"
 #include "texturemanager.h"
+#include "resourcemanager.h"
 
 struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 wMat;
@@ -48,6 +49,7 @@ private:
 
 	RenderAssets* assets;
 	TextureManager* textureManager;
+	ResourceManager* resourceManager;
 
 	// Root Signature & Pipeline State Object
 	ID3D12RootSignature* rootSignature;
@@ -91,10 +93,6 @@ private:
 
 	// Textures
 	ID3D12Resource* textureBuffer;
-	int LoadImageDataFromFile(BYTE** imageData, D3D12_RESOURCE_DESC& resourceDescription, LPCWSTR filename, int& bytesPerRow);
-	DXGI_FORMAT GetDXGIFormatFromWICFormat(WICPixelFormatGUID& wicFormatGUID);
-	WICPixelFormatGUID GetConvertToWICFormat(WICPixelFormatGUID& wicFormatGUID);
-	int GetDXGIFormatBitsPerPixel(DXGI_FORMAT& dxgiFormat);
 	ID3D12DescriptorHeap* mainDescriptorHeap;
 	ID3D12Resource* textureBufferUploadHeap;
 

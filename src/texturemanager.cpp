@@ -232,6 +232,9 @@ Texture* TextureManager::CreateTexture(LPCWSTR filename)
 		textures.push_back(newTex);
 		return newTex;
 	}
+	delete newTex;
+	newTex = nullptr;
+
 	return nullptr;
 }
 
