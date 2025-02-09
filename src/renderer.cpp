@@ -30,18 +30,12 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	rootCBVDescriptor.ShaderRegister = 0;
 
 	// Create Descriptor Range
-	D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[2];
+	D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[1];
 	descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorTableRanges[0].NumDescriptors = 1;
+	descriptorTableRanges[0].NumDescriptors = 2;
 	descriptorTableRanges[0].BaseShaderRegister = 0;
 	descriptorTableRanges[0].RegisterSpace = 0;
 	descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	descriptorTableRanges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
-	descriptorTableRanges[1].NumDescriptors = 1;
-	descriptorTableRanges[1].BaseShaderRegister = 0;
-	descriptorTableRanges[1].RegisterSpace = 0;
-	descriptorTableRanges[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	// Create Descriptor Table
 	D3D12_ROOT_DESCRIPTOR_TABLE descriptorTable;
@@ -54,7 +48,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	rootParameters[0].Descriptor = rootCBVDescriptor;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// Create SRV Texture Root Parameter
+	// Create SRV and UAV Texture Root Parameter
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[1].DescriptorTable = descriptorTable;
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -427,7 +421,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	heapDesc.NumDescriptors = 2;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mainDescriptorHeap));
+	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&srvDescriptorHeap));
 	if (FAILED(result))
 	{
 		running = false;
@@ -439,38 +433,54 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	srvDesc.Format = newTex->GetDesc().Format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
-	assets->GetDevice()->CreateShaderResourceView(textureBuffer, &srvDesc, mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+	assets->GetDevice()->CreateShaderResourceView(textureBuffer, &srvDesc, srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	// Create Framebuffer
-	D3D12_RESOURCE_DESC resDesc = {};
-	resDesc.DepthOrArraySize = 1;
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-	resDesc.Width = width;
-	resDesc.Height = height;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-	result = assets->GetDevice()->CreateCommittedResource(
-		&dHeapProp, D3D12_HEAP_FLAG_NONE, &resDesc,
-		D3D12_RESOURCE_STATE_COPY_SOURCE, nullptr,
-		IID_PPV_ARGS(&frameBuffer));
-	if (FAILED(result))
-	{
-		running = false;
+	// Create Render Texture Heap
+	D3D12_DESCRIPTOR_HEAP_DESC rtHeapDesc = {};
+	rtHeapDesc.NumDescriptors = 1;
+	rtHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	rtHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	result = assets->GetDevice()->CreateDescriptorHeap(&rtHeapDesc, IID_PPV_ARGS(&rtDescriptorHeap));
+	if (FAILED(result)) {
+		return false;
 	}
 
-	// Create UAV
-	D3D12_CPU_DESCRIPTOR_HANDLE fbHandle = mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	fbHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	// Create Render Texture
+	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+	result = assets->GetDevice()->CreateCommittedResource(
+		&dHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resoDesc,
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+		nullptr,
+		IID_PPV_ARGS(&renderTexture));
+	if (FAILED(result)) {
+		return false;
+	}
 
-	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
-	uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-	assets->GetDevice()->CreateUnorderedAccessView(frameBuffer, nullptr, &uavDesc, fbHandle);
+	D3D12_CPU_DESCRIPTOR_HANDLE rtHandle = srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	rtHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	// Create Render Texture SRV
+	D3D12_SHADER_RESOURCE_VIEW_DESC rtSrvDesc = {};
+	rtSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	rtSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	rtSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	rtSrvDesc.Texture2D.MipLevels = 1;
+	assets->GetDevice()->CreateShaderResourceView(renderTexture, &rtSrvDesc, rtHandle);
+
+	// Create Render Texture RTV
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	assets->GetDevice()->CreateRenderTargetView(renderTexture, &rtvDesc, rtDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 	// Create Font Descriptor Heap
-	result = assets->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&fontDescriptorHeap));
+	D3D12_DESCRIPTOR_HEAP_DESC fontHeapDesc = {};
+	fontHeapDesc.NumDescriptors = 1;
+	fontHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	fontHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	result = assets->GetDevice()->CreateDescriptorHeap(&fontHeapDesc, IID_PPV_ARGS(&fontDescriptorHeap));
 	if (FAILED(result))
 	{
 		running = false;
@@ -560,7 +570,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	init_info.NumFramesInFlight = FRAME_BUFFER_COUNT;
 	init_info.RTVFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	init_info.DSVFormat = DXGI_FORMAT_UNKNOWN;
-	init_info.SrvDescriptorHeap = mainDescriptorHeap;
+	init_info.SrvDescriptorHeap = srvDescriptorHeap;
 	init_info.SrvDescriptorAllocFn = [](ImGui_ImplDX12_InitInfo*, D3D12_CPU_DESCRIPTOR_HANDLE* out_cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE* out_gpu_handle) { return fontDescriptorHeapAlloc.Alloc(out_cpu_handle, out_gpu_handle); };
 	init_info.SrvDescriptorFreeFn = [](ImGui_ImplDX12_InitInfo*, D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle) { return fontDescriptorHeapAlloc.Free(cpu_handle, gpu_handle); };
 	if (!ImGui_ImplDX12_Init(&init_info)) {
@@ -606,7 +616,7 @@ void Renderer::UnInit()
 
 	SAFE_RELEASE(textureBuffer);
 	SAFE_RELEASE(textureBufferUploadHeap);
-	SAFE_RELEASE(mainDescriptorHeap);
+	SAFE_RELEASE(srvDescriptorHeap);
 	SAFE_RELEASE(fontDescriptorHeap);
 
 	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
@@ -693,38 +703,45 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Get handle to render target and depth buffer for merger stage
+	CD3DX12_CPU_DESCRIPTOR_HANDLE fbHandle(rtDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(assets->GetRtvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), assets->GetFrameIndex(), assets->GetRtvDescriptorSize());
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
+	assets->GetCommandList()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 	assets->GetCommandList()->RSSetViewports(1, &viewport);
 	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 
 	assets->GetCommandList()->SetGraphicsRootSignature(rootSignature);
+	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
-	ID3D12DescriptorHeap* descriptorHeaps[] = { mainDescriptorHeap };
-	assets->GetCommandList()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-
+	// First Pass
+	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
 	const float clearColor[] = {0.2f, 0.1f, 0.3f, 1.0f};
-	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	assets->GetCommandList()->ClearRenderTargetView(fbHandle, clearColor, 0, nullptr);
 	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, mainDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	
 	// Render Scene
 	assets->GetCommandList()->SetPipelineState(pipelineStateObject);
+	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 
+	// Second Pass
+	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+	const float newClearColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, newClearColor, 0, nullptr);
+
 	// Render Quad
 	assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
-	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &quadVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&quadIndexBufferView);
 	assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
+	// Render ImGui
 	RenderImGui();
 
 	// Set render target to present state

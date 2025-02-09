@@ -51,7 +51,8 @@ private:
 	TextureManager* textureManager;
 	ResourceManager* resourceManager;
 
-	ID3D12Resource* frameBuffer;
+	ID3D12Resource* renderTexture;
+	ID3D12DescriptorHeap* rtDescriptorHeap;
 
 	// Root Signature & Pipeline State Object
 	ID3D12RootSignature* rootSignature;
@@ -95,7 +96,7 @@ private:
 
 	// Textures
 	ID3D12Resource* textureBuffer;
-	ID3D12DescriptorHeap* mainDescriptorHeap;
+	ID3D12DescriptorHeap* srvDescriptorHeap;
 	ID3D12Resource* textureBufferUploadHeap;
 
 	// ImGui Reqs

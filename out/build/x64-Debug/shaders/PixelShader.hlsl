@@ -18,7 +18,7 @@ cbuffer ConstantBuffer : register(b0)
 };
 
 float4 main(VS_OUTPUT input) : SV_TARGET
-{
+{ 
     float3 _LightDirection = float3(1.0f, 1.0f, -1.0f);
     float3 _LightColor = float3(1.0f, 1.0f, 1.0f);
     float3 _AmbientColor = float3(0.3f, 0.4f, 0.46f);
