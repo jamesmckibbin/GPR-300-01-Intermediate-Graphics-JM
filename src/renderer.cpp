@@ -21,10 +21,6 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	textureManager = new TextureManager();
 	resourceManager = new ResourceManager();
 
-	// Create Sample Descriptor
-	DXGI_SAMPLE_DESC sampleDesc = {};
-	sampleDesc.Count = 1;
-
 	// Create Root Descriptor
 	D3D12_ROOT_DESCRIPTOR rootCBVDescriptor;
 	rootCBVDescriptor.RegisterSpace = 0;
@@ -95,76 +91,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
-	// Create Shaders
-	Shader vertexShader{};
-	vertexShader.Init(L"shaders/VertexShader.hlsl", "main", "vs_5_0");
-
-	Shader pixelShader{};
-	pixelShader.Init(L"shaders/PixelShader.hlsl", "main", "ps_5_0");
-
-	// Create PP Shaders
-	Shader ppVertexShader{};
-	ppVertexShader.Init(L"shaders/PPVertexShader.hlsl", "main", "vs_5_0");
-
-	Shader ppPixelShader{};
-	ppPixelShader.Init(L"shaders/PPPixelShader.hlsl", "main", "ps_5_0");
-
-	// Create Input Layout
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "NORMALS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
-
-	// Fill Input Layout Descriptor
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-	inputLayoutDesc.NumElements = sizeof(inputLayout) / sizeof(D3D12_INPUT_ELEMENT_DESC);
-	inputLayoutDesc.pInputElementDescs = inputLayout;
-
-	// Create PSO Descriptor
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.InputLayout = inputLayoutDesc;
-	psoDesc.pRootSignature = rootSignature;
-	psoDesc.VS = vertexShader.GetBytecode();
-	psoDesc.PS = pixelShader.GetBytecode();
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	psoDesc.SampleDesc = sampleDesc;
-	psoDesc.SampleMask = 0xffffffff;
-	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-
-	// Create PSO
-	result = assets->GetDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Create Framebuffer PSO Descriptor
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC fbPsoDesc = {};
-	fbPsoDesc.InputLayout = inputLayoutDesc;
-	fbPsoDesc.pRootSignature = rootSignature;
-	fbPsoDesc.VS = ppVertexShader.GetBytecode();
-	fbPsoDesc.PS = ppPixelShader.GetBytecode();
-	fbPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	fbPsoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	fbPsoDesc.SampleDesc = sampleDesc;
-	fbPsoDesc.SampleMask = 0xffffffff;
-	fbPsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	fbPsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	fbPsoDesc.NumRenderTargets = 1;
-	fbPsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-
-	// Create Framebuffer PSO
-	result = assets->GetDevice()->CreateGraphicsPipelineState(&fbPsoDesc, IID_PPV_ARGS(&fbPipelineStateObject));
-	if (FAILED(result))
-	{
-		return false;
-	}
+	CreatePipelineStateObjects();
 
 	CreateUploadVIData();
 
@@ -395,6 +322,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	}
 
 	dsaModifiers = {1.0f, 1.0f, 1.0f};
+	ppOption = 0;
 
 	return true;
 }
@@ -496,6 +424,8 @@ void Renderer::Update(float dt)
 	XMStoreFloat4(&cbPerObject.camPos, cPos);
 	DirectX::XMVECTOR dsa = XMLoadFloat3(&dsaModifiers);
 	XMStoreFloat3(&cbPerObject.dsaMod, dsa);
+	DirectX::XMVECTOR pp = XMLoadInt(&ppOption);
+	XMStoreInt(&cbPerObject.ppOption, pp);
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
 	memcpy(cbvGPUAddress[assets->GetFrameIndex()], &cbPerObject, sizeof(cbPerObject));
@@ -561,6 +491,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &renderTriVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&renderTriIndexBufferView);
+	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	assets->GetCommandList()->DrawIndexedInstanced(3, 1, 0, 0, 0);
 
 	// Render ImGui
@@ -762,6 +693,88 @@ void Renderer::CreateUploadVIData()
 	renderTriIndexBufferView.SizeInBytes = triIBufferSize;
 }
 
+bool Renderer::CreatePipelineStateObjects()
+{
+	HRESULT result;
+
+	// Create Sample Descriptor
+	DXGI_SAMPLE_DESC sampleDesc = {};
+	sampleDesc.Count = 1;
+
+	// Create Scene Shaders
+	Shader vertexShader{};
+	vertexShader.Init(L"shaders/VertexShader.hlsl", "main", "vs_5_0");
+
+	Shader pixelShader{};
+	pixelShader.Init(L"shaders/PixelShader.hlsl", "main", "ps_5_0");
+
+	// Create Framebuffer Shaders
+	Shader ppVertexShader{};
+	ppVertexShader.Init(L"shaders/PPVertexShader.hlsl", "main", "vs_5_0");
+
+	Shader ppPixelShader{};
+	ppPixelShader.Init(L"shaders/PPPixelShader.hlsl", "main", "ps_5_0");
+
+	// Create Input Layout
+	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMALS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
+	// Fill Input Layout Descriptor
+	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
+	inputLayoutDesc.NumElements = sizeof(inputLayout) / sizeof(D3D12_INPUT_ELEMENT_DESC);
+	inputLayoutDesc.pInputElementDescs = inputLayout;
+
+	// Create PSO Descriptor
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+	psoDesc.InputLayout = inputLayoutDesc;
+	psoDesc.pRootSignature = rootSignature;
+	psoDesc.VS = vertexShader.GetBytecode();
+	psoDesc.PS = pixelShader.GetBytecode();
+	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	psoDesc.SampleDesc = sampleDesc;
+	psoDesc.SampleMask = 0xffffffff;
+	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	psoDesc.NumRenderTargets = 1;
+	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// Create PSO
+	result = assets->GetDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Create Framebuffer PSO Descriptor
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC fbPsoDesc = {};
+	fbPsoDesc.InputLayout = inputLayoutDesc;
+	fbPsoDesc.pRootSignature = rootSignature;
+	fbPsoDesc.VS = ppVertexShader.GetBytecode();
+	fbPsoDesc.PS = ppPixelShader.GetBytecode();
+	fbPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	fbPsoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	fbPsoDesc.SampleDesc = sampleDesc;
+	fbPsoDesc.SampleMask = 0xffffffff;
+	fbPsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	fbPsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	fbPsoDesc.NumRenderTargets = 1;
+	fbPsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	// Create Framebuffer PSO
+	result = assets->GetDevice()->CreateGraphicsPipelineState(&fbPsoDesc, IID_PPV_ARGS(&fbPipelineStateObject));
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void Renderer::RenderImGui()
 {
 	// Render ImGui
@@ -781,6 +794,27 @@ void Renderer::RenderImGui()
 		ImGui::Checkbox("Rotate Y", &rotateY);
 		ImGui::Checkbox("Rotate Z", &rotateZ);
 		ImGui::SliderFloat("Rotate Speed", &rotateSpeed, 0.0f, 1.0f);
+	}
+	if (ImGui::CollapsingHeader("Post Processing")) {
+		int regInt = ppOption;
+		const char* ppText = " ";
+		switch (ppOption) {
+		case 0:
+			ppText = "None";
+			break;
+		case 1:
+			ppText = "Inverse";
+			break;
+		case 2:
+			ppText = "Box Blur";
+			break;
+		case 3:
+			ppText = "Gaussian Blur";
+			break;
+		}
+		ImGui::Text(ppText);
+		ImGui::SliderInt(" ", &regInt, 0, 3);
+		ppOption = regInt;
 	}
 	ImGui::End();
 

@@ -16,6 +16,7 @@ struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 vpMat;
 	DirectX::XMFLOAT4 camPos;
 	DirectX::XMFLOAT3 dsaMod;
+	UINT32 ppOption;
 };
 
 // From DirectX12 ImGui Examples
@@ -46,6 +47,7 @@ public:
 private:
 
 	void CreateUploadVIData();
+	bool CreatePipelineStateObjects();
 	void RenderImGui();
 
 	RenderAssets* assets;
@@ -102,6 +104,7 @@ private:
 	ID3D12DescriptorHeap* fontDescriptorHeap;
 	static DescriptorHeapAllocator fontDescriptorHeapAlloc;
 	DirectX::XMFLOAT3 dsaModifiers;
+	UINT32 ppOption;
 	bool rotateX, rotateY, rotateZ;
 	float rotateSpeed = 1.0f;
 	bool resetCube;
