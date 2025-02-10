@@ -17,6 +17,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
+	// Create Managers
 	textureManager = new TextureManager();
 	resourceManager = new ResourceManager();
 
@@ -165,148 +166,11 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
-	// Verticies
-	Vertex cubeVList[] = {
-		// Front
-		{ -0.5f,  0.5f, -0.5f, 0.0f, 0.0f },
-		{  0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
-		{ -0.5f, -0.5f, -0.5f, 0.0f, 1.0f },
-		{  0.5f,  0.5f, -0.5f, 1.0f, 0.0f },
-
-		// Right
-		{  0.5f, -0.5f, -0.5f, 0.0f, 1.0f },
-		{  0.5f,  0.5f,  0.5f, 1.0f, 0.0f },
-		{  0.5f, -0.5f,  0.5f, 1.0f, 1.0f },
-		{  0.5f,  0.5f, -0.5f, 0.0f, 0.0f },
-
-		// Left
-		{ -0.5f,  0.5f,  0.5f, 0.0f, 0.0f },
-		{ -0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
-		{ -0.5f, -0.5f,  0.5f, 0.0f, 1.0f },
-		{ -0.5f,  0.5f, -0.5f, 1.0f, 0.0f },
-
-		// Back
-		{  0.5f,  0.5f,  0.5f, 0.0f, 0.0f },
-		{ -0.5f, -0.5f,  0.5f, 1.0f, 1.0f },
-		{  0.5f, -0.5f,  0.5f, 0.0f, 1.0f },
-		{ -0.5f,  0.5f,  0.5f, 1.0f, 0.0f },
-
-		// Top
-		{ -0.5f,  0.5f, -0.5f, 0.0f, 1.0f },
-		{  0.5f,  0.5f,  0.5f, 1.0f, 0.0f },
-		{  0.5f,  0.5f, -0.5f, 1.0f, 1.0f },
-		{ -0.5f,  0.5f,  0.5f, 0.0f, 0.0f },
-
-		// Bottom
-		{  0.5f, -0.5f,  0.5f, 0.0f, 0.0f },
-		{ -0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
-		{  0.5f, -0.5f, -0.5f, 0.0f, 1.0f },
-		{ -0.5f, -0.5f,  0.5f, 1.0f, 0.0f },
-	};
-	int cubeVBufferSize = sizeof(cubeVList);
-
-	// Verticies
-	Vertex quadVList[] = {
-		// Front
-		{ -1.0f,  1.0f, 0.0f, 0.0f, 0.0f },
-		{  1.0f, -1.0f, 0.0f, 1.0f, 1.0f },
-		{ -1.0f, -1.0f, 0.0f, 0.0f, 1.0f },
-		{  1.0f,  1.0f, 0.0f, 1.0f, 0.0f },
-	};
-	int quadVBufferSize = sizeof(quadVList);
+	CreateUploadVIData();
 
 	CD3DX12_HEAP_PROPERTIES dHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_HEAP_PROPERTIES uHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	CD3DX12_RESOURCE_DESC resoDesc;
-
-	// Cube Verticies Heaps
-	cubeVertexBuffer = resourceManager->CreateDefaultHeap(assets->GetDevice(), cubeVertexBuffer, L"Cube Vertex Buffer Resource Heap", cubeVBufferSize);
-	ID3D12Resource* cubeVBufferUploadHeap = resourceManager->CreateUploadHeap(assets->GetDevice(), L"Cube Vertex Buffer Upload Resource Heap", cubeVBufferSize);
-
-	// Cube Copy Verticies to Default Heap
-	D3D12_SUBRESOURCE_DATA cubeVertexData = {};
-	cubeVertexData.pData = reinterpret_cast<BYTE*>(cubeVList);
-	cubeVertexData.RowPitch = cubeVBufferSize;
-	cubeVertexData.SlicePitch = cubeVBufferSize;
-	UpdateSubresources(assets->GetCommandList(), cubeVertexBuffer, cubeVBufferUploadHeap, 0, 0, 1, &cubeVertexData);
-	CD3DX12_RESOURCE_BARRIER resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(cubeVertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
-
-	// Quad Verticies Heaps
-	quadVertexBuffer = resourceManager->CreateDefaultHeap(assets->GetDevice(), quadVertexBuffer, L"Quad Vertex Buffer Resource Heap", quadVBufferSize);
-	ID3D12Resource* quadVBufferUploadHeap = resourceManager->CreateUploadHeap(assets->GetDevice(), L"Quad Vertex Buffer Upload Resource Heap", quadVBufferSize);
-
-	// Quad Copy Verticies to Default Heap
-	D3D12_SUBRESOURCE_DATA quadVertexData = {};
-	quadVertexData.pData = reinterpret_cast<BYTE*>(quadVList);
-	quadVertexData.RowPitch = quadVBufferSize;
-	quadVertexData.SlicePitch = quadVBufferSize;
-	UpdateSubresources(assets->GetCommandList(), quadVertexBuffer, quadVBufferUploadHeap, 0, 0, 1, &quadVertexData);
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(quadVertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
-
-	// Cube Indicies
-	UINT32 cubeIList[] = {
-		// Front
-		0, 1, 2,
-		0, 3, 1,
-
-		// Left
-		4, 5, 6,
-		4, 7, 5,
-
-		// Right
-		8, 9, 10,
-		8, 11, 9,
-
-		// Back
-		12, 13, 14,
-		12, 15, 13,
-
-		// Top
-		16, 17, 18,
-		16, 19, 17,
-
-		// Bottom
-		20, 21, 22,
-		20, 23, 21,
-	};
-	int cubeIBufferSize = sizeof(cubeIList);
-	numCubeIndices = sizeof(cubeIList) / sizeof(UINT32);
-
-	// Quad Indicies
-	UINT32 quadIList[] = {
-		// Front
-		0, 1, 2,
-		0, 3, 1,
-	};
-	int quadIBufferSize = sizeof(quadIList);
-
-	// Cube Indicies Heaps
-	cubeIndexBuffer = resourceManager->CreateDefaultHeap(assets->GetDevice(), cubeIndexBuffer, L"Cube Index Buffer Resource Heap", cubeIBufferSize);
-	ID3D12Resource* cubeIBufferUploadHeap = resourceManager->CreateUploadHeap(assets->GetDevice(), L"Cube Index Buffer Upload Resource Heap", cubeIBufferSize);
-
-	// Cube Copy Indicies to Default Heap
-	D3D12_SUBRESOURCE_DATA cubeIndexData = {};
-	cubeIndexData.pData = reinterpret_cast<BYTE*>(cubeIList);
-	cubeIndexData.RowPitch = cubeIBufferSize;
-	cubeIndexData.SlicePitch = cubeIBufferSize;
-	UpdateSubresources(assets->GetCommandList(), cubeIndexBuffer, cubeIBufferUploadHeap, 0, 0, 1, &cubeIndexData);
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(cubeIndexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
-
-	// Quad Indicies Heaps
-	quadIndexBuffer = resourceManager->CreateDefaultHeap(assets->GetDevice(), quadIndexBuffer, L"Quad Index Buffer Resource Heap", quadIBufferSize);
-	ID3D12Resource* quadIBufferUploadHeap = resourceManager->CreateUploadHeap(assets->GetDevice(), L"Quad Index Buffer Upload Resource Heap", quadIBufferSize);
-
-	// Quad Copy Indicies to Default Heap
-	D3D12_SUBRESOURCE_DATA quadIndexData = {};
-	quadIndexData.pData = reinterpret_cast<BYTE*>(quadIList);
-	quadIndexData.RowPitch = quadIBufferSize;
-	quadIndexData.SlicePitch = quadIBufferSize;
-	UpdateSubresources(assets->GetCommandList(), quadIndexBuffer, quadIBufferUploadHeap, 0, 0, 1, &quadIndexData);
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(quadIndexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Create Depth Stencil Buffer Heap
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
@@ -374,47 +238,9 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	}
 
 	// Texture Buffer Default Heap
-	result = assets->GetDevice()->CreateCommittedResource(
-		&dHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&newTex->GetDesc(),
-		D3D12_RESOURCE_STATE_COPY_DEST,
-		nullptr,
-		IID_PPV_ARGS(&textureBuffer));
-	if (FAILED(result))
-	{
-		running = false;
-		return false;
-	}
-	textureBuffer->SetName(L"Texture Buffer Resource Heap");
-
-	UINT64 textureUploadBufferSize;
-	assets->GetDevice()->GetCopyableFootprints(&newTex->GetDesc(), 0, 1, 0, nullptr, nullptr, nullptr, &textureUploadBufferSize);
-
-	// Texture Buffer Upload Heap
-	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(textureUploadBufferSize);
-	result = assets->GetDevice()->CreateCommittedResource(
-		&uHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&textureBufferUploadHeap));
-	if (FAILED(result))
-	{
-		running = false;
-		return false;
-	}
-	textureBufferUploadHeap->SetName(L"Texture Buffer Upload Resource Heap");
-
-	// Copy Texture Data To Default Heap
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(textureBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-	D3D12_SUBRESOURCE_DATA textureData = {};
-	textureData.pData = &newTex->GetData()[0];
-	textureData.RowPitch = newTex->GetBytesPerRow();
-	textureData.SlicePitch = newTex->GetBytesPerRow() * newTex->GetDesc().Height;
-	UpdateSubresources(assets->GetCommandList(), textureBuffer, textureBufferUploadHeap, 0, 0, 1, &textureData);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
+	textureBuffer = resourceManager->CreateTexDefaultHeap(assets->GetDevice(), textureBuffer, newTex, L"Texture Buffer Resource Heap", newTex->GetSize());
+	ID3D12Resource* textureBufferUploadHeap = resourceManager->CreateTexUploadHeap(assets->GetDevice(), newTex, L"Texture Buffer Upload Resource Heap", newTex->GetSize());
+	resourceManager->UploadTextureResources(assets->GetCommandList(), textureBuffer, textureBufferUploadHeap, newTex);
 
 	// Create SRV Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
@@ -437,7 +263,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	// Create Render Texture Heap
 	D3D12_DESCRIPTOR_HEAP_DESC rtHeapDesc = {};
-	rtHeapDesc.NumDescriptors = 1;
+	rtHeapDesc.NumDescriptors = FRAME_BUFFER_COUNT;
 	rtHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	result = assets->GetDevice()->CreateDescriptorHeap(&rtHeapDesc, IID_PPV_ARGS(&rtDescriptorHeap));
@@ -445,35 +271,46 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
-	// Create Render Texture
+	// Get Size & First Handle of Render Texture Descriptor
+	int descSize = assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtHandle(rtDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+
+	// Get Next Handle of SRV Descriptor
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	srvHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	// Create Render Texture Per Buffer
 	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
-	result = assets->GetDevice()->CreateCommittedResource(
-		&dHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resoDesc,
-		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
-		nullptr,
-		IID_PPV_ARGS(&renderTexture));
-	if (FAILED(result)) {
-		return false;
+	for (int i = 0; i < FRAME_BUFFER_COUNT; i++) {
+
+		// Create Render Texture
+		result = assets->GetDevice()->CreateCommittedResource(
+			&dHeapProp,
+			D3D12_HEAP_FLAG_NONE,
+			&resoDesc,
+			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+			nullptr,
+			IID_PPV_ARGS(&renderTextures[i]));
+		if (FAILED(result)) {
+			return false;
+		}
+
+		// Create Render Texture SRV
+		D3D12_SHADER_RESOURCE_VIEW_DESC rtSrvDesc = {};
+		rtSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		rtSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		rtSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		rtSrvDesc.Texture2D.MipLevels = 1;
+		assets->GetDevice()->CreateShaderResourceView(renderTextures[i], &rtSrvDesc, srvHandle);
+
+		// Create Render Texture RTV
+		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+		assets->GetDevice()->CreateRenderTargetView(renderTextures[i], &rtvDesc, rtHandle);
+
+		rtHandle.Offset(1, descSize);
 	}
-
-	D3D12_CPU_DESCRIPTOR_HANDLE rtHandle = srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	rtHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	// Create Render Texture SRV
-	D3D12_SHADER_RESOURCE_VIEW_DESC rtSrvDesc = {};
-	rtSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	rtSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	rtSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	rtSrvDesc.Texture2D.MipLevels = 1;
-	assets->GetDevice()->CreateShaderResourceView(renderTexture, &rtSrvDesc, rtHandle);
-
-	// Create Render Texture RTV
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	assets->GetDevice()->CreateRenderTargetView(renderTexture, &rtvDesc, rtDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 	// Create Font Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC fontHeapDesc = {};
@@ -503,26 +340,6 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	// Free Obsolete Texture Data
 	textureManager->Cleanup();
-
-	// Create VBV
-	cubeVertexBufferView.BufferLocation = cubeVertexBuffer->GetGPUVirtualAddress();
-	cubeVertexBufferView.StrideInBytes = sizeof(Vertex);
-	cubeVertexBufferView.SizeInBytes = cubeVBufferSize;
-
-	// Create Index Buffer View
-	cubeIndexBufferView.BufferLocation = cubeIndexBuffer->GetGPUVirtualAddress();
-	cubeIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
-	cubeIndexBufferView.SizeInBytes = cubeIBufferSize;
-
-	// Create VBV
-	quadVertexBufferView.BufferLocation = quadVertexBuffer->GetGPUVirtualAddress();
-	quadVertexBufferView.StrideInBytes = sizeof(Vertex);
-	quadVertexBufferView.SizeInBytes = quadVBufferSize;
-
-	// Create Index Buffer View
-	quadIndexBufferView.BufferLocation = quadIndexBuffer->GetGPUVirtualAddress();
-	quadIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
-	quadIndexBufferView.SizeInBytes = quadIBufferSize;
 
 	// Define Viewport
 	viewport.TopLeftX = 0;
@@ -595,29 +412,34 @@ void Renderer::UnInit()
 	delete assets;
 	assets = nullptr;
 
-	delete textureManager;
-	textureManager = nullptr;
-
-	delete resourceManager;
-	resourceManager = nullptr;
+	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
+	{
+		SAFE_RELEASE(renderTextures[i]);
+	};
 
 	SAFE_RELEASE(pipelineStateObject);
 	SAFE_RELEASE(fbPipelineStateObject);
 	SAFE_RELEASE(rootSignature);
 	SAFE_RELEASE(cubeVertexBuffer);
 	SAFE_RELEASE(cubeIndexBuffer);
-	SAFE_RELEASE(quadVertexBuffer);
-	SAFE_RELEASE(quadIndexBuffer);
+	SAFE_RELEASE(textureBuffer);
+	SAFE_RELEASE(renderTriVertexBuffer);
+	SAFE_RELEASE(renderTriIndexBuffer);
 
 	SAFE_RELEASE(depthStencilBuffer);
 	SAFE_RELEASE(dsDescriptorHeap);
 
 	fontDescriptorHeapAlloc.Destroy();
 
-	SAFE_RELEASE(textureBuffer);
-	SAFE_RELEASE(textureBufferUploadHeap);
 	SAFE_RELEASE(srvDescriptorHeap);
+	SAFE_RELEASE(rtDescriptorHeap);
 	SAFE_RELEASE(fontDescriptorHeap);
+
+	delete textureManager;
+	textureManager = nullptr;
+
+	delete resourceManager;
+	resourceManager = nullptr;
 
 	for (int i = 0; i < FRAME_BUFFER_COUNT; ++i)
 	{
@@ -703,7 +525,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Get handle to render target and depth buffer for merger stage
-	CD3DX12_CPU_DESCRIPTOR_HANDLE fbHandle(rtDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+	CD3DX12_CPU_DESCRIPTOR_HANDLE fbHandle(rtDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), assets->GetFrameIndex(), assets->GetRtvDescriptorSize());
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(assets->GetRtvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), assets->GetFrameIndex(), assets->GetRtvDescriptorSize());
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
@@ -737,9 +559,9 @@ void Renderer::UpdatePipeline()
 
 	// Render Quad
 	assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
-	assets->GetCommandList()->IASetVertexBuffers(0, 1, &quadVertexBufferView);
-	assets->GetCommandList()->IASetIndexBuffer(&quadIndexBufferView);
-	assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	assets->GetCommandList()->IASetVertexBuffers(0, 1, &renderTriVertexBufferView);
+	assets->GetCommandList()->IASetIndexBuffer(&renderTriIndexBufferView);
+	assets->GetCommandList()->DrawIndexedInstanced(3, 1, 0, 0, 0);
 
 	// Render ImGui
 	RenderImGui();
@@ -804,6 +626,141 @@ void Renderer::WaitForPreviousFrame()
 }
 
 void Renderer::CloseFenceEventHandle() { CloseHandle(assets->GetFenceEvent()); }
+
+void Renderer::CreateUploadVIData()
+{
+	// Verticies
+	Vertex cubeVList[] = {
+		// Front
+		{ -0.5f,  0.5f, -0.5f, 0.0f, 0.0f },
+		{  0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
+		{ -0.5f, -0.5f, -0.5f, 0.0f, 1.0f },
+		{  0.5f,  0.5f, -0.5f, 1.0f, 0.0f },
+
+		// Right
+		{  0.5f, -0.5f, -0.5f, 0.0f, 1.0f },
+		{  0.5f,  0.5f,  0.5f, 1.0f, 0.0f },
+		{  0.5f, -0.5f,  0.5f, 1.0f, 1.0f },
+		{  0.5f,  0.5f, -0.5f, 0.0f, 0.0f },
+
+		// Left
+		{ -0.5f,  0.5f,  0.5f, 0.0f, 0.0f },
+		{ -0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
+		{ -0.5f, -0.5f,  0.5f, 0.0f, 1.0f },
+		{ -0.5f,  0.5f, -0.5f, 1.0f, 0.0f },
+
+		// Back
+		{  0.5f,  0.5f,  0.5f, 0.0f, 0.0f },
+		{ -0.5f, -0.5f,  0.5f, 1.0f, 1.0f },
+		{  0.5f, -0.5f,  0.5f, 0.0f, 1.0f },
+		{ -0.5f,  0.5f,  0.5f, 1.0f, 0.0f },
+
+		// Top
+		{ -0.5f,  0.5f, -0.5f, 0.0f, 1.0f },
+		{  0.5f,  0.5f,  0.5f, 1.0f, 0.0f },
+		{  0.5f,  0.5f, -0.5f, 1.0f, 1.0f },
+		{ -0.5f,  0.5f,  0.5f, 0.0f, 0.0f },
+
+		// Bottom
+		{  0.5f, -0.5f,  0.5f, 0.0f, 0.0f },
+		{ -0.5f, -0.5f, -0.5f, 1.0f, 1.0f },
+		{  0.5f, -0.5f, -0.5f, 0.0f, 1.0f },
+		{ -0.5f, -0.5f,  0.5f, 1.0f, 0.0f },
+	};
+	int cubeVBufferSize = sizeof(cubeVList);
+
+	// Verticies
+	Vertex triVList[] = {
+		// Front
+		{ -1.0f,  1.0f, 0.0f, 0.0f, 0.0f },
+		{  3.0f,  1.0f, 0.0f, 2.0f, 0.0f },
+		{ -1.0f, -3.0f, 0.0f, 0.0f, 2.0f },
+	};
+	int triVBufferSize = sizeof(triVList);
+
+	// Cube Verticies Heaps
+	cubeVertexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), cubeVertexBuffer, L"Cube Vertex Buffer Resource Heap", cubeVBufferSize);
+	ID3D12Resource* cubeVBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Cube Vertex Buffer Upload Resource Heap", cubeVBufferSize);
+
+	// Cube Copy Verticies to Default Heap
+	resourceManager->UploadVertexResources(assets->GetCommandList(), cubeVertexBuffer, cubeVBufferUploadHeap, cubeVList);
+
+	// Tri Verticies Heaps
+	renderTriVertexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), renderTriVertexBuffer, L"Tri Vertex Buffer Resource Heap", triVBufferSize);
+	ID3D12Resource* triVBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Tri Vertex Buffer Upload Resource Heap", triVBufferSize);
+
+	// Tri Copy Verticies to Default Heap
+	resourceManager->UploadVertexResources(assets->GetCommandList(), renderTriVertexBuffer, triVBufferUploadHeap, triVList);
+
+	// Cube Indicies
+	UINT32 cubeIList[] = {
+		// Front
+		0, 1, 2,
+		0, 3, 1,
+
+		// Left
+		4, 5, 6,
+		4, 7, 5,
+
+		// Right
+		8, 9, 10,
+		8, 11, 9,
+
+		// Back
+		12, 13, 14,
+		12, 15, 13,
+
+		// Top
+		16, 17, 18,
+		16, 19, 17,
+
+		// Bottom
+		20, 21, 22,
+		20, 23, 21,
+	};
+	int cubeIBufferSize = sizeof(cubeIList);
+	numCubeIndices = sizeof(cubeIList) / sizeof(UINT32);
+
+	// Tri Indicies
+	UINT32 triIList[] = {
+		0, 1, 2,
+	};
+	int triIBufferSize = sizeof(triIList);
+
+	// Cube Indicies Heaps
+	cubeIndexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), cubeIndexBuffer, L"Cube Index Buffer Resource Heap", cubeIBufferSize);
+	ID3D12Resource* cubeIBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Cube Index Buffer Upload Resource Heap", cubeIBufferSize);
+
+	// Cube Copy Indicies to Default Heap
+	resourceManager->UploadIndexResources(assets->GetCommandList(), cubeIndexBuffer, cubeIBufferUploadHeap, cubeIList);
+
+	// Tri Indicies Heaps
+	renderTriIndexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), renderTriIndexBuffer, L"Tri Index Buffer Resource Heap", triIBufferSize);
+	ID3D12Resource* triIBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Tri Index Buffer Upload Resource Heap", triIBufferSize);
+
+	// Quad Copy Indicies to Default Heap
+	resourceManager->UploadIndexResources(assets->GetCommandList(), renderTriIndexBuffer, triIBufferUploadHeap, triIList);
+
+	// Create VBV
+	cubeVertexBufferView.BufferLocation = cubeVertexBuffer->GetGPUVirtualAddress();
+	cubeVertexBufferView.StrideInBytes = sizeof(Vertex);
+	cubeVertexBufferView.SizeInBytes = cubeVBufferSize;
+
+	// Create Index Buffer View
+	cubeIndexBufferView.BufferLocation = cubeIndexBuffer->GetGPUVirtualAddress();
+	cubeIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	cubeIndexBufferView.SizeInBytes = cubeIBufferSize;
+
+	// Create VBV
+	renderTriVertexBufferView.BufferLocation = renderTriVertexBuffer->GetGPUVirtualAddress();
+	renderTriVertexBufferView.StrideInBytes = sizeof(Vertex);
+	renderTriVertexBufferView.SizeInBytes = triVBufferSize;
+
+	// Create Index Buffer View
+	renderTriIndexBufferView.BufferLocation = renderTriIndexBuffer->GetGPUVirtualAddress();
+	renderTriIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	renderTriIndexBufferView.SizeInBytes = triIBufferSize;
+}
 
 void Renderer::RenderImGui()
 {

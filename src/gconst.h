@@ -22,7 +22,7 @@
 #define DEFAULT_WINDOW_WIDTH 800
 #define DEFAULT_WINDOW_HEIGHT 600
 
-#define FRAME_BUFFER_COUNT 3
+#define FRAME_BUFFER_COUNT 2
 
 struct Vertex {
 	Vertex(float x, float y, float z, float u, float v) : pos(x, y, z), normals(x, y, z), texCoord(u, v) {}

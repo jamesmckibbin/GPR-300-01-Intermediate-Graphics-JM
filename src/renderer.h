@@ -45,13 +45,14 @@ public:
 	void CloseFenceEventHandle();
 private:
 
+	void CreateUploadVIData();
 	void RenderImGui();
 
 	RenderAssets* assets;
 	TextureManager* textureManager;
 	ResourceManager* resourceManager;
 
-	ID3D12Resource* renderTexture;
+	ID3D12Resource* renderTextures[FRAME_BUFFER_COUNT];
 	ID3D12DescriptorHeap* rtDescriptorHeap;
 
 	// Root Signature & Pipeline State Object
@@ -64,11 +65,10 @@ private:
 	ID3D12Resource* cubeIndexBuffer;
 	D3D12_VERTEX_BUFFER_VIEW cubeVertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW cubeIndexBufferView;
-
-	ID3D12Resource* quadVertexBuffer;
-	ID3D12Resource* quadIndexBuffer;
-	D3D12_VERTEX_BUFFER_VIEW quadVertexBufferView;
-	D3D12_INDEX_BUFFER_VIEW quadIndexBufferView;
+	ID3D12Resource* renderTriVertexBuffer;
+	ID3D12Resource* renderTriIndexBuffer;
+	D3D12_VERTEX_BUFFER_VIEW renderTriVertexBufferView;
+	D3D12_INDEX_BUFFER_VIEW renderTriIndexBufferView;
 
 	// Depth Buffer
 	ID3D12Resource* depthStencilBuffer;
@@ -97,7 +97,6 @@ private:
 	// Textures
 	ID3D12Resource* textureBuffer;
 	ID3D12DescriptorHeap* srvDescriptorHeap;
-	ID3D12Resource* textureBufferUploadHeap;
 
 	// ImGui Reqs
 	ID3D12DescriptorHeap* fontDescriptorHeap;
