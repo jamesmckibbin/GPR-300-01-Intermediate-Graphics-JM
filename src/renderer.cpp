@@ -45,7 +45,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	rootParameters[0].Descriptor = rootCBVDescriptor;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// Create SRV and UAV Texture Root Parameter
+	// Create SRV Texture Root Parameter
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[1].DescriptorTable = descriptorTable;
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -164,7 +164,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
-	// Texture Buffer Default Heap
+	// Texture Buffer Heap
 	textureBuffer = resourceManager->CreateTexDefaultHeap(assets->GetDevice(), textureBuffer, newTex, L"Texture Buffer Resource Heap", newTex->GetSize());
 	ID3D12Resource* textureBufferUploadHeap = resourceManager->CreateTexUploadHeap(assets->GetDevice(), newTex, L"Texture Buffer Upload Resource Heap", newTex->GetSize());
 	resourceManager->UploadTextureResources(assets->GetCommandList(), textureBuffer, textureBufferUploadHeap, newTex);
