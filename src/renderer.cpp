@@ -468,7 +468,10 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->SetGraphicsRootSignature(rootSignature);
 	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
-	// First Pass
+	// Shadow Map Pass
+
+
+	// Scene Pass
 	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
 	const float clearColor[] = {0.2f, 0.1f, 0.3f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(fbHandle, clearColor, 0, nullptr);
@@ -482,12 +485,12 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 
-	// Second Pass
+	// Post Process Pass
 	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 	const float newClearColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, newClearColor, 0, nullptr);
 
-	// Render Quad
+	// Render Fullscreen Tri
 	assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &renderTriVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&renderTriIndexBufferView);
@@ -697,10 +700,6 @@ bool Renderer::CreatePipelineStateObjects()
 {
 	HRESULT result;
 
-	// Create Sample Descriptor
-	DXGI_SAMPLE_DESC sampleDesc = {};
-	sampleDesc.Count = 1;
-
 	// Create Scene Shaders
 	Shader vertexShader{};
 	vertexShader.Init(L"shaders/VertexShader.hlsl", "main", "vs_5_0");
@@ -723,52 +722,10 @@ bool Renderer::CreatePipelineStateObjects()
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
-	// Fill Input Layout Descriptor
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-	inputLayoutDesc.NumElements = sizeof(inputLayout) / sizeof(D3D12_INPUT_ELEMENT_DESC);
-	inputLayoutDesc.pInputElementDescs = inputLayout;
-
-	// Create PSO Descriptor
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.InputLayout = inputLayoutDesc;
-	psoDesc.pRootSignature = rootSignature;
-	psoDesc.VS = vertexShader.GetBytecode();
-	psoDesc.PS = pixelShader.GetBytecode();
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	psoDesc.SampleDesc = sampleDesc;
-	psoDesc.SampleMask = 0xffffffff;
-	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-
-	// Create PSO
-	result = assets->GetDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
-	if (FAILED(result))
-	{
+	if (!scenePSO.Init(assets->GetDevice(), rootSignature, inputLayout, vertexShader, pixelShader)) {
 		return false;
 	}
-
-	// Create Framebuffer PSO Descriptor
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC fbPsoDesc = {};
-	fbPsoDesc.InputLayout = inputLayoutDesc;
-	fbPsoDesc.pRootSignature = rootSignature;
-	fbPsoDesc.VS = ppVertexShader.GetBytecode();
-	fbPsoDesc.PS = ppPixelShader.GetBytecode();
-	fbPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	fbPsoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	fbPsoDesc.SampleDesc = sampleDesc;
-	fbPsoDesc.SampleMask = 0xffffffff;
-	fbPsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	fbPsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	fbPsoDesc.NumRenderTargets = 1;
-	fbPsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-
-	// Create Framebuffer PSO
-	result = assets->GetDevice()->CreateGraphicsPipelineState(&fbPsoDesc, IID_PPV_ARGS(&fbPipelineStateObject));
-	if (FAILED(result))
-	{
+	if (!postPSO.Init(assets->GetDevice(), rootSignature, inputLayout, ppVertexShader, ppPixelShader)) {
 		return false;
 	}
 
@@ -816,40 +773,16 @@ void Renderer::RenderImGui()
 		ImGui::SliderInt(" ", &regInt, 0, 3);
 		ppOption = regInt;
 	}
-	ImGui::BeginChild("Shadow Map");
-	ImGui::EndChild();
+	if (ImGui::BeginChild("Shadow Map")) {
+		ImGui::Text("Shadow mapping here soon!");
+		ImGui::EndChild();
+	}
 	ImGui::End();
 
 	ImGui::Render();
 	assets->GetCommandList()->SetDescriptorHeaps(1, &fontDescriptorHeap);
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), assets->GetCommandList());
 }
-
-bool Shader::Init(LPCWSTR filename, LPCSTR entryFunc, LPCSTR target)
-{
-	HRESULT result;
-
-	result = D3DCompileFromFile(filename, nullptr, nullptr,
-		entryFunc, target, 0,
-		0, &shaderBlob, &errorBlob);
-	if (FAILED(result))
-	{
-		OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-		return false;
-	}
-
-	shaderBytecode = {};
-	shaderBytecode.BytecodeLength = shaderBlob->GetBufferSize();
-	shaderBytecode.pShaderBytecode = shaderBlob->GetBufferPointer();
-
-	return true;
-}
-
-ID3DBlob* Shader::GetBlob() { return shaderBlob; }
-
-ID3DBlob* Shader::GetErrorBlob() { return errorBlob; }
-
-D3D12_SHADER_BYTECODE Shader::GetBytecode() { return shaderBytecode; }
 
 void DescriptorHeapAllocator::Create(ID3D12Device* device, ID3D12DescriptorHeap* heap)
 {

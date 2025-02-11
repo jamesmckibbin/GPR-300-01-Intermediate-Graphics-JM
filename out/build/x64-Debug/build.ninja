@@ -105,6 +105,14 @@ build CMakeFiles\app.dir\src\resourcemanager.cpp.obj: CXX_COMPILER__app_unscanne
   TARGET_COMPILE_PDB = CMakeFiles\app.dir\
   TARGET_PDB = app.pdb
 
+build CMakeFiles\app.dir\src\shader.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\src\shader.cpp || cmake_object_order_depends_target_app
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
+  OBJECT_DIR = CMakeFiles\app.dir
+  OBJECT_FILE_DIR = CMakeFiles\app.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\app.dir\
+  TARGET_PDB = app.pdb
+
 build CMakeFiles\app.dir\src\texturemanager.cpp.obj: CXX_COMPILER__app_unscanned_Debug C$:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\src\texturemanager.cpp || cmake_object_order_depends_target_app
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\SDL3\include -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\directx -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectX12\include\dxguid -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\DirectXTK\Inc -IC:\Users\james.mckibbin\Documents\Repos\GPR-300-01-Intermediate-Graphics-JM\libs\imgui
@@ -185,7 +193,7 @@ build CMakeFiles\app.dir\libs\imgui\imgui_widgets.cpp.obj: CXX_COMPILER__app_uns
 #############################################
 # Link the executable app.exe
 
-build app.exe: CXX_EXECUTABLE_LINKER__app_Debug CMakeFiles\app.dir\src\app.cpp.obj CMakeFiles\app.dir\src\main.cpp.obj CMakeFiles\app.dir\src\pipelinestateobject.cpp.obj CMakeFiles\app.dir\src\renderassets.cpp.obj CMakeFiles\app.dir\src\renderer.cpp.obj CMakeFiles\app.dir\src\rendertexture.cpp.obj CMakeFiles\app.dir\src\resourcemanager.cpp.obj CMakeFiles\app.dir\src\texturemanager.cpp.obj CMakeFiles\app.dir\src\timer.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_demo.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_draw.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_impl_dx12.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_impl_sdl3.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_tables.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_widgets.cpp.obj | lib\DirectXTK12.lib || lib\DirectXTK12.lib
+build app.exe: CXX_EXECUTABLE_LINKER__app_Debug CMakeFiles\app.dir\src\app.cpp.obj CMakeFiles\app.dir\src\main.cpp.obj CMakeFiles\app.dir\src\pipelinestateobject.cpp.obj CMakeFiles\app.dir\src\renderassets.cpp.obj CMakeFiles\app.dir\src\renderer.cpp.obj CMakeFiles\app.dir\src\rendertexture.cpp.obj CMakeFiles\app.dir\src\resourcemanager.cpp.obj CMakeFiles\app.dir\src\shader.cpp.obj CMakeFiles\app.dir\src\texturemanager.cpp.obj CMakeFiles\app.dir\src\timer.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_demo.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_draw.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_impl_dx12.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_impl_sdl3.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_tables.cpp.obj CMakeFiles\app.dir\libs\imgui\imgui_widgets.cpp.obj | lib\DirectXTK12.lib || lib\DirectXTK12.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = SDL3.lib  d3d12.lib  dxgi.lib  d3dcompiler.lib  dxguid.lib  lib\DirectXTK12.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

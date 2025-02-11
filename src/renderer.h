@@ -10,6 +10,8 @@ https://github.com/galek/SDL-Directx12
 #include "renderassets.h"
 #include "texturemanager.h"
 #include "resourcemanager.h"
+#include "shader.h"
+#include "pipelinestateobject.h"
 
 struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 wMat;
@@ -61,6 +63,8 @@ private:
 	ID3D12RootSignature* rootSignature;
 	ID3D12PipelineState* pipelineStateObject;
 	ID3D12PipelineState* fbPipelineStateObject;
+	PipelineStateObject scenePSO;
+	PipelineStateObject postPSO;
 
 	// Vertex & Index Buffers
 	ID3D12Resource* cubeVertexBuffer;
@@ -113,17 +117,4 @@ private:
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT scissorRect;
 
-};
-
-class Shader {
-public:
-	bool Init(LPCWSTR filename, LPCSTR entryFunc, LPCSTR target);
-	ID3DBlob* GetBlob();
-	ID3DBlob* GetErrorBlob();
-	D3D12_SHADER_BYTECODE GetBytecode();
-
-private:
-	ID3DBlob* shaderBlob;
-	ID3DBlob* errorBlob;
-	D3D12_SHADER_BYTECODE shaderBytecode;
 };
