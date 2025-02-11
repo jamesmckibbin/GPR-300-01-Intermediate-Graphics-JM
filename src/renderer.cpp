@@ -816,6 +816,8 @@ void Renderer::RenderImGui()
 		ImGui::SliderInt(" ", &regInt, 0, 3);
 		ppOption = regInt;
 	}
+	ImGui::BeginChild("Shadow Map");
+	ImGui::EndChild();
 	ImGui::End();
 
 	ImGui::Render();
