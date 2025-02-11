@@ -347,6 +347,8 @@ void Renderer::UnInit()
 
 	SAFE_RELEASE(pipelineStateObject);
 	SAFE_RELEASE(fbPipelineStateObject);
+	delete scenePSO;
+	delete postPSO;
 	SAFE_RELEASE(rootSignature);
 	SAFE_RELEASE(cubeVertexBuffer);
 	SAFE_RELEASE(cubeIndexBuffer);
@@ -445,7 +447,7 @@ void Renderer::UpdatePipeline()
 	}
 
 	// Reset command lists and set starting PSO
-	result = assets->GetCommandList()->Reset(assets->GetCommandAllocator(assets->GetFrameIndex()), pipelineStateObject);
+	result = assets->GetCommandList()->Reset(assets->GetCommandAllocator(assets->GetFrameIndex()), scenePSO->GetState());
 	if (FAILED(result)) {
 		running = false;
 	}
@@ -478,12 +480,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	
 	// Render Scene
-	assets->GetCommandList()->SetPipelineState(pipelineStateObject);
-	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
-	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
-	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
-	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
+	DrawScene();
 
 	// Post Process Pass
 	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
@@ -491,7 +488,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, newClearColor, 0, nullptr);
 
 	// Render Fullscreen Tri
-	assets->GetCommandList()->SetPipelineState(fbPipelineStateObject);
+	assets->GetCommandList()->SetPipelineState(postPSO->GetState());
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &renderTriVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&renderTriIndexBufferView);
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
@@ -700,6 +697,9 @@ bool Renderer::CreatePipelineStateObjects()
 {
 	HRESULT result;
 
+	scenePSO = new PipelineStateObject();
+	postPSO = new PipelineStateObject();
+
 	// Create Scene Shaders
 	Shader vertexShader{};
 	vertexShader.Init(L"shaders/VertexShader.hlsl", "main", "vs_5_0");
@@ -714,22 +714,24 @@ bool Renderer::CreatePipelineStateObjects()
 	Shader ppPixelShader{};
 	ppPixelShader.Init(L"shaders/PPPixelShader.hlsl", "main", "ps_5_0");
 
-	// Create Input Layout
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "NORMALS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
-
-	if (!scenePSO.Init(assets->GetDevice(), rootSignature, inputLayout, vertexShader, pixelShader)) {
+	if (!scenePSO->Init(assets->GetDevice(), rootSignature, &vertexShader, &pixelShader)) {
 		return false;
 	}
-	if (!postPSO.Init(assets->GetDevice(), rootSignature, inputLayout, ppVertexShader, ppPixelShader)) {
+	if (!postPSO->Init(assets->GetDevice(), rootSignature, &ppVertexShader, &ppPixelShader)) {
 		return false;
 	}
 
 	return true;
+}
+
+void Renderer::DrawScene()
+{
+	assets->GetCommandList()->SetPipelineState(scenePSO->GetState());
+	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
+	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
+	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
+	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 }
 
 void Renderer::RenderImGui()
@@ -772,10 +774,6 @@ void Renderer::RenderImGui()
 		ImGui::Text(ppText);
 		ImGui::SliderInt(" ", &regInt, 0, 3);
 		ppOption = regInt;
-	}
-	if (ImGui::BeginChild("Shadow Map")) {
-		ImGui::Text("Shadow mapping here soon!");
-		ImGui::EndChild();
 	}
 	ImGui::End();
 

@@ -51,6 +51,7 @@ private:
 	void CreateUploadVIData();
 	bool CreatePipelineStateObjects();
 	void RenderImGui();
+	void DrawScene();
 
 	RenderAssets* assets;
 	TextureManager* textureManager;
@@ -63,8 +64,8 @@ private:
 	ID3D12RootSignature* rootSignature;
 	ID3D12PipelineState* pipelineStateObject;
 	ID3D12PipelineState* fbPipelineStateObject;
-	PipelineStateObject scenePSO;
-	PipelineStateObject postPSO;
+	PipelineStateObject* scenePSO;
+	PipelineStateObject* postPSO;
 
 	// Vertex & Index Buffers
 	ID3D12Resource* cubeVertexBuffer;

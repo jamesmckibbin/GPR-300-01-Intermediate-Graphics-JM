@@ -5,13 +5,21 @@ PipelineStateObject::~PipelineStateObject()
 	SAFE_RELEASE(pso);
 }
 
-bool PipelineStateObject::Init(ID3D12Device* device, ID3D12RootSignature* rootSignature, const D3D12_INPUT_ELEMENT_DESC* inputLayout, Shader& vs, Shader& ps)
+bool PipelineStateObject::Init(ID3D12Device* device, ID3D12RootSignature* rootSignature, Shader* vs, Shader* ps)
 {
 	HRESULT result;
 
 	// Create Sample Descriptor
 	DXGI_SAMPLE_DESC sampleDesc = {};
 	sampleDesc.Count = 1;
+
+	// Create Input Layout
+	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMALS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
 
 	// Fill Input Layout Descriptor
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
@@ -22,8 +30,8 @@ bool PipelineStateObject::Init(ID3D12Device* device, ID3D12RootSignature* rootSi
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.InputLayout = inputLayoutDesc;
 	psoDesc.pRootSignature = rootSignature;
-	psoDesc.VS = vs.GetBytecode();
-	psoDesc.PS = ps.GetBytecode();
+	psoDesc.VS = vs->GetBytecode();
+	psoDesc.PS = ps->GetBytecode();
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.SampleDesc = sampleDesc;
