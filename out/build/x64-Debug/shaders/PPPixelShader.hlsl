@@ -1,4 +1,5 @@
-Texture2D t1 : register(t1);
+Texture2D t1 : register(t2);
+Texture2D t2 : register(t2);
 SamplerState s1 : register(s0);
 
 #define BOX_BLUR float3x3(1, 1, 1, 1, 1, 1, 1, 1, 1) * 0.1111f

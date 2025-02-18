@@ -78,6 +78,10 @@ private:
 	ID3D12Resource* renderTriIndexBuffer;
 	D3D12_VERTEX_BUFFER_VIEW renderTriVertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW renderTriIndexBufferView;
+	ID3D12Resource* planeVertexBuffer;
+	ID3D12Resource* planeIndexBuffer;
+	D3D12_VERTEX_BUFFER_VIEW planeVertexBufferView;
+	D3D12_INDEX_BUFFER_VIEW planeIndexBufferView;
 
 	// Depth Buffer
 	ID3D12Resource* depthStencilBuffer;

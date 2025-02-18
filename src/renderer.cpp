@@ -632,6 +632,15 @@ void Renderer::CreateUploadVIData()
 	};
 	int triVBufferSize = sizeof(triVList);
 
+	Vertex planeVList[] = {
+
+		{ -1.0f, -2.0f,  1.0f, 0.0f, 0.0f },
+		{  1.0f, -2.0f,  1.0f, 1.0f, 0.0f },
+		{  1.0f, -2.0f, -1.0f, 1.0f, 1.0f },
+		{ -1.0f, -2.0f, -1.0f, 0.0f, 1.0f },
+	};
+	int planeVBufferSize = sizeof(planeVList);
+
 	// Cube Verticies Heaps
 	cubeVertexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), cubeVertexBuffer, L"Cube Vertex Buffer Resource Heap", cubeVBufferSize);
 	ID3D12Resource* cubeVBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Cube Vertex Buffer Upload Resource Heap", cubeVBufferSize);
@@ -645,6 +654,13 @@ void Renderer::CreateUploadVIData()
 
 	// Tri Copy Verticies to Default Heap
 	resourceManager->UploadVertexResources(assets->GetCommandList(), renderTriVertexBuffer, triVBufferUploadHeap, triVList);
+
+	// Plane Verticies Heaps
+	planeVertexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), planeVertexBuffer, L"Plane Vertex Buffer Resource Heap", planeVBufferSize);
+	ID3D12Resource* planeVBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Plane Vertex Buffer Upload Resource Heap", planeVBufferSize);
+
+	// Plane Copy Verticies to Default Heap
+	resourceManager->UploadVertexResources(assets->GetCommandList(), planeVertexBuffer, planeVBufferUploadHeap, planeVList);
 
 	// Cube Indicies
 	UINT32 cubeIList[] = {
@@ -681,6 +697,13 @@ void Renderer::CreateUploadVIData()
 	};
 	int triIBufferSize = sizeof(triIList);
 
+	// Plane Indicies
+	UINT32 planeIList[] = {
+		0, 1, 2,
+		0, 2, 3,
+	};
+	int planeIBufferSize = sizeof(planeIList);
+
 	// Cube Indicies Heaps
 	cubeIndexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), cubeIndexBuffer, L"Cube Index Buffer Resource Heap", cubeIBufferSize);
 	ID3D12Resource* cubeIBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Cube Index Buffer Upload Resource Heap", cubeIBufferSize);
@@ -692,8 +715,15 @@ void Renderer::CreateUploadVIData()
 	renderTriIndexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), renderTriIndexBuffer, L"Tri Index Buffer Resource Heap", triIBufferSize);
 	ID3D12Resource* triIBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Tri Index Buffer Upload Resource Heap", triIBufferSize);
 
-	// Quad Copy Indicies to Default Heap
+	// Tri Copy Indicies to Default Heap
 	resourceManager->UploadIndexResources(assets->GetCommandList(), renderTriIndexBuffer, triIBufferUploadHeap, triIList);
+
+	// Plane Indicies Heaps
+	planeIndexBuffer = resourceManager->CreateVIDefaultHeap(assets->GetDevice(), planeIndexBuffer, L"Plane Index Buffer Resource Heap", planeIBufferSize);
+	ID3D12Resource* planeIBufferUploadHeap = resourceManager->CreateVIUploadHeap(assets->GetDevice(), L"Plane Index Buffer Upload Resource Heap", planeIBufferSize);
+
+	// Plane Copy Indicies to Default Heap
+	resourceManager->UploadIndexResources(assets->GetCommandList(), planeIndexBuffer, planeIBufferUploadHeap, planeIList);
 
 	// Create VBV
 	cubeVertexBufferView.BufferLocation = cubeVertexBuffer->GetGPUVirtualAddress();
@@ -714,6 +744,16 @@ void Renderer::CreateUploadVIData()
 	renderTriIndexBufferView.BufferLocation = renderTriIndexBuffer->GetGPUVirtualAddress();
 	renderTriIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 	renderTriIndexBufferView.SizeInBytes = triIBufferSize;
+
+	// Create VBV
+	planeVertexBufferView.BufferLocation = planeVertexBuffer->GetGPUVirtualAddress();
+	planeVertexBufferView.StrideInBytes = sizeof(Vertex);
+	planeVertexBufferView.SizeInBytes = planeVBufferSize;
+
+	// Create Index Buffer View
+	planeIndexBufferView.BufferLocation = planeIndexBuffer->GetGPUVirtualAddress();
+	planeIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	planeIndexBufferView.SizeInBytes = planeIBufferSize;
 }
 
 bool Renderer::CreatePipelineStateObjects()
@@ -765,6 +805,10 @@ void Renderer::DrawScene()
 	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
+	assets->GetCommandList()->IASetVertexBuffers(0, 1, &planeVertexBufferView);
+	assets->GetCommandList()->IASetIndexBuffer(&planeIndexBufferView);
+	assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+
 }
 
 void Renderer::RenderImGui()
