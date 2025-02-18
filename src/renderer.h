@@ -16,7 +16,10 @@ https://github.com/galek/SDL-Directx12
 struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 wMat;
 	DirectX::XMFLOAT4X4 vpMat;
+	DirectX::XMFLOAT4X4 lMat;
+	DirectX::XMFLOAT4 lPos;
 	DirectX::XMFLOAT4 camPos;
+
 	DirectX::XMFLOAT3 dsaMod;
 	UINT32 ppOption;
 };
@@ -57,15 +60,14 @@ private:
 	TextureManager* textureManager;
 	ResourceManager* resourceManager;
 
-	ID3D12Resource* renderTextures[FRAME_BUFFER_COUNT];
+	ID3D12Resource* renderTexture;
 	ID3D12DescriptorHeap* rtDescriptorHeap;
 
 	// Root Signature & Pipeline State Object
 	ID3D12RootSignature* rootSignature;
-	ID3D12PipelineState* pipelineStateObject;
-	ID3D12PipelineState* fbPipelineStateObject;
 	PipelineStateObject* scenePSO;
 	PipelineStateObject* postPSO;
+	PipelineStateObject* shadowPSO;
 
 	// Vertex & Index Buffers
 	ID3D12Resource* cubeVertexBuffer;
@@ -110,9 +112,11 @@ private:
 	static DescriptorHeapAllocator fontDescriptorHeapAlloc;
 	DirectX::XMFLOAT3 dsaModifiers;
 	UINT32 ppOption;
-	bool rotateX, rotateY, rotateZ;
-	float rotateSpeed = 1.0f;
-	bool resetCube;
+	bool rotateX = false, rotateY = false, rotateZ = false;
+	float rotateSpeed = 0.0f;
+	bool resetCube = false;
+	DirectX::XMFLOAT4 lightPosition = {1.0f, 1.0f, -1.0f, 0.0f};
+	float nearPlane = 1.0f, farPlane = 7.5f;
 	
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;
