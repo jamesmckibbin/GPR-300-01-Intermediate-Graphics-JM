@@ -752,7 +752,7 @@ void Renderer::RenderImGui()
 		ImGui::Checkbox("Rotate X", &rotateX);
 		ImGui::Checkbox("Rotate Y", &rotateY);
 		ImGui::Checkbox("Rotate Z", &rotateZ);
-		ImGui::SliderFloat("Rotate Speed", &rotateSpeed, 0.0f, 1.0f);
+		ImGui::SliderFloat("Rotate Speed", &rotateSpeed, -1.0f, 1.0f);
 	}
 	if (ImGui::CollapsingHeader("Post Processing")) {
 		int regInt = ppOption;
