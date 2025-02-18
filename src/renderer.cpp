@@ -123,7 +123,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	D3D12_CPU_DESCRIPTOR_HANDLE dsHandle = dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	dsHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
-	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 	assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -193,7 +193,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	// Create Render Texture Heap
 	D3D12_DESCRIPTOR_HEAP_DESC rtHeapDesc = {};
-	rtHeapDesc.NumDescriptors = 1;
+	rtHeapDesc.NumDescriptors = 2;
 	rtHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	result = assets->GetDevice()->CreateDescriptorHeap(&rtHeapDesc, IID_PPV_ARGS(&rtDescriptorHeap));
@@ -235,22 +235,23 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 	assets->GetDevice()->CreateRenderTargetView(renderTexture, &rtvDesc, rtHandle);
 
-	// Get Next Handle of SRV Descriptor
+	// Get Next Handle of SRV and RTV Descriptor
 	srvHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	rtHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	//// Create Depth Texture SRV
-	//D3D12_SHADER_RESOURCE_VIEW_DESC dsSrvDesc = {};
-	//dsSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	//dsSrvDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	//dsSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	//dsSrvDesc.Texture2D.MipLevels = 1;
-	//assets->GetDevice()->CreateShaderResourceView(depthStencilBuffer, &dsSrvDesc, srvHandle);
+	// Create Depth Texture SRV
+	D3D12_SHADER_RESOURCE_VIEW_DESC dsSrvDesc = {};
+	dsSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	dsSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	dsSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	dsSrvDesc.Texture2D.MipLevels = 1;
+	assets->GetDevice()->CreateShaderResourceView(depthStencilBuffer, &dsSrvDesc, srvHandle);
 
 	// Create Depth Texture RTV
-	// D3D12_RENDER_TARGET_VIEW_DESC dsDesc = {};
-	// dsDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	// dsDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	// assets->GetDevice()->CreateRenderTargetView(depthStencilBuffer, &dsDesc, dsHandle);
+	D3D12_RENDER_TARGET_VIEW_DESC dsDesc = {};
+	dsDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	dsDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	assets->GetDevice()->CreateRenderTargetView(depthStencilBuffer, &dsDesc, rtHandle);
 
 	// Create Font Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC fontHeapDesc = {};
@@ -485,16 +486,16 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
 	// Shadow Map Pass
-	//assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
-	//const float clearColor[] = { 0.2f, 0.1f, 0.3f, 1.0f };
-	//assets->GetCommandList()->ClearRenderTargetView(fbHandle, clearColor, 0, nullptr);
-	//assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	fbHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
+	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 	// Render To Shadow Map
-	//assets->GetCommandList()->SetPipelineState(shadowPSO->GetState());
-	//DrawScene();
+	assets->GetCommandList()->SetPipelineState(shadowPSO->GetState());
+	DrawScene();
 
 	// Scene Pass
+	fbHandle.ptr -= assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
 	const float newClearColor[] = {0.2f, 0.1f, 0.3f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(fbHandle, newClearColor, 0, nullptr);
@@ -739,10 +740,10 @@ bool Renderer::CreatePipelineStateObjects()
 
 	// Create Shadow Map Shaders
 	Shader dsVertexShader{};
-	ppVertexShader.Init(L"shaders/DSVertexShader.hlsl", "main", "vs_5_0");
+	dsVertexShader.Init(L"shaders/DSVertexShader.hlsl", "main", "vs_5_0");
 
 	Shader dsPixelShader{};
-	ppPixelShader.Init(L"shaders/DSPixelShader.hlsl", "main", "ps_5_0");
+	dsPixelShader.Init(L"shaders/DSPixelShader.hlsl", "main", "ps_5_0");
 
 	if (!scenePSO->Init(assets->GetDevice(), rootSignature, &vertexShader, &pixelShader)) {
 		return false;
