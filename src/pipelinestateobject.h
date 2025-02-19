@@ -8,7 +8,8 @@ class PipelineStateObject
 public:
 
 	~PipelineStateObject();
-	bool Init(ID3D12Device* device, ID3D12RootSignature* rootSignature, Shader* vs, Shader* ps);
+	bool Init(ID3D12Device* device, ID3D12RootSignature* rootSignature, Shader* vs, Shader* ps, UINT32 numRenderTargets);
+	bool InitShadowMap(ID3D12Device* device, ID3D12RootSignature* rootSignature, Shader* vs, Shader* ps);
 
 	ID3D12PipelineState* GetState() { return pso; }
 

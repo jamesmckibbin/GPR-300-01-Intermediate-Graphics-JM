@@ -1,4 +1,4 @@
-Texture2D t1 : register(t2);
+Texture2D t1 : register(t1);
 Texture2D t2 : register(t2);
 SamplerState s1 : register(s0);
 
@@ -39,13 +39,14 @@ float4 main(VS_OUTPUT input) : SV_TARGET
     {
         // Normal
         case 0:
-            return float4(t1.Sample(s1, input.texCoord).rgb, 1.0f);
+            return t1.Sample(s1, input.texCoord);
             break;
         
-        // Inverse
+        // Shadow Map
         case 1:
-            return 1.0f - float4(t1.Sample(s1, input.texCoord).rgb, 1.0f);
-            break;
+            float shadowColor = t2.Sample(s1, input.texCoord).r;
+            return float4(float3(shadowColor, shadowColor, shadowColor), 1.0f);
+            //break;
         
         // Box Blur
         case 2:

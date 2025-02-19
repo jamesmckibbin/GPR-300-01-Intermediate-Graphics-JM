@@ -85,7 +85,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
-	result = assets->GetDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+	result = assets->GetDevice()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&baseRootSig));
 	if (FAILED(result))
 	{
 		return false;
@@ -102,7 +102,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	// Create Depth Stencil Buffer Heap
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
 	dsvHeapDesc.NumDescriptors = 1;
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES;
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	result = assets->GetDevice()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsDescriptorHeap));
 	if (FAILED(result))
@@ -111,27 +111,28 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	}
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
-	depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
 	D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-	depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	depthOptimizedClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
 	depthOptimizedClearValue.DepthStencil.Stencil = 0;
 
-	D3D12_CPU_DESCRIPTOR_HANDLE dsHandle = dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	dsHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
-	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
-	assets->GetDevice()->CreateCommittedResource(
+	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R24G8_TYPELESS, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+	result = assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resoDesc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		&depthOptimizedClearValue,
 		IID_PPV_ARGS(&depthStencilBuffer));
 	dsDescriptorHeap->SetName(L"Depth/Stencil Resource Heap");
+	if (FAILED(result)) {
+		running = false;
+		return false;
+	}
 
 	assets->GetDevice()->CreateDepthStencilView(depthStencilBuffer, &depthStencilDesc, dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
@@ -242,16 +243,10 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	// Create Depth Texture SRV
 	D3D12_SHADER_RESOURCE_VIEW_DESC dsSrvDesc = {};
 	dsSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	dsSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	dsSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	dsSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	dsSrvDesc.Texture2D.MipLevels = 1;
 	assets->GetDevice()->CreateShaderResourceView(depthStencilBuffer, &dsSrvDesc, srvHandle);
-
-	// Create Depth Texture RTV
-	D3D12_RENDER_TARGET_VIEW_DESC dsDesc = {};
-	dsDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	dsDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	assets->GetDevice()->CreateRenderTargetView(depthStencilBuffer, &dsDesc, rtHandle);
 
 	// Create Font Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC fontHeapDesc = {};
@@ -358,7 +353,7 @@ void Renderer::UnInit()
 	SAFE_RELEASE(renderTexture);
 	delete scenePSO;
 	delete postPSO;
-	SAFE_RELEASE(rootSignature);
+	SAFE_RELEASE(baseRootSig);
 	SAFE_RELEASE(cubeVertexBuffer);
 	SAFE_RELEASE(cubeIndexBuffer);
 	SAFE_RELEASE(textureBuffer);
@@ -482,48 +477,40 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->RSSetViewports(1, &viewport);
 	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 
-	assets->GetCommandList()->SetGraphicsRootSignature(rootSignature);
+	assets->GetCommandList()->SetGraphicsRootSignature(baseRootSig);
 	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 
 	// Shadow Map Pass
-	fbHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
+	assets->GetCommandList()->OMSetRenderTargets(0, nullptr, FALSE, &dsvHandle);
 	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-	// Render To Shadow Map
 	assets->GetCommandList()->SetPipelineState(shadowPSO->GetState());
 	DrawScene();
 
-	// Scene Pass
-	fbHandle.ptr -= assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	// Scene Pass 
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(depthStencilBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
 	const float newClearColor[] = {0.2f, 0.1f, 0.3f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(fbHandle, newClearColor, 0, nullptr);
-	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-	
-	// Render Scene
 	assets->GetCommandList()->SetPipelineState(scenePSO->GetState());
 	DrawScene();
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(depthStencilBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Post Process Pass
 	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 	const float newerClearColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(rtvHandle, newerClearColor, 0, nullptr);
-
-	// Render Fullscreen Tri
 	assets->GetCommandList()->SetPipelineState(postPSO->GetState());
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &renderTriVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&renderTriIndexBufferView);
-	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	assets->GetCommandList()->DrawIndexedInstanced(3, 1, 0, 0, 0);
 
 	// Render ImGui
 	RenderImGui();
 
 	// Set render target to present state
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(assets->GetRenderTarget(assets->GetFrameIndex()), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
-
 	result = assets->GetCommandList()->Close();
 	if (FAILED(result)) {
 		running = false;
@@ -785,13 +772,16 @@ bool Renderer::CreatePipelineStateObjects()
 	Shader dsPixelShader{};
 	dsPixelShader.Init(L"shaders/DSPixelShader.hlsl", "main", "ps_5_0");
 
-	if (!scenePSO->Init(assets->GetDevice(), rootSignature, &vertexShader, &pixelShader)) {
+	if (!scenePSO->Init(assets->GetDevice(), baseRootSig, &vertexShader, &pixelShader, 1)) {
+		running = false;
 		return false;
 	}
-	if (!postPSO->Init(assets->GetDevice(), rootSignature, &ppVertexShader, &ppPixelShader)) {
+	if (!postPSO->Init(assets->GetDevice(), baseRootSig, &ppVertexShader, &ppPixelShader, 1)) {
+		running = false;
 		return false;
 	}
-	if (!shadowPSO->Init(assets->GetDevice(), rootSignature, &dsVertexShader, &dsPixelShader)) {
+	if (!shadowPSO->InitShadowMap(assets->GetDevice(), baseRootSig, &dsVertexShader, &dsPixelShader)) {
+		running = false;
 		return false;
 	}
 

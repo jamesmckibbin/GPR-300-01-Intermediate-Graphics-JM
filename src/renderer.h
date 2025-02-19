@@ -64,7 +64,7 @@ private:
 	ID3D12DescriptorHeap* rtDescriptorHeap;
 
 	// Root Signature & Pipeline State Object
-	ID3D12RootSignature* rootSignature;
+	ID3D12RootSignature* baseRootSig;
 	PipelineStateObject* scenePSO;
 	PipelineStateObject* postPSO;
 	PipelineStateObject* shadowPSO;

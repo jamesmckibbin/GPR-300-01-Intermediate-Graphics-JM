@@ -1,16 +1,11 @@
 struct VS_INPUT
 {
     float4 pos : POSITION;
-    float3 norm : NORMALS;
-    float2 texCoord : TEXCOORD;
 };
 
 struct VS_OUTPUT
 {
     float4 pos : SV_POSITION;
-    float3 worldPos : WORLDPOSITION;
-    float3 norm : NORMALS;
-    float2 texCoord : TEXCOORD;
 };
 
 cbuffer ConstantBuffer : register(b0)
@@ -27,6 +22,6 @@ cbuffer ConstantBuffer : register(b0)
 VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
-    output.pos = mul(lMat * mul(wMat, vpMat), float4(input.pos.xyz, 1.0f));
+    output.pos = mul(lMat * (wMat * vpMat), input.pos);
     return output;
 }
