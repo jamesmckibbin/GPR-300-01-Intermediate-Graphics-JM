@@ -117,10 +117,10 @@ private:
 	DirectX::XMFLOAT3 dsaModifiers;
 	UINT32 ppOption;
 	bool rotateX = false, rotateY = false, rotateZ = false;
-	float rotateSpeed = 0.0f;
+	float rotateSpeed = 1.0f;
 	bool resetCube = false;
 	DirectX::XMFLOAT4 lightPosition = {1.0f, 1.0f, -1.0f, 0.0f};
-	float nearPlane = 1.0f, farPlane = 7.5f;
+	float nearPlane = 0.1f, farPlane = 15.0f;
 	
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;

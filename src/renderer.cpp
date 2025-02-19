@@ -297,8 +297,8 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	XMStoreFloat4x4(&cameraProjMat, tmpMat);
 
 	// set starting camera state
-	cameraPosition = DirectX::XMFLOAT4(0.0f, 2.0f, -4.0f, 0.0f);
-	cameraTarget = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	cameraPosition = DirectX::XMFLOAT4(-2.0f, 2.0f, -2.0f, 0.0f);
+	cameraTarget = DirectX::XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
 	cameraUp = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
 
 	// build view matrix
@@ -310,7 +310,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	// set starting cubes position
 	// first cube
-	cube1Position = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	cube1Position = DirectX::XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
 	DirectX::XMVECTOR posVec = XMLoadFloat4(&cube1Position);
 
 	tmpMat = DirectX::XMMatrixTranslationFromVector(posVec);
@@ -432,10 +432,9 @@ void Renderer::Update(float dt)
 	XMStoreFloat3(&cbPerObject.dsaMod, dsa);
 	DirectX::XMVECTOR pp = XMLoadInt(&ppOption);
 	XMStoreInt(&cbPerObject.ppOption, pp);
-
-	DirectX::XMMATRIX lightProj = DirectX::XMMatrixOrthographicLH(800, 600, nearPlane, farPlane);
+	DirectX::XMMATRIX lightProj = DirectX::XMMatrixOrthographicLH(10, 10, nearPlane, farPlane);
 	DirectX::XMMATRIX lightView = DirectX::XMMatrixLookAtLH(XMLoadFloat4(&lightPosition), XMLoadFloat4(&cube1Position), {0.0f, 1.0f, 0.0f});
-	DirectX::XMMATRIX lightMat = lightProj * lightView;
+	DirectX::XMMATRIX lightMat = lightView * lightProj;
 	XMStoreFloat4x4(&cbPerObject.lMat, lightMat);
 	XMStoreFloat4(&cbPerObject.lPos, XMLoadFloat4(&lightPosition));
 
@@ -482,21 +481,22 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 
 	// Shadow Map Pass
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(depthStencilBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 	assets->GetCommandList()->OMSetRenderTargets(0, nullptr, FALSE, &dsvHandle);
 	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(shadowPSO->GetState());
 	DrawScene();
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(depthStencilBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Scene Pass 
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(depthStencilBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_DEPTH_WRITE);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
 	const float newClearColor[] = {0.2f, 0.1f, 0.3f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(fbHandle, newClearColor, 0, nullptr);
+	//assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(scenePSO->GetState());
 	DrawScene();
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(depthStencilBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Post Process Pass
 	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
@@ -621,10 +621,10 @@ void Renderer::CreateUploadVIData()
 
 	Vertex planeVList[] = {
 
-		{ -1.0f, -2.0f,  1.0f, 0.0f, 0.0f },
-		{  1.0f, -2.0f,  1.0f, 1.0f, 0.0f },
-		{  1.0f, -2.0f, -1.0f, 1.0f, 1.0f },
-		{ -1.0f, -2.0f, -1.0f, 0.0f, 1.0f },
+		{ -2.0f, -2.0f,  2.0f, 0.0f, 0.0f },
+		{  2.0f, -2.0f,  2.0f, 1.0f, 0.0f },
+		{  2.0f, -2.0f, -2.0f, 1.0f, 1.0f },
+		{ -2.0f, -2.0f, -2.0f, 0.0f, 1.0f },
 	};
 	int planeVBufferSize = sizeof(planeVList);
 

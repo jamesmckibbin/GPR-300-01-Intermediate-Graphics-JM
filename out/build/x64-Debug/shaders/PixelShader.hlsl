@@ -26,9 +26,9 @@ float4 main(VS_OUTPUT input) : SV_TARGET
     float3 _AmbientColor = float3(0.3f, 0.4f, 0.46f);
     
     float3 normal = normalize(input.norm);
-    float diffuseFactor = mul(0.5f, max(dot(normal, lPos.xyz), 0.0f));
+    float diffuseFactor = mul(0.5f, max(dot(normal, clamp(lPos.xyz, 0.0f, 1.0f)), 0.0f));
     float3 toEye = normalize((float3)camPos - input.worldPos);
-    float3 h = normalize(lPos.xyz + toEye);
+    float3 h = normalize(clamp(lPos.xyz, 0.0f, 1.0f) + toEye);
     float specularFactor = pow(max(dot(normal, h), 0.0f), 128);
     float3 lightColor = mul(mul(dsa.x, diffuseFactor) + mul(dsa.y, specularFactor), _LightColor);
     lightColor += mul(_AmbientColor, dsa.z);
