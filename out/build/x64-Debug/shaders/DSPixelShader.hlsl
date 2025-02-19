@@ -1,10 +1,4 @@
-struct VS_OUTPUT
+void main() : SV_TARGET
 {
-    float4 pos : SV_POSITION;
-};
-
-float4 main(VS_OUTPUT input) : SV_TARGET
-{
-    return float4(1.0f);
-
+    
 }
