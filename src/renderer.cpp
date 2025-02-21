@@ -511,7 +511,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
 	const float newClearColor[] = {0.2f, 0.1f, 0.3f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(fbHandle, newClearColor, 0, nullptr);
-	//assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(scenePSO->GetState());
 	DrawScene();
 

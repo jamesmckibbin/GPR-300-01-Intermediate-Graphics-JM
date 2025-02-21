@@ -5,10 +5,11 @@ struct VS_INPUT
     float2 texCoord : TEXCOORD;
 };
 
-struct VS_OUTPUT
+struct PS_INPUT
 {
     float4 pos : SV_POSITION;
-    float3 worldPos : WORLDPOSITION;
+    float4 worldPos : WORLDPOSITION;
+    float4 fragPosLightSpace : LIGHTSPACE;
     float3 norm : NORMALS;
     float2 texCoord : TEXCOORD;
 };
@@ -24,10 +25,11 @@ cbuffer ConstantBuffer : register(b0)
     uint postP;
 };
 
-VS_OUTPUT main(VS_INPUT input)
+PS_INPUT main(VS_INPUT input)
 {
-    VS_OUTPUT output;
-    output.worldPos = (float3)mul(wMat, input.pos);
+    PS_INPUT output;
+    output.worldPos = mul(wMat, input.pos);
+    output.fragPosLightSpace = mul(lMat, output.worldPos);
     output.pos = mul(input.pos, mul(wMat, vpMat));
     output.norm = mul(transpose((float3x3)wMat), input.norm);
     output.texCoord = input.texCoord;
