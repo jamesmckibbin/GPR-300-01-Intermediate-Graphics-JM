@@ -101,7 +101,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	// Create Depth Stencil Buffer Heap
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-	dsvHeapDesc.NumDescriptors = 1;
+	dsvHeapDesc.NumDescriptors = 2;
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	result = assets->GetDevice()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsDescriptorHeap));
@@ -109,6 +109,8 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	{
 		return false;
 	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
 	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -134,7 +136,24 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		return false;
 	}
 
-	assets->GetDevice()->CreateDepthStencilView(depthStencilBuffer, &depthStencilDesc, dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+	assets->GetDevice()->CreateDepthStencilView(depthStencilBuffer, &depthStencilDesc, dsvHandle);
+
+	dsvHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+
+	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R24G8_TYPELESS, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+	result = assets->GetDevice()->CreateCommittedResource(
+		&dHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resoDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&depthOptimizedClearValue,
+		IID_PPV_ARGS(&shadowMapBuffer));
+	if (FAILED(result)) {
+		running = false;
+		return false;
+	}
+
+	assets->GetDevice()->CreateDepthStencilView(shadowMapBuffer, &depthStencilDesc, dsvHandle);
 
 	// Create Constant Buffer Resource Heap
 	resoDesc = CD3DX12_RESOURCE_DESC::Buffer(1024 * 64);
@@ -246,7 +265,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	dsSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	dsSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	dsSrvDesc.Texture2D.MipLevels = 1;
-	assets->GetDevice()->CreateShaderResourceView(depthStencilBuffer, &dsSrvDesc, srvHandle);
+	assets->GetDevice()->CreateShaderResourceView(shadowMapBuffer, &dsSrvDesc, srvHandle);
 
 	// Create Font Descriptor Heap
 	D3D12_DESCRIPTOR_HEAP_DESC fontHeapDesc = {};
@@ -493,25 +512,29 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 
 	// Shadow Map Pass
+	dsvHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+
 	assets->GetCommandList()->RSSetViewports(1, &smViewport);
 	assets->GetCommandList()->RSSetScissorRects(1, &smScissorRect);
 
 	assets->GetCommandList()->OMSetRenderTargets(0, nullptr, FALSE, &dsvHandle);
-	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	assets->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(shadowPSO->GetState());
 	DrawScene();
 
 	// Scene Pass
+	dsvHandle.ptr -= assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+
 	assets->GetCommandList()->RSSetViewports(1, &viewport);
 	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(depthStencilBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_DEPTH_READ);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(shadowMapBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_DEPTH_READ);
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 	
 	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
 	const float newClearColor[] = {0.2f, 0.1f, 0.3f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(fbHandle, newClearColor, 0, nullptr);
-	assets->GetCommandList()->ClearDepthStencilView(dsDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	assets->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(scenePSO->GetState());
 	DrawScene();
 
@@ -524,7 +547,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->IASetIndexBuffer(&renderTriIndexBufferView);
 	assets->GetCommandList()->DrawIndexedInstanced(3, 1, 0, 0, 0);
 
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(depthStencilBuffer, D3D12_RESOURCE_STATE_DEPTH_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(shadowMapBuffer, D3D12_RESOURCE_STATE_DEPTH_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Render ImGui

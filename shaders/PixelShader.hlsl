@@ -35,21 +35,20 @@ float ShadowCalculation(float4 lightSpacePos)
 float4 main(PS_INPUT input) : SV_TARGET
 { 
     float3 _LightColor = float3(1.0f, 1.0f, 1.0f);
+    float3 _AmbientColor = float3(0.3f, 0.4f, 0.46f);
     
-    float3 objectColor = t1.Sample(s1, input.texCoord).rgb;
     float3 normal = normalize(input.norm);
     float diffuseFactor = mul(0.5f, max(dot(normal, clamp(lPos.xyz, 0.0f, 1.0f)), 0.0f));
-    float3 toEye = normalize((float3)camPos - input.worldPos);
+    float3 toEye = normalize((float3) camPos - input.worldPos);
     float3 h = normalize(clamp(lPos.xyz, 0.0f, 1.0f) + toEye);
     float specularFactor = pow(max(dot(normal, h), 0.0f), 128);
-    float ambient = mul(_LightColor, 0.15f);
     
     float shadow = ShadowCalculation(input.fragPosLightSpace);
     
-    float3 lighting = mul(mul(
-    mul(ambient, dsa.z) + (1.0f - shadow),
-    mul(dsa.x, diffuseFactor) + mul(dsa.y, specularFactor)),
-    objectColor);
+    float3 lightColor = mul(mul(dsa.x, diffuseFactor) + mul(dsa.y, specularFactor), _LightColor);
+    lightColor += mul(_AmbientColor, dsa.z);
+    float3 objectColor = t1.Sample(s1, input.texCoord).rgb;
+    float3 passColor = objectColor * lightColor;
     
-    return float4(lighting, 1.0f);
+    return float4(passColor, 1.0f);
 }

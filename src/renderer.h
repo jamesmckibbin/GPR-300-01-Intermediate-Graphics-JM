@@ -85,6 +85,7 @@ private:
 
 	// Depth Buffer
 	ID3D12Resource* depthStencilBuffer;
+	ID3D12Resource* shadowMapBuffer;
 	ID3D12DescriptorHeap* dsDescriptorHeap;
 
 	// Constant Buffer
