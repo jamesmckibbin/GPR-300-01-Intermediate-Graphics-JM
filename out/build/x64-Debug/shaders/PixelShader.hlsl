@@ -39,12 +39,12 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     float3 normal = normalize(input.norm);
     float diffuseFactor = mul(0.5f, max(dot(normal, lPos.xyz), 0.0f));
-    float3 toEye = normalize((float3)camPos - input.worldPos);
-    float3 h = normalize((float3)lPos + toEye);
+    float3 toEye = normalize(camPos.xyz - input.worldPos);
+    float3 h = normalize(lPos.xyz + toEye);
     float specularFactor = pow(max(dot(normal, h), 0.0f), 128);
     
-    float3 toLight = normalize((float3)lPos - input.worldPos);
-    float bias = max(0.05 * (1.0 - dot(normal, toLight)), 0.005);
+    float3 toLight = normalize(lPos.xyz - input.worldPos);
+    float bias = max(0.005 * (1.0 - dot(normal, toLight)), 0.005);
     float shadow = ShadowCalculation(input.fragPosLightSpace, bias);
     
     float3 lightColor = mul(mul(dsa.x, diffuseFactor) + mul(dsa.y, specularFactor), _LightColor);
