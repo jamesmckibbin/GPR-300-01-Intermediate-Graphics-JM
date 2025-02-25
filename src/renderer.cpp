@@ -327,11 +327,11 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	smScissorRect.bottom = (LONG)512;
 
 	// build projection and view matrix
-	DirectX::XMMATRIX tmpMat = DirectX::XMMatrixPerspectiveFovLH(45.0f * (3.14f / 180.0f), (float)width / (float)height, 0.1f, 1000.0f);
+	DirectX::XMMATRIX tmpMat = DirectX::XMMatrixPerspectiveFovLH(60.0f * (3.14f / 180.0f), (float)width / (float)height, 0.1f, 1000.0f);
 	XMStoreFloat4x4(&cameraProjMat, tmpMat);
 
 	// set starting camera state
-	cameraPosition = DirectX::XMFLOAT4(0.0f, 2.0f, -4.0f, 0.0f);
+	cameraPosition = DirectX::XMFLOAT4(0.0f, 2.0f, -2.0f, 0.0f);
 	cameraTarget = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 	cameraUp = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -461,23 +461,18 @@ void Renderer::Update(float dt)
 	DirectX::XMMATRIX viewMat = XMLoadFloat4x4(&cameraViewMat); // load view matrix
 	DirectX::XMMATRIX projMat = XMLoadFloat4x4(&cameraProjMat); // load projection matrix
 	DirectX::XMMATRIX wMat = XMLoadFloat4x4(&cubeWorldMat); // create world matrix
-	DirectX::XMMATRIX vpMat = viewMat * projMat; // create view projection matrix
-	DirectX::XMMATRIX transposed = XMMatrixTranspose(wMat); // must transpose w matrix for the gpu
-	XMStoreFloat4x4(&cbPerObject.wMat, transposed); // store transposed w matrix in constant buffer
-	transposed = XMMatrixTranspose(vpMat); // must transpose vp matrix for the gpu
-	XMStoreFloat4x4(&cbPerObject.vpMat, transposed); // store transposed vp matrix in constant buffer
+	DirectX::XMMATRIX vpMat = XMMatrixMultiply(viewMat, projMat); // create view projection matrix
 
-	DirectX::XMVECTOR cPos = XMLoadFloat4(&cameraPosition);
-	XMStoreFloat4(&cbPerObject.camPos, cPos);
-	DirectX::XMVECTOR dsa = XMLoadFloat3(&dsaModifiers);
-	XMStoreFloat3(&cbPerObject.dsaMod, dsa);
-	DirectX::XMVECTOR pp = XMLoadInt(&ppOption);
-	XMStoreInt(&cbPerObject.ppOption, pp);
+	XMStoreFloat4x4(&cbPerObject.wMat, XMMatrixTranspose(wMat)); // store transposed w matrix in constant buffer
+	XMStoreFloat4x4(&cbPerObject.vpMat, XMMatrixTranspose(vpMat)); // store transposed vp matrix in constant buffer
+	XMStoreFloat4(&cbPerObject.camPos, XMLoadFloat4(&cameraPosition));
+	XMStoreFloat3(&cbPerObject.dsaMod, XMLoadFloat3(&dsaModifiers));
+	XMStoreInt(&cbPerObject.ppOption, XMLoadInt(&ppOption));
+
 	DirectX::XMMATRIX lightView = DirectX::XMMatrixLookAtLH(XMLoadFloat4(&lightPosition), XMLoadFloat4(&cameraTarget), XMLoadFloat4(&cameraUp));
-	DirectX::XMMATRIX lightProj = DirectX::XMMatrixOrthographicOffCenterLH(-10, 10, -10, 10, nearPlane, farPlane);
-	DirectX::XMMATRIX lightMat = lightView * lightProj;
-	transposed = XMMatrixTranspose(lightMat);
-	XMStoreFloat4x4(&cbPerObject.lMat, transposed);
+	DirectX::XMMATRIX lightProj = DirectX::XMMatrixOrthographicLH(20, 20, nearPlane, farPlane);
+	DirectX::XMMATRIX lightMat = XMMatrixMultiply(lightView, lightProj);
+	XMStoreFloat4x4(&cbPerObject.lMat, XMMatrixTranspose(lightMat));
 	XMStoreFloat4(&cbPerObject.lDir, XMLoadFloat4(&lightPosition));
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
@@ -488,8 +483,7 @@ void Renderer::Update(float dt)
 	XMStoreFloat4x4(&planeWorldMat, worldMat);
 
 	wMat = XMLoadFloat4x4(&planeWorldMat);
-	transposed = XMMatrixTranspose(wMat);
-	XMStoreFloat4x4(&cbPerObject.wMat, transposed);
+	XMStoreFloat4x4(&cbPerObject.wMat, XMMatrixTranspose(wMat));
 
 	memcpy(cbvGPUAddress[assets->GetFrameIndex()] + ConstantBufferPerObjectAlignedSize, &cbPerObject, sizeof(cbPerObject));
 }

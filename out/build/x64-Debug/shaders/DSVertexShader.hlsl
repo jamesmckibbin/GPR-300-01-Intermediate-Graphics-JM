@@ -22,6 +22,6 @@ cbuffer ConstantBuffer : register(b0)
 PS_INPUT main(VS_INPUT input)
 {
     PS_INPUT output;
-    output.pos = mul(input.pos, mul(wMat, lMat));
+    output.pos = mul(mul(wMat, input.pos), lMat);
     return output;
 }
