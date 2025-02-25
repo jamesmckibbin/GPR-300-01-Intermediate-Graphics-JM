@@ -22,13 +22,13 @@ cbuffer ConstantBuffer : register(b0)
     uint postP;
 };
 
-float ShadowCalculation(float4 lightSpacePos)
+float ShadowCalculation(float4 lightSpacePos, float bias)
 {
     float3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
     projCoords = projCoords * 0.5f + 0.5f;
     float closestDepth = t2.Sample(s1, projCoords.xy).r;
     float currentDepth = projCoords.z;
-    float shadow = currentDepth > closestDepth ? 1.0f : 0.0f;
+    float shadow = currentDepth - bias > closestDepth ? 1.0f : 0.0f;
     return shadow;
 }
 
@@ -38,15 +38,17 @@ float4 main(PS_INPUT input) : SV_TARGET
     float3 _AmbientColor = float3(0.3f, 0.4f, 0.46f);
     
     float3 normal = normalize(input.norm);
-    float diffuseFactor = mul(0.5f, max(dot(normal, clamp(lPos.xyz, 0.0f, 1.0f)), 0.0f));
-    float3 toEye = normalize((float3) camPos - input.worldPos);
-    float3 h = normalize(clamp(lPos.xyz, 0.0f, 1.0f) + toEye);
+    float diffuseFactor = mul(0.5f, max(dot(normal, lPos.xyz), 0.0f));
+    float3 toEye = normalize((float3)camPos - input.worldPos);
+    float3 h = normalize((float3)lPos + toEye);
     float specularFactor = pow(max(dot(normal, h), 0.0f), 128);
     
-    float shadow = ShadowCalculation(input.fragPosLightSpace);
+    float3 toLight = normalize((float3)lPos - input.worldPos);
+    float bias = max(0.05 * (1.0 - dot(normal, toLight)), 0.005);
+    float shadow = ShadowCalculation(input.fragPosLightSpace, bias);
     
     float3 lightColor = mul(mul(dsa.x, diffuseFactor) + mul(dsa.y, specularFactor), _LightColor);
-    lightColor += mul(_AmbientColor, dsa.z);
+    lightColor += mul(_AmbientColor, dsa.z) + (1.0f - shadow);
     float3 objectColor = t1.Sample(s1, input.texCoord).rgb;
     float3 passColor = objectColor * lightColor;
     

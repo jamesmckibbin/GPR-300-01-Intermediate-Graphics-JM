@@ -54,7 +54,7 @@ private:
 	void CreateUploadVIData();
 	bool CreatePipelineStateObjects();
 	void RenderImGui();
-	void DrawScene();
+	void DrawScene(bool drawPlane);
 
 	RenderAssets* assets;
 	TextureManager* textureManager;
@@ -121,7 +121,7 @@ private:
 	float rotateSpeed = 1.0f;
 	bool resetCube = false;
 	DirectX::XMFLOAT4 lightPosition = {1.0f, 4.0f, -1.0f, 0.0f};
-	float nearPlane = 1.0f, farPlane = 10.0f;
+	float nearPlane = 0.1f, farPlane = 10.0f;
 	
 	// Misc Draw Data
 	D3D12_VIEWPORT viewport;

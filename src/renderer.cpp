@@ -520,23 +520,20 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->OMSetRenderTargets(0, nullptr, FALSE, &dsvHandle);
 	assets->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(shadowPSO->GetState());
-	DrawScene();
+	DrawScene(false);
 
 	// Scene Pass
 	dsvHandle.ptr -= assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	assets->GetCommandList()->RSSetViewports(1, &viewport);
 	assets->GetCommandList()->RSSetScissorRects(1, &scissorRect);
-
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(shadowMapBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_DEPTH_READ);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 	
 	assets->GetCommandList()->OMSetRenderTargets(1, &fbHandle, FALSE, &dsvHandle);
 	const float newClearColor[] = {0.2f, 0.1f, 0.3f, 1.0f};
 	assets->GetCommandList()->ClearRenderTargetView(fbHandle, newClearColor, 0, nullptr);
 	assets->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(scenePSO->GetState());
-	DrawScene();
+	DrawScene(true);
 
 	// Post Process Pass
 	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
@@ -546,9 +543,6 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &renderTriVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&renderTriIndexBufferView);
 	assets->GetCommandList()->DrawIndexedInstanced(3, 1, 0, 0, 0);
-
-	resoBarr = CD3DX12_RESOURCE_BARRIER::Transition(shadowMapBuffer, D3D12_RESOURCE_STATE_DEPTH_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
-	assets->GetCommandList()->ResourceBarrier(1, &resoBarr);
 
 	// Render ImGui
 	RenderImGui();
@@ -831,17 +825,18 @@ bool Renderer::CreatePipelineStateObjects()
 	return true;
 }
 
-void Renderer::DrawScene()
+void Renderer::DrawScene(bool drawPlane)
 {
 	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
 	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
-	assets->GetCommandList()->IASetVertexBuffers(0, 1, &planeVertexBufferView);
-	assets->GetCommandList()->IASetIndexBuffer(&planeIndexBufferView);
-	assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
-
+	if (drawPlane) {
+		assets->GetCommandList()->IASetVertexBuffers(0, 1, &planeVertexBufferView);
+		assets->GetCommandList()->IASetIndexBuffer(&planeIndexBufferView);
+		assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	}
 }
 
 void Renderer::RenderImGui()
@@ -856,6 +851,7 @@ void Renderer::RenderImGui()
 		ImGui::SliderFloat("Diffuse", &dsaModifiers.x, 0.0f, 1.0f);
 		ImGui::SliderFloat("Specular", &dsaModifiers.y, 0.0f, 1.0f);
 		ImGui::SliderFloat("Ambient", &dsaModifiers.z, 0.0f, 1.0f);
+		ImGui::SliderFloat3("Light Position", &lightPosition.x, -5.0f, 5.0f);
 	}
 	if (ImGui::CollapsingHeader("Cube Settings")) {
 		resetCube = ImGui::Button("Reset Cube");
@@ -872,7 +868,7 @@ void Renderer::RenderImGui()
 			ppText = "None";
 			break;
 		case 1:
-			ppText = "Inverse";
+			ppText = "Shadow Map";
 			break;
 		case 2:
 			ppText = "Box Blur";
