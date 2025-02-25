@@ -54,7 +54,7 @@ private:
 	void CreateUploadVIData();
 	bool CreatePipelineStateObjects();
 	void RenderImGui();
-	void DrawScene(bool drawPlane);
+	void DrawScene(bool drawCube, bool drawPlane);
 
 	RenderAssets* assets;
 	TextureManager* textureManager;

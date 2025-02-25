@@ -29,7 +29,7 @@ PS_INPUT main(VS_INPUT input)
 {
     PS_INPUT output;
     output.worldPos = mul(wMat, input.pos);
-    output.fragPosLightSpace = mul(input.pos, mul(wMat, lMat));
+    output.fragPosLightSpace = mul(input.pos, lMat);
     output.pos = mul(input.pos, mul(wMat, vpMat));
     output.norm = mul(transpose((float3x3)wMat), input.norm);
     output.texCoord = input.texCoord;

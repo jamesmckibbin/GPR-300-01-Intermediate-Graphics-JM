@@ -466,7 +466,7 @@ void Renderer::Update(float dt)
 	DirectX::XMVECTOR pp = XMLoadInt(&ppOption);
 	XMStoreInt(&cbPerObject.ppOption, pp);
 	DirectX::XMMATRIX lightProj = DirectX::XMMatrixOrthographicLH(10, 10, nearPlane, farPlane);
-	DirectX::XMMATRIX lightView = DirectX::XMMatrixLookAtLH(XMLoadFloat4(&lightPosition), XMLoadFloat4(&cube1Position), {0.0f, 1.0f, 0.0f});
+	DirectX::XMMATRIX lightView = DirectX::XMMatrixLookAtLH(XMLoadFloat4(&lightPosition), XMLoadFloat4(&cube1Position), {0.0f, 1.0f, 0.0f, 1.0f});
 	DirectX::XMMATRIX lightMat = lightView * lightProj;
 	transposed = XMMatrixTranspose(lightMat);
 	XMStoreFloat4x4(&cbPerObject.lMat, transposed);
@@ -520,7 +520,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->OMSetRenderTargets(0, nullptr, FALSE, &dsvHandle);
 	assets->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(shadowPSO->GetState());
-	DrawScene(false);
+	DrawScene(true, false);
 
 	// Scene Pass
 	dsvHandle.ptr -= assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
@@ -533,7 +533,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->ClearRenderTargetView(fbHandle, newClearColor, 0, nullptr);
 	assets->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(scenePSO->GetState());
-	DrawScene(true);
+	DrawScene(true, true);
 
 	// Post Process Pass
 	assets->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
@@ -825,13 +825,15 @@ bool Renderer::CreatePipelineStateObjects()
 	return true;
 }
 
-void Renderer::DrawScene(bool drawPlane)
+void Renderer::DrawScene(bool drawCube, bool drawPlane)
 {
 	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
-	assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
 	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
-	assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
+	if (drawCube) {
+		assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
+		assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
+		assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
+	}
 	if (drawPlane) {
 		assets->GetCommandList()->IASetVertexBuffers(0, 1, &planeVertexBufferView);
 		assets->GetCommandList()->IASetIndexBuffer(&planeIndexBufferView);
