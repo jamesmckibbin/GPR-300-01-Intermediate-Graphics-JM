@@ -17,7 +17,7 @@ struct ConstantBufferPerObject {
 	DirectX::XMFLOAT4X4 wMat;
 	DirectX::XMFLOAT4X4 vpMat;
 	DirectX::XMFLOAT4X4 lMat;
-	DirectX::XMFLOAT4 lPos;
+	DirectX::XMFLOAT4 lDir;
 	DirectX::XMFLOAT4 camPos;
 
 	DirectX::XMFLOAT3 dsaMod;
@@ -102,11 +102,14 @@ private:
 	DirectX::XMFLOAT4 cameraUp;
 
 	// Cube
-	DirectX::XMFLOAT4X4 cube1WorldMat;
-	DirectX::XMFLOAT4X4 cube1DefaultRotMat;
-	DirectX::XMFLOAT4X4 cube1RotMat;
-	DirectX::XMFLOAT4 cube1Position;
+	DirectX::XMFLOAT4X4 cubeWorldMat;
+	DirectX::XMFLOAT4X4 cubeDefaultRotMat;
+	DirectX::XMFLOAT4X4 cubeRotMat;
+	DirectX::XMFLOAT4 cubePosition;
 	int numCubeIndices;
+
+	DirectX::XMFLOAT4X4 planeWorldMat;
+	DirectX::XMFLOAT4 planePosition;
 
 	// Textures
 	ID3D12Resource* textureBuffer;
@@ -120,7 +123,7 @@ private:
 	bool rotateX = false, rotateY = false, rotateZ = false;
 	float rotateSpeed = 1.0f;
 	bool resetCube = false;
-	DirectX::XMFLOAT4 lightPosition = {1.0f, 4.0f, -1.0f, 0.0f};
+	DirectX::XMFLOAT4 lightPosition = {2.0f, 2.0f, 0.0f, 1.0f};
 	float nearPlane = 0.1f, farPlane = 10.0f;
 	
 	// Misc Draw Data

@@ -16,7 +16,7 @@ cbuffer ConstantBuffer : register(b0)
     float4x4 wMat;
     float4x4 vpMat;
     float4x4 lMat;
-    float4 lPos;
+    float4 lDir;
     float4 camPos;
     float3 dsa;
     uint postP;

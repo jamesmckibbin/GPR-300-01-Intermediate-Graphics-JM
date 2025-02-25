@@ -140,7 +140,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 
 	dsvHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
-	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R24G8_TYPELESS, (UINT64)width, (UINT)height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+	resoDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R24G8_TYPELESS, (UINT64)512, (UINT)512, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 	result = assets->GetDevice()->CreateCommittedResource(
 		&dHeapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -175,6 +175,7 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 		result = constantBufferUploadHeaps[i]->Map(0, &readRange, reinterpret_cast<void**>(&cbvGPUAddress[i]));
 
 		memcpy(cbvGPUAddress[i], &cbPerObject, sizeof(cbPerObject)); // Cube
+		memcpy(cbvGPUAddress[i] + ConstantBufferPerObjectAlignedSize, &cbPerObject, sizeof(cbPerObject)); // Plane
 	}
 
 	// Load Image From File
@@ -314,16 +315,16 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	// Define Shadow Map Viewport
 	smViewport.TopLeftX = 0;
 	smViewport.TopLeftY = 0;
-	smViewport.Width = width;
-	smViewport.Height = height;
+	smViewport.Width = 512;
+	smViewport.Height = 512;
 	smViewport.MinDepth = 0.0f;
 	smViewport.MaxDepth = 1.0f;
 
 	// Define Shadow Map Scissor Rect
 	smScissorRect.left = 0;
 	smScissorRect.top = 0;
-	smScissorRect.right = (LONG)width;
-	smScissorRect.bottom = (LONG)height;
+	smScissorRect.right = (LONG)512;
+	smScissorRect.bottom = (LONG)512;
 
 	// build projection and view matrix
 	DirectX::XMMATRIX tmpMat = DirectX::XMMatrixPerspectiveFovLH(45.0f * (3.14f / 180.0f), (float)width / (float)height, 0.1f, 1000.0f);
@@ -341,15 +342,19 @@ bool Renderer::Init(const HWND& window, bool screenState, float width, float hei
 	tmpMat = DirectX::XMMatrixLookAtLH(cPos, cTarg, cUp);
 	XMStoreFloat4x4(&cameraViewMat, tmpMat);
 
-	// set starting cubes position
-	// first cube
-	cube1Position = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR posVec = XMLoadFloat4(&cube1Position);
+	cubePosition = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR posVec = XMLoadFloat4(&cubePosition);
 
 	tmpMat = DirectX::XMMatrixTranslationFromVector(posVec);
-	XMStoreFloat4x4(&cube1DefaultRotMat, DirectX::XMMatrixIdentity());
-	XMStoreFloat4x4(&cube1RotMat, DirectX::XMMatrixIdentity());
-	XMStoreFloat4x4(&cube1WorldMat, tmpMat);
+	XMStoreFloat4x4(&cubeDefaultRotMat, DirectX::XMMatrixIdentity());
+	XMStoreFloat4x4(&cubeRotMat, DirectX::XMMatrixIdentity());
+	XMStoreFloat4x4(&cubeWorldMat, tmpMat);
+
+	planePosition = DirectX::XMFLOAT4(0.0f, -0.5f, 0.0f, 0.0f);
+	posVec = XMLoadFloat4(&planePosition);
+
+	tmpMat = DirectX::XMMatrixTranslationFromVector(posVec);
+	XMStoreFloat4x4(&planeWorldMat, tmpMat);
 
 	ImGui_ImplDX12_InitInfo init_info = {};
 	init_info.Device = assets->GetDevice();
@@ -386,6 +391,7 @@ void Renderer::UnInit()
 	SAFE_RELEASE(renderTexture);
 	delete scenePSO;
 	delete postPSO;
+	delete shadowPSO;
 	SAFE_RELEASE(baseRootSig);
 	SAFE_RELEASE(cubeVertexBuffer);
 	SAFE_RELEASE(cubeIndexBuffer);
@@ -394,6 +400,7 @@ void Renderer::UnInit()
 	SAFE_RELEASE(renderTriIndexBuffer);
 
 	SAFE_RELEASE(depthStencilBuffer);
+	SAFE_RELEASE(shadowMapBuffer);
 	SAFE_RELEASE(dsDescriptorHeap);
 
 	fontDescriptorHeapAlloc.Destroy();
@@ -419,7 +426,7 @@ void Renderer::UnInit()
 void Renderer::Update(float dt)
 {
 	// add rotation to cube1's rotation matrix and store it
-	DirectX::XMMATRIX rotMat = XMLoadFloat4x4(&cube1RotMat);
+	DirectX::XMMATRIX rotMat = XMLoadFloat4x4(&cubeRotMat);
 	if (rotateX) {
 		DirectX::XMMATRIX rotMatX = XMMatrixRotationX(rotateSpeed * 0.002f * dt);
 		rotMat *= rotMatX;
@@ -436,44 +443,55 @@ void Renderer::Update(float dt)
 		rotateX = false;
 		rotateY = false;
 		rotateZ = false;
-		rotMat = XMLoadFloat4x4(&cube1DefaultRotMat);
+		rotMat = XMLoadFloat4x4(&cubeDefaultRotMat);
 	}
-	XMStoreFloat4x4(&cube1RotMat, rotMat);
+	XMStoreFloat4x4(&cubeRotMat, rotMat);
 
 	// create translation matrix for cube 1 from cube 1's position vector
-	DirectX::XMMATRIX translationMat = DirectX::XMMatrixTranslationFromVector(XMLoadFloat4(&cube1Position));
+	DirectX::XMMATRIX translationMat = DirectX::XMMatrixTranslationFromVector(XMLoadFloat4(&cubePosition));
 
 	// create cube1's world matrix by first rotating the cube, then positioning the rotated cube
 	DirectX::XMMATRIX worldMat = rotMat * translationMat;
 
 	// store cube1's world matrix
-	XMStoreFloat4x4(&cube1WorldMat, worldMat);
+	XMStoreFloat4x4(&cubeWorldMat, worldMat);
 
 	// update constant buffer for cube1
 	// create the wvp matrix and store in constant buffer
 	DirectX::XMMATRIX viewMat = XMLoadFloat4x4(&cameraViewMat); // load view matrix
 	DirectX::XMMATRIX projMat = XMLoadFloat4x4(&cameraProjMat); // load projection matrix
-	DirectX::XMMATRIX wMat = XMLoadFloat4x4(&cube1WorldMat); // create world matrix
+	DirectX::XMMATRIX wMat = XMLoadFloat4x4(&cubeWorldMat); // create world matrix
 	DirectX::XMMATRIX vpMat = viewMat * projMat; // create view projection matrix
 	DirectX::XMMATRIX transposed = XMMatrixTranspose(wMat); // must transpose w matrix for the gpu
 	XMStoreFloat4x4(&cbPerObject.wMat, transposed); // store transposed w matrix in constant buffer
 	transposed = XMMatrixTranspose(vpMat); // must transpose vp matrix for the gpu
 	XMStoreFloat4x4(&cbPerObject.vpMat, transposed); // store transposed vp matrix in constant buffer
+
 	DirectX::XMVECTOR cPos = XMLoadFloat4(&cameraPosition);
 	XMStoreFloat4(&cbPerObject.camPos, cPos);
 	DirectX::XMVECTOR dsa = XMLoadFloat3(&dsaModifiers);
 	XMStoreFloat3(&cbPerObject.dsaMod, dsa);
 	DirectX::XMVECTOR pp = XMLoadInt(&ppOption);
 	XMStoreInt(&cbPerObject.ppOption, pp);
-	DirectX::XMMATRIX lightProj = DirectX::XMMatrixOrthographicLH(10, 10, nearPlane, farPlane);
-	DirectX::XMMATRIX lightView = DirectX::XMMatrixLookAtLH(XMLoadFloat4(&lightPosition), XMLoadFloat4(&cube1Position), {0.0f, 1.0f, 0.0f, 1.0f});
+	DirectX::XMMATRIX lightView = DirectX::XMMatrixLookAtLH(XMLoadFloat4(&lightPosition), XMLoadFloat4(&cameraTarget), XMLoadFloat4(&cameraUp));
+	DirectX::XMMATRIX lightProj = DirectX::XMMatrixOrthographicOffCenterLH(-10, 10, -10, 10, nearPlane, farPlane);
 	DirectX::XMMATRIX lightMat = lightView * lightProj;
 	transposed = XMMatrixTranspose(lightMat);
 	XMStoreFloat4x4(&cbPerObject.lMat, transposed);
-	XMStoreFloat4(&cbPerObject.lPos, XMLoadFloat4(&lightPosition));
+	XMStoreFloat4(&cbPerObject.lDir, XMLoadFloat4(&lightPosition));
 
 	// copy our ConstantBuffer instance to the mapped constant buffer resource
 	memcpy(cbvGPUAddress[assets->GetFrameIndex()], &cbPerObject, sizeof(cbPerObject));
+
+	translationMat = DirectX::XMMatrixTranslationFromVector(XMLoadFloat4(&planePosition));
+	worldMat = translationMat;
+	XMStoreFloat4x4(&planeWorldMat, worldMat);
+
+	wMat = XMLoadFloat4x4(&planeWorldMat);
+	transposed = XMMatrixTranspose(wMat);
+	XMStoreFloat4x4(&cbPerObject.wMat, transposed);
+
+	memcpy(cbvGPUAddress[assets->GetFrameIndex()] + ConstantBufferPerObjectAlignedSize, &cbPerObject, sizeof(cbPerObject));
 }
 
 void Renderer::UpdatePipeline()
@@ -509,7 +527,6 @@ void Renderer::UpdatePipeline()
 
 	assets->GetCommandList()->SetGraphicsRootSignature(baseRootSig);
 	assets->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 
 	// Shadow Map Pass
 	dsvHandle.ptr += assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
@@ -520,7 +537,7 @@ void Renderer::UpdatePipeline()
 	assets->GetCommandList()->OMSetRenderTargets(0, nullptr, FALSE, &dsvHandle);
 	assets->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	assets->GetCommandList()->SetPipelineState(shadowPSO->GetState());
-	DrawScene(true, false);
+	DrawScene(true, true);
 
 	// Scene Pass
 	dsvHandle.ptr -= assets->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
@@ -658,10 +675,10 @@ void Renderer::CreateUploadVIData()
 
 	Vertex planeVList[] = {
 
-		{ -2.0f, -0.5f,  2.0f, 0.0f, 0.0f },
-		{  2.0f, -0.5f,  2.0f, 1.0f, 0.0f },
-		{  2.0f, -0.5f, -2.0f, 1.0f, 1.0f },
-		{ -2.0f, -0.5f, -2.0f, 0.0f, 1.0f },
+		{ -2.0f, 0.0f,  2.0f, 0.0f, 0.0f },
+		{  2.0f, 0.0f,  2.0f, 1.0f, 0.0f },
+		{  2.0f, 0.0f, -2.0f, 1.0f, 1.0f },
+		{ -2.0f, 0.0f, -2.0f, 0.0f, 1.0f },
 	};
 	int planeVBufferSize = sizeof(planeVList);
 
@@ -828,13 +845,14 @@ bool Renderer::CreatePipelineStateObjects()
 void Renderer::DrawScene(bool drawCube, bool drawPlane)
 {
 	assets->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 	if (drawCube) {
+		assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress());
 		assets->GetCommandList()->IASetVertexBuffers(0, 1, &cubeVertexBufferView);
 		assets->GetCommandList()->IASetIndexBuffer(&cubeIndexBufferView);
 		assets->GetCommandList()->DrawIndexedInstanced(numCubeIndices, 1, 0, 0, 0);
 	}
 	if (drawPlane) {
+		assets->GetCommandList()->SetGraphicsRootConstantBufferView(0, constantBufferUploadHeaps[assets->GetFrameIndex()]->GetGPUVirtualAddress() + ConstantBufferPerObjectAlignedSize);
 		assets->GetCommandList()->IASetVertexBuffers(0, 1, &planeVertexBufferView);
 		assets->GetCommandList()->IASetIndexBuffer(&planeIndexBufferView);
 		assets->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
