@@ -25,7 +25,7 @@ cbuffer ConstantBuffer : register(b0)
 float ShadowCalculation(float4 lightSpacePos, float bias)
 {
     float3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
-    projCoords = projCoords * 0.5f + 0.5f;
+    projCoords = mul(projCoords, 0.5f) + 0.5f;
     float closestDepth = t2.Sample(s1, projCoords.xy).r;
     float currentDepth = projCoords.z;
     float shadow = currentDepth - bias > closestDepth ? 1.0f : 0.0f;

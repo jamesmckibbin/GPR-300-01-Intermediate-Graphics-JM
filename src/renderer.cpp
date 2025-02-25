@@ -658,10 +658,10 @@ void Renderer::CreateUploadVIData()
 
 	Vertex planeVList[] = {
 
-		{ -2.0f, -2.0f,  2.0f, 0.0f, 0.0f },
-		{  2.0f, -2.0f,  2.0f, 1.0f, 0.0f },
-		{  2.0f, -2.0f, -2.0f, 1.0f, 1.0f },
-		{ -2.0f, -2.0f, -2.0f, 0.0f, 1.0f },
+		{ -2.0f, -0.5f,  2.0f, 0.0f, 0.0f },
+		{  2.0f, -0.5f,  2.0f, 1.0f, 0.0f },
+		{  2.0f, -0.5f, -2.0f, 1.0f, 1.0f },
+		{ -2.0f, -0.5f, -2.0f, 0.0f, 1.0f },
 	};
 	int planeVBufferSize = sizeof(planeVList);
 
